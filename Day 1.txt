@@ -171,7 +171,13 @@ int main()
 }
 
 
+3.Merge two sorted arrays in O(1) space
 
+ANS.   1st approach(it is not in O(1) space but will make better impression on interviewer) : merge using one array of size(n+m) using two pointer approach.
+        
+       2nd approach (similar to two pointer approach(https://practice.geeksforgeeks.org/viewSol.php?subId=3c943233141b0cc9ba4d9373a805af1f&pid=701243&user=msngi24july));
+
+       3rd approach (gap method)
 
 
 
