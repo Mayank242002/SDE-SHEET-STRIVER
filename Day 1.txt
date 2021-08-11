@@ -1,0 +1,217 @@
+                                          SDE SHEET STRIVER
+
+
+                                                 DAY 1
+
+
+1. Sort an array of 0’s 1’s 2’s without using extra space or sorting algo 
+
+ANS. 1st approach (sort the array)  : sort(nums.begin(),nums.end());
+      O(nlogn)
+     2nd approch  (count the no of 0,1,2 and insert them)  :
+      O(n) +O(n)
+     3rd best approach : Dutch National Flag Algorithm
+
+      class Solution {
+   public:
+    void swap (int *a,int *b)
+    {
+        int temp=*a;
+        *a=*b;
+        *b=temp;
+    }
+    void sortColors(vector<int>& nums) {
+        
+        int low=0,mid=0,high=nums.size()-1;
+        
+        while (mid<=high)
+        {
+            if (nums[mid]==0)
+            {
+                swap(&nums[low],&nums[mid]);
+                low++;
+                mid++;
+            }
+            else if (nums[mid]==1)
+            {
+                mid++;
+            }
+            else if (nums[mid]==2)
+            {
+                swap(&nums[mid],&nums[high]);
+                high--;
+            }
+        }
+        
+    }
+};
+
+
+2.Repeat and Missing Number
+
+ANS.   1st approach(Time-O(n),space-O(n)) : Hashing and finding reapeted element easily and then again traverse the hash array to find missing element.
+
+       2nd approach(O(n*logn))  :  sort and easily find the repeated element and missing one
+
+       3rd approach(try to avoid this technique because this modify the array) : making element negative 
+     
+       4rth approach(might cause the overflow because we are calculating the sum of square)   :  
+        
+#include <bits/stdc++.h>
+ 
+using namespace std;
+ 
+vector<int>repeatedNumber(const vector<int> &A) {
+    long long int len = A.size();
+    long long int Sum_N = (len * (len+1) ) /2, Sum_NSq = (len * (len +1) *(2*len +1) )/6;
+    long long int missingNumber=0, repeating=0;
+     
+    for(int i=0;i<A.size(); i++){
+       Sum_N -= (long long int)A[i];
+       Sum_NSq -= (long long int)A[i]*(long long int)A[i];
+    }
+     
+    missingNumber = (Sum_N + Sum_NSq/Sum_N)/2;
+    repeating= missingNumber - Sum_N;
+    vector <int> ans;
+    ans.push_back(repeating);
+    ans.push_back(missingNumber);
+    return ans;
+     
+}
+ 
+ 
+int main(void){
+        std::vector<int> v = {4, 3, 6, 2, 1, 6,7};
+    vector<int> res = repeatedNumber(v);
+    for(int x: res){
+        cout<< x<<"  ";
+    }
+    cout<<endl;
+}
+   
+      5th approach(using bitwise operators)  :
+
+      #include <bits/stdc++.h>
+using namespace std;
+ 
+/* The output of this function is stored at
+*x and *y */
+void getTwoElements(int arr[], int n,
+                    int* x, int* y)
+{
+    /* Will hold xor of all elements
+    and numbers from 1 to n */
+    int xor1;
+ 
+    /* Will have only single set bit of xor1 */
+    int set_bit_no;
+ 
+    int i;
+    *x = 0;
+    *y = 0;
+ 
+    xor1 = arr[0];
+ 
+    /* Get the xor of all array elements */
+    for (i = 1; i < n; i++)
+        xor1 = xor1 ^ arr[i];
+ 
+    /* XOR the previous result with numbers
+    from 1 to n*/
+    for (i = 1; i <= n; i++)
+        xor1 = xor1 ^ i;
+ 
+    /* Get the rightmost set bit in set_bit_no */
+    set_bit_no = xor1 & ~(xor1 - 1);
+ 
+    /* Now divide elements into two
+    sets by comparing a rightmost set
+    bit of xor1 with the bit at the same
+    position in each element. Also,
+    get XORs of two sets. The two
+    XORs are the output elements.
+    The following two for loops
+    serve the purpose */
+    for (i = 0; i < n; i++) {
+        if (arr[i] & set_bit_no)
+            /* arr[i] belongs to first set */
+            *x = *x ^ arr[i];
+ 
+        else
+            /* arr[i] belongs to second set*/
+            *y = *y ^ arr[i];
+    }
+    for (i = 1; i <= n; i++) {
+        if (i & set_bit_no)
+            /* i belongs to first set */
+            *x = *x ^ i;
+ 
+        else
+            /* i belongs to second set*/
+            *y = *y ^ i;
+    }
+ 
+    /* *x and *y hold the desired
+        output elements */
+}
+ 
+/* Driver code */
+int main()
+{
+    int arr[] = { 1, 3, 4, 5, 5, 6, 2 };
+    int* x = (int*)malloc(sizeof(int));
+    int* y = (int*)malloc(sizeof(int));
+    int n = sizeof(arr) / sizeof(arr[0]);
+ 
+    getTwoElements(arr, n, x, y);
+    cout << " The missing element is " << *x << " and the repeating"
+         << " number is " << *y;
+    getchar();
+}
+
+
+
+
+
+
+6.Find the duplicate number  [2 5 9 6 3 8 9 7 1]  RETURNS 9
+
+ANS.  1st aproach : sort the array and then search for similar item by condition nums[i]==nums[i+1]
+
+      2nd approach : using HASHING
+
+      3rd best approach : using cycle detection method in linked list
+
+      class Solution {
+   public:
+    int findDuplicate(vector<int>& nums) {
+        int slow=nums[0];
+        int fast=nums[0];
+        
+        do{
+            slow=nums[slow];
+            fast=nums[nums[fast]];
+            
+        }while (slow!=fast);
+        
+        fast=nums[0];
+        while (fast!=slow)
+        {
+            slow=nums[slow];
+            fast=nums[fast];
+        }
+        
+        return fast;
+        }
+
+    };
+
+
+3.
+
+ 
+
+    
+
+  
