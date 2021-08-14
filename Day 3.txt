@@ -95,4 +95,64 @@ ANS.   1st approach (search one by one in whole 2D array O(n2)):
 
 2.Pow(x, n)
 
-ANS.   1st approach ():
+ANS.   1st approach (using power function but interviewer may prefer better solutions): 
+
+       2nd approach (traversing from 1 to n and calculating power  O(n)) :
+
+       3rd approach (O(logn)) :
+
+       double myPow(double x, int n) {
+       double power=1;
+        long long nn=n;
+        if (nn<0) 
+            nn=nn*-1;
+        
+        while (nn)
+        {
+            if (nn%2==0)
+            {
+                x=x*x;
+                nn=nn/2;
+            }
+            else
+            {
+                power=power*x;
+                nn=nn-1;
+            }
+        }
+        if (n<0)
+            power=1/power;
+        return power;
+    }
+
+
+3.Majority Element(n/2)
+
+ANS.   1st approach (Brute force  O(n2)) : count for each element and return that number which is greater than n/2 times.
+
+       2nd approach (using Map  O(nlogn))  :
+       
+       int majorityElement(vector<int>& nums) {
+        if (nums.size()==1)
+            return nums[0];
+        int result;
+        map <int,int> m;
+        for (int i=0;i<nums.size();i++)
+        {
+            if (m.find(nums[i])==m.end())
+            m[nums[i]]=1;
+            else
+            {
+                m[nums[i]]++;
+            if (m[nums[i]]>nums.size()/2)
+                result=nums[i];
+            }
+        }
+       
+        return result;
+        
+    }
+        
+
+       3rd approach (Moore's Voting algorithm) :
+          
