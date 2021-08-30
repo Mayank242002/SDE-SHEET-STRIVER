@@ -100,3 +100,75 @@ ANS.   1st approach (first sort and then using 3 pointer apply Binary search on 
         return res;
         
     }
+
+
+3.Longest Consecutive Sequence
+
+ANS.   1st approach (Brute force(sort the array and linearly iterate too find longest consecutive sequence   O(nlogn)))  :
+
+         int longestConsecutive(vector<int>& nums) {
+        
+        sort(nums.begin(),nums.end());
+        int count=1,maincount=1;
+        if (nums.size()==0)
+            return 0;
+        for (int i=1;i<nums.size();i++)
+        {
+            if (nums[i]!=nums[i-1])
+            {
+                if (nums[i]==nums[i-1]+1)
+                count++;
+                else
+                {
+                 maincount=max(count,maincount);
+                 count=1;   
+                }
+                
+            }
+                
+        }
+        
+            return max(maincount,count);
+    }
+
+      2nd approach (O(N)) :
+
+       int longestConsecutive(vector<int>& nums) {
+        
+        if (nums.size()==0)
+            return 0;
+        
+        unordered_set<int> hashset;
+        for (int i:nums)
+        {
+            hashset.insert(i);
+        }
+        int longestcount=0;
+        for (int i=0;i<nums.size();i++)
+        {
+            if (!hashset.count(nums[i]-1))
+            {
+                int currentno=nums[i];
+                int count=1;
+                
+                while (hashset.count(currentno+1))
+                {
+                    currentno+=1;
+                    count+=1;
+                }
+                
+                longestcount=max(longestcount,count);
+            }
+        }
+        
+        
+        return longestcount;
+        
+    }
+
+
+4.Largest Subarray with Zero Sum
+
+ANS.  1st approach (same as maximum subarray sum with little change   O(n3))  :
+
+       2nd approach ()  :
