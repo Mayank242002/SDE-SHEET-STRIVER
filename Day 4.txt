@@ -49,4 +49,54 @@ ANS. 1st approach (Brute force O(n2))  :
 
 2. 4 Sum problem 
 
-ANS.   1st approach ():
+ANS.   1st approach (first sort and then using 3 pointer apply Binary search on the remaining array   O(n3 *logn)+O(nlogn)):
+
+       2nd approach (sorting the array first and then using left and right pointer   O(n3)+O(nlogn)):
+
+        vector<vector<int>> fourSum(vector<int>& nums, int target) {
+        
+        vector<vector<int>> res;
+        if (nums.empty())
+            return res;
+        sort(nums.begin(),nums.end());
+        int n=nums.size();
+        for (int i=0;i<n;i++)
+        {
+            for (int j=i+1;j<n;j++)
+            {
+                int left=j+1;
+                int right=n-1;
+                while (left<right)
+                {
+                    if (nums[left]+nums[right]<target-(nums[i]+nums[j]))
+                        left++;
+                    else if (nums[left]+nums[right]>target-(nums[i]+nums[j]))
+                        right--;
+                    else 
+                    {
+                        vector<int> temp;
+                        temp.push_back(nums[i]);
+                        temp.push_back(nums[j]);
+                        temp.push_back(nums[left]);
+                        temp.push_back(nums[right]);
+                        res.push_back(temp);
+                        
+                        while (left<right && nums[left]==temp[2])
+                            left++;
+                        while (left<right && nums[right]==temp[3])
+                            right--;
+                        
+                    }
+                }
+                while (j+1<n && nums[j+1]==nums[j])
+                    j++;
+                
+            }
+            
+            while (i+1<n && nums[i+1]==nums[i])
+                i++;
+        }
+        
+        return res;
+        
+    }
