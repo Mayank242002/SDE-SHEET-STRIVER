@@ -221,5 +221,37 @@ ANS.   1st approach (Brute force : same as maximum subarray sum with little chan
         }
 
         return count;
-       }        
+       }    
+
+
+6.Longest substring without repeat 
+
+ANS.   1st approach (Brute force : finding all substring with no repeated characters  : O(n2)+O(n))  :
+
+       2nd approach (O(n))  :
+ 
+       int lengthOfLongestSubstring(string s) {
+        
+        vector<int> mpp(256,-1);
+        
+        int n=s.size();
+        int len=0,left=0,right=0;
+        
+        while (right<n)
+        {
+            if (mpp[s[right]]!=-1)
+                left=max(mpp[s[right]]+1,left);
+            
+            mpp[s[right]]=right;
+            
+            len=max(right-left+1,len);
+            right++;
+        }
+        
+        
+        return len;
+        
+    }
+
+    
  
