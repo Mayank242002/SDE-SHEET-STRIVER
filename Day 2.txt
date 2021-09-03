@@ -51,7 +51,41 @@ public:
 
      2nd approach (take two dummy array of size m and n  and update with them 0 as the we find any item as 0  and then traverse again to set all those places to zero which have 0 in their index in dummy array):
 
+     void setZeroes(vector<vector<int>>& matrix) {
+        int rows=matrix.size();
+        int count=1;
+        int colms=matrix[0].size();
+        
+        vector<int> r(rows,1);
+        vector<int> c(colms,1);
+        
+        for (int i=0;i<rows;i++)
+        {
+            for (int j=0;j<colms;j++)
+            {
+                if (matrix[i][j]==0)
+                {
+                    r[i]=0;
+                    c[j]=0;
+                }
+            }
+        }
+        
+        
+       for (int i=0;i<rows;i++)
+        {
+            for (int j=0;j<colms;j++)
+            {
+                if (r[i]==0 || c[j]==0)
+                {
+                    matrix[i][j]=0;
+                }
+            }
+        }
+    }
+
      3rd approach (take two dummy array as first row and column)  :
+
       
       class Solution {
 public:
@@ -87,10 +121,6 @@ public:
             if (count==0)
                 matrix[i][0]=0;
         }
-       
-        
-        
-        
     }
 };
 
