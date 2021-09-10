@@ -139,4 +139,91 @@ ANS.  1st approach (making a new linked list  SC-O(n+m)  TS-O(n+m))  :
   
 4.Remove N-th node from back of LinkedList 
 
-ANS.   1st approach () :
+ANS.   1st approach (first counting total number of nodes and then traversing from front to delete that node  O(n)+O(n)) :
+
+        ListNode* removeNthFromEnd(ListNode* head, int n) {
+        ListNode *p=head,*q=nullptr;
+        int count=0;
+        while (p)
+        {
+            count++;
+            p=p->next;
+        }
+        
+        p=head;
+        count=count-n;
+        
+        for (int i=0;i<count;i++)
+        {
+            q=p;
+            p=p->next;
+        }
+        if (q==nullptr)
+        {
+            q=head;
+            head=head->next;
+            delete q;
+        }
+            
+        else{
+            q->next=p->next;
+            delete p;
+        }
+        
+        return head;
+    }
+      2nd approach (uisng fast and slow pointer technique   O(n)) :
+
+       ListNode* removeNthFromEnd(ListNode* head, int n) {
+        ListNode *f=head,*s=nullptr;
+        for (int i=0;i<n-1;i++)
+        {
+            f=f->next;
+        }
+        while (f->next!=nullptr)
+        {
+            if (s==nullptr)
+                s=head;
+            else
+                s=s->next;
+            f=f->next;
+        }
+        if (s==nullptr)
+            return head->next;
+        
+        s->next=s->next->next;
+        
+        return head; 
+    }
+
+5.Delete Node in a Linked List when that node is given
+
+ANS.   1st approach  (copying the right values to the one left   O(n)) :
+
+       void deleteNode(ListNode* node) {
+        
+      ListNode *p=node,*temp=nullptr;
+     while (p->next!=nullptr)
+     {
+         p->val=p->next->val;
+          if (p->next->next==nullptr)
+             temp=p;
+         p=p->next; 
+     } 
+        temp->next=nullptr;
+    }
+
+      2nd approach (just copy the next value and modify the next link   O(1))  :
+
+       void deleteNode(ListNode* node) {
+     
+        node->val=node->next->val;
+        node->next=node->next->next;
+    }
+
+
+6. Add two numbers as LinkedList 
+
+ANS.   1st approach ()  :
+
+       
