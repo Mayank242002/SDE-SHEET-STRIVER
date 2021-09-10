@@ -1,0 +1,142 @@
+                                              SDE SHEET STRIVER
+
+
+                                                      DAY 5
+
+
+1.Reverse a LinkedList 
+
+ANS.   1st approach (using three pointer O(n)):
+
+        ListNode* reverseList(ListNode* head) {
+        
+        ListNode *p=head,*q=nullptr,*r=nullptr;
+        
+        while (p!=nullptr)
+        {
+            r=q;
+            q=p;
+            p=p->next;
+            q->next=r;
+        }
+        head=q;
+        return head;
+        }
+
+
+2.Find middle of LinkedList
+
+ANS.   1st approach (traverse to count the no. of nodes and then again traverse for middle  O(n)+O(n/2))  :
+
+       ListNode* middleNode(ListNode* head) {
+        int count=0;
+        ListNode *p=head;
+        while (p)
+        {
+            count++;
+            p=p->next;
+        }
+        p=head;
+        int count2=0;
+        while (p)
+        {
+            count2++;
+            if (count2==((count/2)+1))
+                break;
+            p=p->next;
+        }
+        return p;
+    }
+
+
+       2nd approach (slow and fast pointer method or tortoise method  O(n/2))  :
+
+       ListNode* middleNode(ListNode* head) {
+       ListNode *p=head,*q=head;
+        while (q && q->next)
+        {
+            p=p->next;
+            q=q->next->next;
+        }
+        return p;
+       }
+
+
+3.Merge Two Sorted Lists
+
+ANS.  1st approach (making a new linked list  SC-O(n+m)  TS-O(n+m))  :
+
+      2nd approach (making changes in existing linked lists   O(n+m))  :
+
+       ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+        ListNode *last=nullptr,*third=nullptr;
+        if (l1==nullptr && l2==nullptr)
+            return third;
+        if (l1==nullptr || l2==nullptr)
+        {
+            if (l1==nullptr)
+            {
+                third=l2;
+                return third;
+            }
+            else{
+                third=l1;
+                return third;
+            }
+        }
+        
+        if (l1->val<l2->val)
+        {
+            third=last=l1;
+            l1=l1->next;
+            last->next=nullptr;
+        }
+        else
+        {
+            third=last=l2;
+            l2=l2->next;
+            last->next=nullptr;
+        }
+        
+        while (l1 && l2)
+        {
+           if (l1->val<l2->val)
+        {
+            last->next=l1;
+            last=l1;
+            l1=l1->next;
+            last->next=nullptr;
+            
+        }
+         else
+         {
+             
+            last->next=l2;
+            last=l2;
+            l2=l2->next;
+            last->next=nullptr;
+         }
+        }
+        
+        while (l1)
+        {
+            last->next=l1;
+            last=l1;
+            l1=l1->next;
+            last->next=nullptr;
+        }
+        
+        while (l2)
+        {
+           last->next=l2;
+            last=l2;
+            l2=l2->next;
+            last->next=nullptr; 
+        }
+        
+        return third; 
+    }
+  
+4.Remove N-th node from back of LinkedList 
+
+ANS.   1st approach () :

@@ -160,7 +160,7 @@ public:
 
 ANS   1st approach (find all permuations and returning the next permutations)
 
-      2nd approach ()  :
+      2nd approach (O(n))  :
 
        class Solution {
 public:
