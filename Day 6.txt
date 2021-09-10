@@ -1,0 +1,41 @@
+                                               SDE SHEET STRIVER
+
+
+                                                      DAY 6
+
+
+1.Find intersection point of Y LinkedList
+
+ANS.    1st approach (using two stacks and then traversing from back   TS=O(m)+O(n)  SC=O(m)+O(n)) :
+
+         ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        
+        stack<ListNode *> temp1;
+        stack<ListNode *> temp2;
+        while (headA)
+        {
+            temp1.push(headA);
+            headA=headA->next;
+        }
+        while (headB)
+        {
+            temp2.push(headB);
+            headB=headB->next;
+        }
+        ListNode *last=nullptr;
+        while (temp1.top()==temp2.top())
+        {
+            last=temp1.top();
+            if (!temp1.empty())
+            temp1.pop();
+            if (!temp2.empty())
+            temp2.pop();
+            if (temp1.empty() || temp2.empty())
+                break;
+        }
+        return last; 
+    }
+
+    2nd appraoch (counting length and then traversing larger LL upto distance  O(m)+O(m-n)+O(n)) :
+
+    3rd approach () :
