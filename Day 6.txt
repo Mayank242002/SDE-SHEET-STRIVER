@@ -38,4 +38,95 @@ ANS.    1st approach (using two stacks and then traversing from back   TS=O(m)+O
 
     2nd appraoch (counting length and then traversing larger LL upto distance  O(m)+O(m-n)+O(n)) :
 
-    3rd approach () :
+     int length(ListNode *p)
+    {
+        int count=0;
+        while (p)
+        {
+            count++;
+            p=p->next;
+        }
+        return count;
+    }
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        
+        int m=length(headA);
+        int n=length(headB);
+        int d=n-m;
+        if (m>n)
+        {
+            ListNode *temp=headA;
+            headA=headB;
+            headB=temp;
+            d=m-n;
+        }
+        int i=0;
+        for (i=0;i<d;i++)
+        {
+            headB=headB->next;
+        }
+        while (headA && headB)
+        {
+            if (headA==headB)
+                return headA;
+            headA=headA->next;
+            headB=headB->next;
+        }
+        
+        return nullptr;
+    }
+
+    3rd approach ( O(m)+(n)+(m-n)) :
+
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        ListNode *d1=headA,*d2=headB;
+        
+        while (d1!=d2)
+        {
+            if (d1==nullptr)
+                d1=headB;
+            else
+                d1=d1->next;
+            
+            if (d2==nullptr)
+                d2=headA;
+            else
+                d2=d2->next;    
+        }
+        return d1;
+        
+    }
+
+
+2.Detect a Cycle in Linked List
+
+ANS.    1st approach (Brute force : using hash table   TC=O(N), SC=O(N))  :   
+
+
+        2nd approach (using fast and slow pointer method   O(n) )  :
+
+        bool hasCycle(ListNode *head) {
+        ListNode *p=head,*q=head;
+        
+        while (q!=nullptr)
+        {
+            q=q->next;
+            p=p->next;
+           
+            if (q==nullptr)
+                return false;
+            else
+                q=q->next;
+            if (p==q)
+                return true;
+        }
+        return false; 
+    }
+
+
+3.Reverse Nodes in k-Group
+
+ANS.   1st approach () :
+
+        
+        
