@@ -126,7 +126,47 @@ ANS.    1st approach (Brute force : using hash table   TC=O(N), SC=O(N))  :
 
 3.Reverse Nodes in k-Group
 
-ANS.   1st approach () :
+ANS.   1st approach (O(n/k)) :
+
+       int length(ListNode *p)
+    {
+        int count=0;
+        while (p)
+        {
+            count++;
+            p=p->next;
+        }
+        return count;
+    }
+    ListNode* reverseKGroup(ListNode* head, int k) {
+        
+        if (head==nullptr || k==1)  return head;
+        int count=length(head);
+        ListNode *dummy=new ListNode();
+        dummy->next=head;
+        ListNode *cur=dummy,*nex=dummy,*pre=dummy;
+        
+        while (count>=k)
+        {
+            cur=pre->next;
+            nex=cur->next;
+            
+            for (int i=1;i<k;i++)
+            {
+                cur->next=nex->next;
+                nex->next=pre->next;
+                pre->next=nex;
+                nex=cur->next;
+            }
+            
+            pre=cur;
+            count-=k;
+        }
+        
+        return dummy->next;
+        
+        
+    }
 
         
         
