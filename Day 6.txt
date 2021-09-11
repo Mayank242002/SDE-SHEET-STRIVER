@@ -168,5 +168,146 @@ ANS.   1st approach (O(n/k)) :
         
     }
 
+
+4.Palindrome Linked List
+
+ANS.    1st approach (reversing the LL and then cheking the elements  TC=O(N)+O(N)+O(N), SC=O(N))  :
+
+          bool isPalindrome(ListNode* head) {
+        
+        ListNode *p=head;
+        vector<int> temp;
+        while (p)
+        {
+            temp.push_back(p->val);
+            p=p->next;
+        }
+        
+        p=head;
+        ListNode *q=nullptr,*r=nullptr;
+        while (p)
+        {
+            r=q;
+            q=p;
+            p=p->next;
+            q->next=r;
+        }
+        
+        ListNode *newhead=q;
+        
+        int i=0;
+        for (i=0;i<temp.size();i++)
+        {
+            if (temp[i]!=newhead->val)
+                return false;
+            newhead=newhead->next;
+        }
+        
+        return true;
+        
+    }
+
+
+      2nd approach  (storing values in vector and checking that vector  : TC=O(N)+O(N), SC=O(N)) :
+
+       bool isPalindrome(ListNode* head) {
+        
+        ListNode *p=head;
+        vector<int> temp;
+        while (p)
+        {
+            temp.push_back(p->val);
+            p=p->next;
+        }
+        int j=temp.size()-1;
+        for (int i=0;i<j;i++,j--)
+        {
+            if (temp[i]!=temp[j])
+                return false;
+        }
+        return true;
+        
+    }
+
+     3rd approach (finding middle and reversing the LL from one rigth to the middle node and then traversing simultaneously  : TC=O(N),SC=O(1)) :
+
+      ListNode* reverse(ListNode *head)
+    {
+        ListNode *pre=nullptr,*next=nullptr;
+        
+        while (head!=nullptr)
+        {
+            next=head->next;
+            head->next=pre;
+            pre=head;
+            head=next;
+        }
+        return pre;
+    }
+    bool isPalindrome(ListNode* head) {
+     if (head==nullptr || head->next==nullptr)
+         return  true;
+    ListNode *slow=head,*fast=head;
+        while (fast->next!=nullptr && fast->next->next!=nullptr)
+        {
+            slow=slow->next;
+            fast=fast->next->next;
+        }
+        
+        slow->next=reverse(slow->next);
+        slow=slow->next;
+        
+        
+        while (slow!=nullptr)
+        {
+            if (head->val!=slow->val)
+                return false;
+            head=head->next;
+            slow=slow->next;
+        }
+        
+        return true;
+    }
+
+
+
+5.Find the starting point of the Loop of LinkedList
+
+ANS.    1st approach  (uisng Hash table TC=O(N), SC=O(N)) :
+
+         
+        2nd approach (using slow and fast pointer (floyd tortoise method)  O(n)) :
+
+        ListNode *detectCycle(ListNode *head) {
+        if (head==nullptr)
+            return nullptr;
+        ListNode *p=head,*q=head;
+        
+        do
+        {
+            p=p->next;
+            q=q->next;
+            if (q==nullptr || q->next==nullptr)
+                return nullptr;
+            else
+                q=q->next;   
+        }  while (p && q && p!=q);
+        
+        p=head;
+        while (p!=q)
+        {
+            p=p->next;
+            q=q->next;
+        }
+        
+        return q;
+        
+    }
+
+
+6.Flattening of a LinkedList 
+
+ANS.    1st approach () :
+
         
         
