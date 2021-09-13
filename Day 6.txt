@@ -307,7 +307,138 @@ ANS.    1st approach  (uisng Hash table TC=O(N), SC=O(N)) :
 
 6.Flattening of a LinkedList 
 
-ANS.    1st approach () :
+ANS.    1st approach (merging list one by one from right : O(all nodes)) :
 
+
+      Node* Merge(Node *a,Node *b)
+       {
+    Node *temp=new Node(0);
+    Node *res=temp;
+    
+    while (a && b)
+    {
+        if (a->data<b->data)
+        {
+            temp->bottom=a;
+            temp=temp->bottom;
+            a=a->bottom;
+        }
+        else
+        {
+            temp->bottom=b;
+            temp=temp->bottom;
+            b=b->bottom;
+        }
+    }
+    
+    if (a){temp->bottom=a;}
+    else{temp->bottom=b;}
+    
+    return res->bottom;
+}
+Node *flatten(Node *root)
+{
+   if (root==nullptr || root->next==nullptr)
+    return root;
+    
+    root->next=flatten(root->next);
+    
+    root=Merge(root,root->next);
+    
+    return root;
+}
+
+
+7.Rotate a LinkedList
+
+ANS.  1st approach (Brute force  : O(k*n)) :
+
+      ListNode* rotateRight(ListNode* head, int k) {
+        if (head==nullptr ||head->next==nullptr)
+            return head;
+        
+        for (int i=0;i<k;i++)
+        {
+            ListNode *p=head,*q=nullptr;
+            while (p->next!=nullptr)
+            {
+                q=p;
+                p=p->next;
+            }
+            
+            p->next=head;
+            q->next=nullptr;
+            head=p;
+        }
+        
+        return head;
+        
+    }
+
+      2nd approach ( O(N*K%N)+O(N)) :
+
+       int length(ListNode *p)
+    {
+        int count=0;
+        while (p)
+        {
+            count++;
+            p=p->next;
+        }
+        return count;
+    }
+    ListNode* rotateRight(ListNode* head, int k) {
+        if (head==nullptr ||head->next==nullptr)
+            return head;
+        int len=length(head);
+        int rem=k%len;
+        for (int i=0;i<rem;i++)
+        {
+            ListNode *p=head,*q=nullptr;
+            while (p->next!=nullptr)
+            {
+                q=p;
+                p=p->next;
+            }
+            
+            p->next=head;
+            q->next=nullptr;
+            head=p;
+        }
+        
+        return head;
+        
+    }
+
+
+    3rd approach ( O(N)+O(N-N%K)) :
+
+
+     ListNode* rotateRight(ListNode* head, int k) {
+        if (head==nullptr ||head->next==nullptr)
+            return head;
+        int len=1;
+       
+        ListNode *c=head,*p=head;
+         while (c->next!=nullptr)
+        {
+            len++;
+            c=c->next;
+        }
+        c->next=head;
+      
+        k=k%len;
+        k=len-k;
+        for (int i=0;i<k-1;i++)
+        {
+            p=p->next;
+        }
+        head=p->next;
+        p->next=nullptr;
+       
+        
+        return head;
+        
+    }
         
         

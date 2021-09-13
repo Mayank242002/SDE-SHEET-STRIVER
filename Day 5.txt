@@ -136,6 +136,46 @@ ANS.  1st approach (making a new linked list  SC-O(n+m)  TS-O(n+m))  :
         
         return third; 
     }
+
+    OR
+
+     ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+        ListNode *third=new ListNode();
+        ListNode *last=third;
+        if (l1==nullptr && l2==nullptr)
+            return nullptr;
+        if (l1==nullptr || l2==nullptr)
+        {
+            if (l1==nullptr)
+            {
+                third=l2;
+                return third;
+            }
+            else{
+                third=l1;
+                return third;
+            }
+        }
+        
+        while (l1 && l2)
+        {
+            if (l1->val<l2->val)
+            {
+                last->next=l1;
+                last=last->next;
+                l1=l1->next;
+            }
+            else{
+                last->next=l2;
+                last=last->next;
+                l2=l2->next;
+            }
+        }
+        
+        if (l1){last->next=l1;}
+        else {last->next=l2;}     
+        return third->next; 
+    }
   
 4.Remove N-th node from back of LinkedList 
 
