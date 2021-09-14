@@ -1,0 +1,62 @@
+                                               SDE SHEET STRIVER
+
+
+                                                      DAY 7
+
+
+1.Copy List with Random Pointer
+
+ANS.    1st approach (Brute force : use HashMap for storing original and Copy of that node and then traverse again for marking next and random with that copy nodes) :
+
+        TC=O(N)+O(N)
+        SC=O(N)
+
+
+        2nd approach (1.Create Copy Nodes in between Original Nodes  2.Point Random pointer of copy nodes   3.getting copy and original LL) :
+
+        TC=O(N)+O(N)+O(N)
+        SC=O(1)
+
+        
+        Node* copyRandomList(Node* head) {
+        Node *itr=head,*front=head;
+        while (itr)
+        {
+            front=itr->next;
+            Node *copy=new Node(itr->val);
+            copy->next=front;
+            itr->next=copy;
+            itr=front;
+        }
+        
+        
+        itr=head;
+        while (itr)
+        {
+            if (itr->random)
+            {
+                itr->next->random=itr->random->next;
+            }
+            itr=itr->next->next;
+        }
+        
+        itr=head;
+        Node *pseudo=new Node(0);
+        Node *copy2=pseudo;
+        while (itr)
+        {
+            front=itr->next->next;
+            copy2->next=itr->next;
+            itr->next=front;
+            copy2=copy2->next;
+            itr=itr->next;
+        }
+        
+        return pseudo->next;
+        
+    }
+
+
+2.3 SUM
+
+ANS.   1st aaproach (Brute force : finding all triplets and then using set to identify unique triplet  TC=O(n3),SC=O(N)) :
