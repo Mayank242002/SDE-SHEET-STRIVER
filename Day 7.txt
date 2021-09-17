@@ -1,7 +1,7 @@
-                                                   SDE SHEET STRIVER
+﻿                                SDE SHEET STRIVER
 
 
-                                                        DAY 7
+                                      DAY 7
 
 
 1.Copy List with Random Pointer
