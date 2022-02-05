@@ -37,6 +37,10 @@ ANS.    1st approach (Brute force : use HashMap for storing original and Copy of
             {
                 itr->next->random=itr->random->next;
             }
+            else
+            {
+                itr->next->random=nullptr;
+            }
             itr=itr->next->next;
         }
         
@@ -59,4 +63,11 @@ ANS.    1st approach (Brute force : use HashMap for storing original and Copy of
 
 2.3 SUM
 
-ANS.   1st aaproach (Brute force : finding all triplets and then using set to identify unique triplet  TC=O(n3),SC=O(N)) :
+ANS.   1st aaproach (Brute force : finding all triplets and then using set to identify unique triplet  TC=O(n3 logm),SC=O(m)) :
+
+
+       2nd approach (use two loops to find the a and b and then c=-(a+b), use Hashmap for storing item and its frequency, use set for unique elements 
+TC=O(N2*logm), SC=O(m)+O(n)):
+
+
+       3rd approach (using two pointer approach) :
