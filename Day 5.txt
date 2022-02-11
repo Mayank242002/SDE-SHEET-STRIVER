@@ -1,4 +1,4 @@
-                                              SDE SHEET STRIVER
+﻿                                              SDE SHEET STRIVER
 
 
                                                       DAY 5
@@ -61,7 +61,88 @@ ANS.   1st approach (traverse to count the no. of nodes and then again traverse 
         return p;
        }
 
+2.1. Reorder List
 
+ANS.  1st approach (first find middle, then reverse the second half of Linked List, then merge in alternating order : O(N)) :
+
+      ListNode* reverseList(ListNode* head) {
+        ListNode *p=head,*q=nullptr,*r=nullptr;
+        while (p!=nullptr)
+        {
+            r=q;
+            q=p;
+            p=p->next;
+            q->next=r;
+        }
+        return q;
+        }
+        ListNode *middle(ListNode* head)
+        {
+        ListNode *p=head,*q=head;
+        while (q && q->next)
+        {
+            p=p->next;
+            q=q->next->next;
+        }
+            return p;
+        }
+    void reorderList(ListNode* head) {
+        ListNode *middle1=middle(head);
+        ListNode *new_head=reverseList(middle1->next);
+        middle1->next=nullptr;
+        middle1=nullptr;
+		while (new_head)
+		{
+			middle1 = head->next;
+			head->next = new_head;
+			head = new_head;
+			new_head = middle1;
+		}      
+    }
+
+2.2. Maximum Twin Sum of a Linked List
+
+ANS.    1st approach (first find middle and then reverse the Linked List and then compute the maximum sum : O(N)):
+ ListNode *middle(ListNode* head)
+        {
+        ListNode *p=head,*q=head;
+        while (q && q->next)
+        {
+            p=p->next;
+            q=q->next->next;
+        }
+            return p;
+        }
+    ListNode* reverseList(ListNode* head) {
+        ListNode *p=head,*q=nullptr,*r=nullptr;
+        while (p!=nullptr)
+        {
+            r=q;
+            q=p;
+            p=p->next;
+            q->next=r;
+        }
+    
+        return q;
+        }
+       
+    
+    int pairSum(ListNode* head) {
+        ListNode *middle_head=middle(head);
+        ListNode *head2=reverseList(middle_head);
+        int sum=0,max_sum=0;
+        while (head2)
+        {
+            sum+=head->val+head2->val;
+            max_sum=max(sum,max_sum);
+            sum=0;
+            head=head->next;
+            head2=head2->next;
+        }
+        return max_sum;
+        
+    }
+            
 3.Merge Two Sorted Lists
 
 ANS.  1st approach (making a new linked list  SC-O(n+m)  TS-O(n+m))  :
@@ -235,7 +316,28 @@ ANS.   1st approach (first counting total number of nodes and then traversing fr
         
         return head; 
     }
+4.1 Swapping Nodes in a Linked List
 
+ANS.     1st approach (finding nth from first and last and then swapping them):
+
+              ListNode* swapNodes(ListNode* head, int k) {
+        ListNode *head1=head;
+        for (int i=0;i<k-1;i++)
+            head1=head1->next;
+        
+        ListNode *main=head1;
+        
+        ListNode *head2=head;
+        while (main->next)
+        {
+            head2=head2->next;
+            main=main->next;
+        }
+        swap(head2->val,head1->val);
+        
+        return head;
+        
+    }
 5.Delete Node in a Linked List when that node is given
 
 ANS.   1st approach  (copying the right values to the one left   O(n)) :
@@ -294,6 +396,59 @@ ANS.   1st approach (O(max(m,n)))  :
       }
         
         return dummy->next;
+    }
+
+6.1 Add two Numbers - ||
+
+ANS.   1st approach ( Reverse the linked list and then add them and again reverse them:  O(max(n,m))):
+
+        ListNode* reverseList(ListNode* head) {
+        
+        ListNode *p=head,*q=nullptr,*r=nullptr;
+        
+        while (p!=nullptr)
+        {
+            r=q;
+            q=p;
+            p=p->next;
+            q->next=r;
+        }
+        head=q;
+        return head;
+        }
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+    l1=reverseList(l1);
+    l2=reverseList(l2);
+    
+         ListNode *dummy=new ListNode();
+        ListNode *temp=dummy;
+        
+        int carry=0;
+        
+        while (l1 || l2 || carry)
+        {
+            int sum=0;
+            if (l1!=nullptr)
+            {
+                sum+=l1->val;
+                l1=l1->next;
+            }
+            
+            if (l2!=nullptr)
+            {
+                sum+=l2->val;
+                l2=l2->next;
+            }
+            sum+=carry;
+            carry=sum/10;
+            ListNode *node=new ListNode();
+            node->val=sum%10;
+            node->next=nullptr;
+            temp->next=node;
+            temp=temp->next;
+        }
+        dummy=reverseList(dummy->next);
+        return dummy;
     }
 
        

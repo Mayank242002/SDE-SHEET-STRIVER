@@ -1,4 +1,4 @@
-﻿                                SDE SHEET STRIVER
+﻿                                 SDE SHEET STRIVER
 
 
                                       DAY 7
@@ -61,7 +61,7 @@ ANS.    1st approach (Brute force : use HashMap for storing original and Copy of
     }
 
 
-2.3 SUM
+2. 3 SUM
 
 ANS.   1st aaproach (Brute force : finding all triplets and then using set to identify unique triplet  TC=O(n3 logm),SC=O(m)) :
 
@@ -70,4 +70,85 @@ ANS.   1st aaproach (Brute force : finding all triplets and then using set to id
 TC=O(N2*logm), SC=O(m)+O(n)):
 
 
-       3rd approach (using two pointer approach) :
+       3rd approach (using two pointer approach same as 4 sum  : TC-O(n*n), SC-O(m)) :
+
+       vector<vector<int>> threeSum(vector<int>& nums) {
+         vector<vector<int>> res;
+        int n=nums.size();
+        sort(nums.begin(),nums.end());
+        for (int i=0;i<n;i++)
+        {
+                int low=i+1;
+                int high=n-1;
+               
+                 while (low<high)
+                 {
+                    if (nums[low]+nums[high]<0-nums[i])
+                       low++;
+                    else if (nums[low]+nums[high]>0-nums[i])
+                        high--;
+                    else
+                    {
+                        vector<int> temp;
+                        temp.push_back(nums[i]);
+                        temp.push_back(nums[low]);
+                        temp.push_back(nums[high]);
+                        res.push_back(temp);
+                        
+                        while (low<high && nums[low]==temp[1])
+                            low++;
+                        while (low<high && nums[high]==temp[2])
+                            high--;
+                    }
+                     
+                 }
+                while (i+1<n && nums[i]==nums[i+1])
+                i++;      
+        }
+        return res;
+    }
+
+3.Remove Duplicate from sorted Array
+
+ANS.    1st appraoch (using map and inserting the Only one copy and then puting them in vector first K places  : SC-O(N),TC-O(N*LOGN)):
+
+        2nd approach (using two pointer approach : O(n)):
+
+    int n=nums.size();
+    if (n<=1) return n;
+    int i=0;
+        
+    for (int j=1;j<n;j++)
+    {
+        if (nums[i]!=nums[j])
+        {
+            i++;
+            nums[i]=nums[j];
+                
+        }
+    }
+      return i+1; 
+    }
+
+4.Max Consecutive Ones
+
+ANS.    1st approach (Maintaining two variable and counting no of 1’s : O(N)) :
+
+       int findMaxConsecutiveOnes(vector<int>& nums) {
+        int count=0,max_count=0;
+        for (int i=0;i<nums.size();i++)
+        {
+            if (nums[i]==1)
+            {
+                count++;
+                max_count=max(max_count,count);
+            }
+            else
+                count=0;
+        }
+        return max_count;
+    }
+
+5. Trapping Rain Water
+
+ANS.   1st approach ():

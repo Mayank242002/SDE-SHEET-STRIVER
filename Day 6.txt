@@ -1,4 +1,4 @@
-                                               SDE SHEET STRIVER
+﻿                                               SDE SHEET STRIVER
 
 
                                                       DAY 6
@@ -168,6 +168,35 @@ ANS.   1st approach (O(n/k)) :
         
     }
 
+    2nd approach (Recursive) :
+
+     ListNode *r=nullptr,*q=node,*p=head;
+        
+        while (p!=node)
+        {
+            r=q;
+            q=p;
+            p=p->next;
+            q->next=r;
+        }
+        return q;
+    }
+
+    ListNode *reverseKGroup(ListNode *head, int k) {
+        // 1. Generate nodes for the current group;
+        ListNode *cur = head;
+        for (int i = 0; i < k; ++i) {
+            if (!cur) return head;
+            cur = cur->next;
+        }
+
+//        2. Reverse the nodes for the current group;
+        ListNode *newHead = reverseBefore(head, cur);
+//        3. Reverse the nodes for the next group;
+        head->next = reverseKGroup(cur, k);
+        return newHead;
+    }
+
 
 4.Palindrome Linked List
 
@@ -229,7 +258,29 @@ ANS.    1st approach (reversing the LL and then cheking the elements  TC=O(N)+O(
         
     }
 
-     3rd approach (finding middle and reversing the LL from one rigth to the middle node and then traversing simultaneously  : TC=O(N),SC=O(1)) :
+     3rd approach (using stack and checking the values : TC-O(N),SC-O(N)) :
+
+     bool isPalindrome(ListNode* head) {
+        stack<ListNode *> st;
+        ListNode *temp=head;
+        while (temp)
+        {
+            st.push(temp);
+            temp=temp->next;
+        }
+        
+        while (!st.empty())
+        {
+            if (st.top()->val!=head->val)
+                return false;
+            st.pop();
+            head=head->next;
+        }
+        return true;
+        
+    }
+
+     4rd approach (finding middle and reversing the LL from one rigth to the middle node and then traversing simultaneously  : TC=O(N),SC=O(1)) :
 
       ListNode* reverse(ListNode *head)
     {

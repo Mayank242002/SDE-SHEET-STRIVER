@@ -1,4 +1,4 @@
-                                           SDE SHEET STRIVER
+﻿                                           SDE SHEET STRIVER
 
 
                                                  DAY 4
@@ -205,7 +205,7 @@ ANS.   1st approach (Brute force : same as maximum subarray sum with little chan
 
        int countsubarrayxor(int A[],int B)
        {
-        map<int,int> freq;
+        unordered_map<int,int> freq;
         
         int count=0,xorr=0;
 
