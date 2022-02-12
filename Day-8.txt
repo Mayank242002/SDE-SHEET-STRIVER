@@ -1,0 +1,149 @@
+﻿                                   DAY-8
+
+
+
+1. N Meeting in one Room
+
+ANS.    1st approach (sorting the End array as Sooner the meeting finishes, more chances of performing more meetings : TC-O(n*logn),SC-O(n)):
+
+        static bool sortbysec(const pair<int,int> &a, const pair<int,int> &b)
+   {
+    return (a.second < b.second);
+   }
+    //Function to find the maximum number of meetings that can
+    //be performed in a meeting room.
+    int maxMeetings(int start[], int end[], int n)
+    {
+        vector<pair<int, int> > vec(n);
+        for(int i=0; i<n; i++) 
+        {
+            vec[i]=make_pair(start[i],end[i]);
+        }
+        
+        sort(vec.begin(), vec.end(), sortbysec);
+        
+        int ans=1;
+        int last_end=vec[0].second;
+        for (int i=1;i<n;i++)
+        {
+            if (vec[i].first>last_end)
+            {
+                ans++;
+                last_end=vec[i].second;
+            }
+        }
+        return ans;
+        
+    }
+
+2. Minimum Number of Platforms required for a railway
+
+ANS.  1st approach (sorting the arrival and departure time and keep track of maximum platform required at a time  : O(nlogn)+O(n)   Intution:nno matter which train is leaving or which is arriving because if at initial moment any train arrives then we need a platform or if a train departure then the platform will empty. So that's why we are sorting the arrival and departuring time.):
+
+       
+
+      int findPlatform(int arr[], int dep[], int n)
+    {
+        sort(arr,arr+n);
+        sort(dep,dep+n);
+        
+        int plat=1,res=1,i=1,j=0;
+        
+        while (i<n && j<n)
+        {
+            if (arr[i]<=dep[j])
+            {
+                plat++;
+                i++;
+            }
+            else if (arr[i]>dep[j])
+            {
+                plat--;
+                j++;
+            }
+            
+            res=max(res,plat);
+        }
+        return res;
+    }
+
+
+3.Job Sequencing Problem
+
+ANS.   1st approach (TC-O(n*logn)+O(n*m), SC-O(N)) :
+
+        static bool comp(Job a,Job b)
+    {
+        return a.profit>b.profit;
+    }
+    //Function to find the maximum profit and the number of jobs done.
+    vector<int> JobScheduling(Job arr[], int n) 
+    { 
+        sort(arr,arr+n,comp);
+        int maxi=arr[0].dead;
+        for (int i=0;i<n;i++)
+            maxi=max(maxi,arr[i].dead);
+            
+        int temp[maxi+1];
+        for (int i=1;i<=maxi;i++)
+           temp[i]=-1;
+           
+        int jobs=0,profit=0;
+        
+        for (int i=0;i<n;i++)
+        {
+            for (int j=arr[i].dead;j>0;j--)
+            {
+                if (temp[j]==-1)
+                {
+                    temp[j]=arr[i].id;
+                    jobs++;
+                    profit+=arr[i].profit;
+                    break;
+                }
+            }
+
+        }
+        vector<int> ans;
+        ans.push_back(jobs);
+        ans.push_back(profit);
+        return ans;
+    }
+
+4. Fractional Knapsack
+
+ANS.   1st approach (Sort according to the profit per weight and add them to the bag according to the weight remains  TC-o(N*LOGN),SC-O(1)):
+
+
+       static bool comp(Item i1,Item i2)
+    {
+        return (double)i1.value/i1.weight>(double)i2.value/i2.weight;
+    }
+    //Function to get the maximum total value in the knapsack.
+    double fractionalKnapsack(int w, Item arr[], int n)
+    {
+        sort(arr,arr+n,comp);
+        double profit=0;
+        
+        for (int i=0;i<n && w>0;i++)
+        {
+            if (arr[i].weight<=w)
+            {
+                profit+=arr[i].value;
+                w-=arr[i].weight;
+            }
+            else
+            {
+                
+                profit+=arr[i].value*(double)w/arr[i].weight;
+                w=0;
+            }
+        }
+        
+        return profit;  
+    }
+
+5. Greedy algorithm to find the minimum number of coins
+
+ANS.   1st appraoch () :
+
