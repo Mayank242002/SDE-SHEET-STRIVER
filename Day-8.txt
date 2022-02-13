@@ -145,5 +145,157 @@ ANS.   1st approach (Sort according to the profit per weight and add them to the
 
 5. Greedy algorithm to find the minimum number of coins
 
-ANS.   1st appraoch () :
+ANS.   1st appraoch (Greedy algo fails on the diffrent coins system, applicable on Indian Coins  : TC-O(V)) :
+
+       static bool comp(int a,int b)
+	{
+	     return a>b;
+	}
+	int minCoins(int coins[], int M, int V) 
+	{ 
+	    sort(coins,coins+M,comp);
+	    int coinsnumber=0;
+	    for (int i=0;i<M && V>0;i++)
+	    {
+	            while (V>=coins[i])
+	            {
+	                coinsnumber++;
+	                V-=coins[i];
+	            }
+	    }
+	    
+	    return coinsnumber;
+	} 
+
+6.  Buy Maximum Stocks if i stocks can be bought on i-th day
+
+
+ANS.   1st approach (less the cost, more no of stocks we can buy,  TC-o(N*LOGN)):
+
+#include <bits/stdc++.h>
+using namespace std;
+
+
+int buyMaximumProducts(int n, int k, int price[])
+{
+vector<pair<int, int> > v;
+
+// Making pair of product cost and number
+// of day..
+for (int i = 0; i < n; ++i)
+v.push_back(make_pair(price[i], i + 1));
+
+// Sorting the vector pair.
+sort(v.begin(), v.end());
+
+// Calculating the maximum number of stock
+/ count.
+   int ans = 0;
+   for (int i = 0; i < n; ++i) 
+  {
+       ans += min(v[i].second, k / v[i].first);
+      k -= v[i].first * min(v[i].second,(k / v[i].first));
+  }
+
+return ans;
+}
+
+// Driven Program
+int main()
+{
+int price[] = { 10, 7, 19 };
+int n = sizeof(price)/sizeof(price[0]);
+int k = 45;
+
+cout << buyMaximumProducts(n, k, price) << endl;
+
+return 0;
+}
+
+7. Shop in Candy store
+
+ANS. 1st approach () :
+
+     static bool comp(int a,int b)
+     {
+     return a>b;
+      }
+    vector<int> candyStore(int candies[], int N, int K)
+    {
+        sort(candies,candies+N);
+        int n=N;
+        int minmoney=0;
+        for (int i=0;i<N && n>0;i++)
+        {
+            minmoney+=candies[i];
+            n-=(K+1);
+        }
+        sort(candies,candies+N,comp);
+        n=N;
+        int maxmoney=0;
+        for (int i=0;i<N && n>0;i++)
+        {
+            maxmoney+=candies[i];
+            n-=(K+1);
+        }
+        
+        vector<int> res;
+        res.push_back(minmoney);
+        res.push_back(maxmoney);
+        return res;
+    }
+
+8. Minimum Cost to cut a board into squares
+
+ANS.   1st approach (higher the price of cutting at less no of piceses , lower will be the cost  TC-O(N*LOGN)) :
+
+static bool comp(long long a,long long b)
+{
+    return a>b;
+}
+int boardCutting(vector<int> cost_y, vector<int> cost_x) {
+    
+    
+    long long m=cost_y.size();
+    long long n=cost_x.size();
+    long long hr=1,vr=1;
+    long long i=0,j=0,cost=0;
+    
+    sort(cost_y.begin(),cost_y.end(),comp);
+    sort(cost_x.begin(),cost_x.end(),comp);
+    
+    while (i<m && j<n)
+    {
+        if (cost_y[i]>cost_x[j])
+        {
+            cost+=cost_y[i]*hr;
+            vr++;
+            i++;
+        }
+        else {
+            cost+=cost_x[j]*vr;
+            hr++;
+            j++;
+        }
+    }
+    
+    while (i<m)
+    {
+        cost+=cost_y[i]*hr;
+            
+            i++;
+    }
+    while (j<n)
+    {
+         cost+=cost_x[j]*vr;
+            j++;
+    }
+    
+    return (cost%1000000007);
+
+}
+
+
+
+        
 
