@@ -295,6 +295,327 @@ int boardCutting(vector<int> cost_y, vector<int> cost_x) {
 
 }
 
+9. Check if it is possible to survive on Island
+
+ANS   1st approach (O(1)):
+
+       int minimumDays(int S, int N, int M){
+        if (M>N)
+        return -1;
+        int units=M*S;
+        S-=S/7;
+        int jobs=ceil((float)units/N);
+        if (S>=jobs)
+          return jobs;
+        else
+          return -1;
+    }
+
+
+10. Maximum Number of events that can be attended
+
+ANS.  1st approach (sort according to the end time):
+
+      static bool comp(pair<int,int> p1,pair<int,int> p2)
+  {
+      if (p1.second!=p2.second)
+          return p1.second<p2.second;
+      else
+        return p1.first<p2.first;
+  }
+    int maxEvents(int start[], int end[], int N) {
+        vector<pair<int,int>> vec(N);
+        for (int i=0;i<N;i++)
+           vec[i]=make_pair(start[i],end[i]);
+           
+        sort(vec.begin(),vec.end(),comp);
+        
+            
+        vector<int> temp(100006,-1);
+           
+        int events=1;
+        int lastattended=vec[0].first;
+        temp[lastattended]=lastattended;
+        for (int i=1;i<N;i++)
+        {
+                for (int j=vec[i].first;j<=vec[i].second;j++)
+                {
+                    if (temp[j]==-1)
+                    {
+                          events++;
+                          lastattended=j;
+                          temp[j]=lastattended;
+                          break;
+                    }
+                }
+              
+            
+        }
+        return events;
+    }
+
+11. Maximize sum of Array after K negations
+
+ANS. 1st approach (sort the array and decrease the k accordingly TC-O(N*LOGN)):
+
+      int largestSumAfterKNegations(vector<int>& nums, int k) {
+        
+        sort(nums.begin(),nums.end());
+        int mini=INT_MAX,original_k;
+        for (int i=0;i<nums.size() && k>0;i++)
+        {
+            if (nums[i]<0)
+            {
+                nums[i]*=-1;
+                k--;
+            }
+            else
+            {
+                original_k=k;
+                k=0;
+            }
+            mini=min(mini,nums[i]);
+        }
+        int sum=0;
+        for (int i=0;i<nums.size();i++)
+            sum+=nums[i];
+        if (original_k%2!=0||(k!=0))
+        return sum-2*mini;
+        else
+            return sum;
+    }
+
+
+12. Maximum Product Subarray
+
+ANS.  1st approach (maintaining minimum and maximum product at each index  TC-O(N)):
+int maxProduct(vector<int>& nums) {
+        int n=nums.size();
+        int res=nums[0],maxi=nums[0],mini=nums[0];
+        for (int i=1;i<n;i++)
+        {
+            if (nums[i]<0)
+            {
+                swap(maxi,mini);
+            }
+            maxi=max(nums[i],nums[i]*maxi);
+            mini=min(nums[i],nums[i]*mini);
+            res=max(res,maxi);
+        }
+        return res;
+    }
+
+
+13. Maximize sum(arr[i]*i) of the array
+
+ANS   1st approach ():
+
+      int Maximize(int a[],int n)
+    {
+        sort(a,a+n);
+        long long sum=0;
+        for (int i=0;i<n;i++)
+           sum+=(long long)a[i]*i;
+           
+        return sum%1000000007;
+    }
+
+14. Maximum sum of absolute diffrence of Array
+
+ANS.  1st approach (Sort the array and get one maximum and one minimum at atime) :
+
+       int MaxisumDiffrence(int a[],int n)
+      {
+          vector<int> final;
+          
+          sort(a,a+n);
+          for (int i=0;i<n/2;i++)
+          {
+             final.push_back(a[i]);
+             final.push_back(a[n-i-1]);
+           }
+           if (n%2!=0)
+               final.push_back(a[n/2]);
+
+           int maxi=0;
+           for (int i=0;i<n-1;i++)
+              maxi+=abs(final[i]-final[i+1]);
+
+           maxi+=abs(final[0]-final[n-1]);
+          
+           return maxi;
+
+        }
+
+
+15. Minimum sum of absolute Diffrence of pairs of two array
+
+ANS.   1st approach (sort both the array and calculate the absolute diffrence):
+
+       int minimumSum(vector<int>& arr1, vector<int>& arr2, int n)
+{
+    sort(arr1.begin(),arr1.end());
+    sort(arr2.begin(),arr2.end());
+    int result=0;
+    for (int i=0;i<n;i++)
+        result+=abs(arr1[i]-arr2[i]);
+    
+    return result;
+}
+
+16. smallest subset with sum greater than all other elements
+
+ANS.   1st approach (sort the array in descending order and calculate sum accordingly) :
+
+      int minElements(int arr[], int n)
+{
+   
+    int TotalSum = 0;
+    for (int i = 0; i < n; i++)
+        TotalSum = TotalSum + arr[i];   
+    
+    sort(arr, arr + n, greater<int>());
+ 
+    int res = 0, curr_sum = 0;
+    for (int i = 0; i < n; i++) {
+        curr_sum+=arr[i];
+        if (curr_sum>TotalSum-curr_sum)
+           return i+1;
+    }
+    return 0;
+}
+
+17. Chocolate Distribution Problem
+
+ANS. 1st approach (sort the array):
+
+    long long findMinDiff(vector<long long> a, long long n, long long m){
+    sort(a.begin(),a.end());
+    long long res=INT_MAX;
+    
+    int i=0,j=m-1;
+    while (j<n)
+    {
+        res=min(res,a[j]-a[i]);
+        i++;
+        j++;
+    }
+    return res;
+
+
+18. Defense of Kingdom
+
+ANS.  1st approach (sort the aray of rows and column and select maximum and minimum diffrence ):
+
+#include <iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+int main() {
+	int t;
+	cin>>t;
+	while(t--)
+	{
+		int w,h,n;
+		cin>>w>>h>>n;
+		vector<int> a(n);
+		vector<int> b(n);
+		a.push_back(0);
+		b.push_back(0);
+		for (int i=0;i<n;i++)
+		{
+			int x,y;
+			cin>>x>>y;
+			a.push_back(x);
+		    b.push_back(y);
+		}
+		a.push_back(w+1);
+		b.push_back(h+1);
+		
+		sort(a.begin(),a.end());
+		sort(b.begin(),b.end());
+		int mx1=0,mx2=0;
+		for (int i=0;i<a.size()-1;i++)
+		{
+			mx1=max(mx1,a[i+1]-a[i]-1);
+			mx2=max(mx2,b[i+1]-b[i]-1);
+		}
+		cout<< mx1*mx2<<endl;
+	}
+	return 0;
+}
+
+
+19.  Die hard spoj
+
+ANS.  1st approach (always use Air, and then use Water or Fire According to the H or A):
+
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+int main() {
+	int t;
+	cin>>t;
+	while (t--)
+	{
+		int h,a;
+		cin>>h>>a;
+		int life=0;
+		while (h>0 && a>0)
+		{
+			h+=3;a+=2;
+			life++;
+			if ((a>10)&&(h>5))
+			{
+			    h-=5;a-=10;	
+			}
+			else
+			{
+			    h-=20;a+=5;
+			    
+			}
+			if (h>0 && a>0)
+			   life++;
+		}
+		cout<<life<<endl;
+	}
+	return 0;
+}
+
+
+20.  Minimum Cost of Ropes
+
+ANS.   1st approach (selecting the minimum two and adding to the cost(priority queue) ) :
+
+        long long minCost(long long arr[], long long n) {
+       priority_queue<long,vector<long>,greater<long>>q;
+       for(int i=0;i<n;i++)
+       {
+           q.push(arr[i]);
+       }
+       
+       long long cost=0;
+       while(q.size()>=2)
+       {
+           long long a=q.top();
+           q.pop();
+           long long b=q.top();
+           q.pop();
+           
+           
+           cost=cost+a+b;
+           q.push(a+b);
+       }
+       return cost;
+   }
+     
+
+ 
+        
+
 
 
         
