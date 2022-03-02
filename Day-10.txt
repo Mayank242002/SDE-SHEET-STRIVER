@@ -1,0 +1,432 @@
+﻿                                  Day-10
+
+
+1. Print all permutation of a string/Array
+
+ANS.  1st approach (using a hash array and marking as the elements are taken):
+
+      void perm(vector<int>& nums,vector<vector<int>>& res,int mp[],int n,vector<int>& temp)
+    {
+        if (temp.size()==n)
+        {
+            res.push_back(temp);
+            return;
+        }
+        for (int i=0;i<n;i++)
+        {
+            if (mp[i]==0)
+            {
+                temp.push_back(nums[i]);
+                mp[i]=1;
+                perm(nums,res,mp,n,temp);
+                temp.pop_back();
+                mp[i]=0; 
+                
+            }            
+        }
+    }
+    vector<vector<int>> permute(vector<int>& nums) {     
+    vector<vector<int>> res;
+    vector<int> temp;
+    int n=nums.size();
+    int mp[n];
+    for (int i=0;i<n;i++)
+        mp[i]=0;
+    perm(nums,res,mp,n,temp);
+    return res;
+        
+    }
+
+
+   2nd approach (using swap method to swap the required postions and get our required permutation) :
+
+     void perm(vector<int>& nums,vector<vector<int>>& res,int l,int h)
+    {
+        if (l==h)
+            res.push_back(nums);
+        else
+        {
+            for (int i=l;i<=h;i++)
+            {
+                 swap(nums[l],nums[i]);
+                 perm(nums,res,l+1,h);
+                 swap(nums[l],nums[i]); //for backtrack
+            }
+        }
+    }
+    vector<vector<int>> permute(vector<int>& nums) {     
+    vector<vector<int>> res;
+    int n=nums.size();
+    perm(nums,res,0,n-1);
+    return res;
+        
+    }
+
+
+2. N Queens
+
+ANS.  1st approach (checking function takes O(n) time):
+
+      bool isSafe(int row,int col,vector<string>& temp,int n)
+    {
+        int duprow=row,dupcol=col;
+        //Checking upper diagonal
+        while (row>=0 && col>=0)
+        {
+            if (temp[row][col]=='Q')
+                return false;
+            row--;
+            col--;
+        }
+        row=duprow;
+        col=dupcol;
+        //checking left row
+        while (col>=0)
+        {
+            if (temp[row][col]=='Q')
+                return false;
+            col--;
+        }
+        
+        row=duprow;
+        col=dupcol;
+        //Checking lower diagonal
+        while (row<n && col>=0)
+        {
+            if (temp[row][col]=='Q')
+                return false;
+            row++;
+            col--;
+        }
+        
+        return true;
+        
+    }
+    void queens(int col,vector<vector<string>>& ans,vector<string>& temp,int n)
+    {
+        if (col==n)
+        {
+            ans.push_back(temp);
+            return;
+        }
+        else
+        {
+            for (int row=0;row<n;row++)
+            {
+                if (isSafe(row,col,temp,n))
+                {
+                    temp[row][col]='Q';
+                    queens(col+1,ans,temp,n);
+                    temp[row][col]='.';
+                }
+            }
+        }
+    }
+    vector<vector<string>> solveNQueens(int n) {
+    vector<vector<string>> ans;
+    string s(n,'.');
+    vector<string> temp(n);
+    for (int i=0;i<n;i++)
+        temp[i]=s;
+    queens(0,ans,temp,n);
+    return ans;
+    }
+
+
+   2nd approach (inplace of isSafe function we have used three vector(upper diagonal, lower diagonal, row)):
+
+     void queens(int col,vector<vector<string>>& ans,vector<string>& temp,int n,vector<int> &leftrow,vector<int> &lowerdiagonal,vector<int> &upperdiagonal)
+    {
+        if (col==n)
+        {
+            ans.push_back(temp);
+            return;
+        }
+        else
+        {
+            for (int row=0;row<n;row++)
+            {
+                if (leftrow[row]==0 && lowerdiagonal[row+col]==0 && upperdiagonal[n-1+(col-row)]==0)
+                {
+                    leftrow[row]=1;
+                    lowerdiagonal[row+col]=1;
+                    upperdiagonal[n-1+(col-row)]=1;
+                    temp[row][col]='Q';
+                    queens(col+1,ans,temp,n,leftrow,lowerdiagonal,upperdiagonal);
+                    temp[row][col]='.';
+                    leftrow[row]=0;
+                    lowerdiagonal[row+col]=0;
+                    upperdiagonal[n-1+(col-row)]=0;
+                }
+            }
+        }
+    }
+    vector<vector<string>> solveNQueens(int n) {
+    vector<vector<string>> ans;
+    string s(n,'.');
+    vector<string> temp(n);
+    for (int i=0;i<n;i++)
+        temp[i]=s;
+    vector<int> leftrow(n,0);
+    vector<int> lowerdiagonal(2*n-1,0);
+    vector<int> upperdiagonal(2*n-1,0);
+    queens(0,ans,temp,n,leftrow,upperdiagonal,lowerdiagonal);
+    return ans;
+    }
+
+
+3. N Queens II
+
+ANS. 1st approach (just count the distinct solutions):
+
+       bool isSafe(int row,int col,vector<string>& temp,int n)
+    {
+        int duprow=row,dupcol=col;
+        //Checking upper diagonal
+        while (row>=0 && col>=0)
+        {
+            if (temp[row][col]=='Q')
+                return false;
+            row--;
+            col--;
+        }
+        row=duprow;
+        col=dupcol;
+        //checking left row
+        while (col>=0)
+        {
+            if (temp[row][col]=='Q')
+                return false;
+            col--;
+        }
+        
+        row=duprow;
+        col=dupcol;
+        //Checking lower diagonal
+        while (row<n && col>=0)
+        {
+            if (temp[row][col]=='Q')
+                return false;
+            row++;
+            col--;
+        }
+        
+        return true;
+        
+    }
+    int queens(int col,vector<string>& temp,int n)
+    {
+        int count=0;
+        if (col==n)
+        {
+            return 1;
+        }
+        else
+        {
+            for (int row=0;row<n;row++)
+            {
+                if (isSafe(row,col,temp,n))
+                {
+                    temp[row][col]='Q';
+                    count+=queens(col+1,temp,n);
+                    temp[row][col]='.';
+                }
+            }
+            return count;
+        }
+    }
+    int totalNQueens(int n) {
+    string s(n,'.');
+    vector<string> temp(n);
+    for (int i=0;i<n;i++)
+        temp[i]=s;
+    return queens(0,temp,n);
+    }
+
+
+4. Sudoku Solver
+
+ANS.   1st approach (checking all possiblities in blank space for ‘1’ to ‘9’) :
+
+       bool issafe(int row,int col,vector<vector<char>> & board,char k)
+    {
+        for (int i=0;i<9;i++)
+        {
+            if (board[i][col]==k)
+                return false;
+            if (board[row][i]==k)
+                return false;
+            if(board[3 * (row / 3) + i / 3][3 * (col / 3) + i % 3] == k) 
+                return false; 
+            
+        }
+        return true;
+    }
+    bool sudoku(vector<vector<char>>& board)
+    {
+        for (int i=0;i<9;i++)
+        {
+            for (int j=0;j<9;j++)
+            {
+                if (board[i][j]=='.')
+                {
+                    for (char k='1';k<='9';k++)
+                    {
+                        if (issafe(i,j,board,k))
+                        {
+                            board[i][j]=k;
+                            if (sudoku(board))
+                               return true;
+                            else
+                                board[i][j]='.';
+                        }
+                    }
+                    return false;
+                 }
+            }
+        }
+        return true;
+    }
+    void solveSudoku(vector<vector<char>>& board) {
+        sudoku(board);  
+    }
+
+    2nd approach (considering 2D matrix as 1D matrix and traversing according to the num ) :
+
+     bool issafe(int row,int col,vector<vector<char>> & board,char k)
+    {
+        for (int i=0;i<9;i++)
+        {
+            if (board[i][col]==k)
+                return false;
+            if (board[row][i]==k)
+                return false;
+            if(board[3 * (row / 3) + i / 3][3 * (col / 3) + i % 3] == k) 
+                return false; 
+            
+        }
+        return true;
+    }
+    bool sudoku(int n,vector<vector<char>>& board)
+    {
+        if (n==81)
+            return true;
+        else
+        {
+            if (board[n/9][n%9]=='.')
+                {
+                    for (char k='1';k<='9';k++)
+                    {
+                        if (issafe(n/9,n%9,board,k))
+                        {
+                            board[n/9][n%9]=k;
+                            if (sudoku(n+1,board))
+                               return true;
+                            else
+                                board[n/9][n%9]='.';
+                        }
+                    }
+                    return false;
+                 }
+            else
+            {
+                if (sudoku(n+1,board))
+                    return true;
+                else
+                    return false;
+            }
+        }
+        return true;
+    }
+    void solveSudoku(vector<vector<char>>& board) {
+        sudoku(0,board);  
+    }
+
+
+
+5. M-colouring Problem
+
+ANS.  There can be three variations of this problem:
+
+      1. Find if it is possible to color the given graph using given m colors or not:
+
+      1st approach (check all possible ways of coloring):
+ 
+      bool ispossible(bool graph[101][101],int node,int colors[],int v,int i)
+{
+    for (int k=0;k<v;k++)
+    {
+        if (k!=node && graph[k][node]==1 && colors[k]==i)
+        return false;
+    }
+    return true;
+}
+bool colorgraph(bool graph[101][101],int m,int v,int node,int colors[])
+{
+    if (node==v)
+      return true;
+    else
+    {
+        for (int i=1;i<=m;i++)
+        {
+            if (ispossible(graph,node,colors,v,i))
+            {
+                colors[node]=i;
+                if (colorgraph(graph,m,v,node+1,colors))
+                   return true;
+                colors[node]=0;
+            }
+        }
+        return false;
+    }
+}
+bool graphColoring(bool graph[101][101], int m, int V)
+{
+    int colors[V];
+    return colorgraph(graph,m,V,0,colors);
+}
+
+      2. Find all possible combination of color given to the nodes.
+
+      3. Find minimum number of colors required to color the graph.(optimization problem)
+
+
+
+6. Rat in Maze
+
+ANS.   1st approach (Try all the 4 possible Directions):
+
+        void distinct(vector<vector<int>> &m,vector<string> &res,string temp,int i,int j,int n)
+    {
+        if (i<0 || j<0 || i>=n || j>=n || m[i][j]==0)
+           return;
+        if (i==n-1 && j==n-1)
+        {
+            res.push_back(temp);
+            return;
+        }
+        else
+        {
+            m[i][j]=0;
+           
+            distinct(m,res,temp+"D",i+1,j,n);
+            distinct(m,res,temp+"L",i,j-1,n);
+            distinct(m,res,temp+"R",i,j+1,n);
+            distinct(m,res,temp+"U",i-1,j,n);
+            m[i][j]=1;
+        }
+    }
+    vector<string> findPath(vector<vector<int>> &m, int n) {
+        vector<string> res;
+        string temp="";
+        distinct(m,res,temp,0,0,n);
+        return res;
+    }
+
+       
+
+7.  Word Break
+
+ANS.   1st approach ():
+
+       
