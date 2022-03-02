@@ -1,0 +1,531 @@
+﻿                                      Day-9
+
+
+
+Mostly in questions:- power set, subset, subsequence are considered same
+
+
+Brute Force to generate all the subsequences(power set method):
+
+Question. Given a string S find all possible subsequences of the string in lexicographically-sorted order.
+
+	vector<string> AllPossibleStrings(string s){
+		    int n=s.size();
+		    vector<string> res;
+		    for(int num=0;num<pow(2,n);num++)
+		    {
+		        string str="";
+		        for (int i=0;i<n;i++)
+		        {
+		            if (num&(1<<i))
+		              str+=s[i];
+		        }
+		        if (str.size()!=0)
+		        res.push_back(str);
+		    }
+		    sort(res.begin(),res.end());
+		    return res;
+		}
+
+
+We Will be using recursion for generating all the subsequnce 
+
+
+1. Print all the subsquence of the array
+
+ANS.  1st approach (we have two choice whether to include the current index or              not):
+
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+void subsequence(int i,vector<int>&v,int arr[],int n)
+{
+    if (i==n)
+    {
+        if (v.size()==0)
+          cout<<"{}"<<endl;
+        else
+        {
+            for (int j=0;j<v.size();j++)
+               cout<<v[j]<<" ";
+            cout<<endl;
+        }
+        return;
+    }
+    v.push_back(arr[i]);
+    subsequence(i+1,v,arr,n);
+    v.pop_back();
+    subsequence(i+1,v,arr,n);
+    
+}
+int main()
+{
+    int arr[4]={1,2,3,4};
+    vector<int> ans;
+    subsequence(0,ans,arr,4);
+    return 0;
+}
+
+
+2.  Printing subsequnece whose sum is K
+
+ANS.  1st approach (taking sum as paramater in above question):
+
+      #include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+void subsequence(int i,vector<int>&v,int arr[],int n,int sum,int s)
+{
+    
+    if (i==n)
+    {
+        if (s==sum)
+        {
+          for (int j=0;j<v.size();j++)
+            cout<<v[j]<<" ";
+          cout<<endl;
+        }
+        return;
+    }
+    v.push_back(arr[i]);
+    s+=arr[i];
+    subsequence(i+1,v,arr,n,sum,s);
+    v.pop_back();
+    s-=arr[i];
+    subsequence(i+1,v,arr,n,sum,s);
+    
+}
+int main()
+{
+    int arr[3]={1,2,1};
+    vector<int> ans;
+    int sum=3;
+    subsequence(0,ans,arr,3,sum,0);
+    return 0;
+}
+
+
+3. Print any one subsequence whose sum is k(technique to print one answer)
+
+ANS.  1st approach (we will return true if our condition is satisfied otherwise return false):
+
+      bool subsequence(int i,vector<int>&v,int arr[],int n,int sum,int s)
+{
+    
+    if (i==n)
+    {
+        if (s==sum)
+        {
+          for (int j=0;j<v.size();j++)
+            cout<<v[j]<<" ";
+          cout<<endl;
+          return true;
+        }
+        return false;
+    }
+    v.push_back(arr[i]);
+    s+=arr[i];
+    if (subsequence(i+1,v,arr,n,sum,s))
+            return true;
+            
+    v.pop_back();
+    s-=arr[i];
+    if (subsequence(i+1,v,arr,n,sum,s))
+        return true;
+        
+    return false;
+}
+
+4.  count the  subsequence whose sum is k
+
+ANS.   1st approach (create a variable count on evry recursion call and add its content to the main count):
+
+ int subsequence(int i,int arr[],int n,int sum,int s)
+{
+    int count=0;
+    
+    if (i==n)
+    {
+        if (s==sum)
+        {
+          count++;
+        }
+        return count;
+    }
+  
+    s+=arr[i];
+    count+=subsequence(i+1,arr,n,sum,s);
+    s-=arr[i];
+    count+=subsequence(i+1,arr,n,sum,s);
+    return count;
+    
+}
+
+
+2nd approach (return 1 if we got sum, otherwise 0, and atlast return sum of all the calls):
+
+int subsequence(int i,int arr[],int n,int sum,int s)
+{
+
+    if (i==n)
+    {
+        if (s==sum)
+        {
+          return 1;
+        }
+        else return 0;
+    }
+ 
+    s+=arr[i];
+    int left_count=subsequence(i+1,arr,n,sum,s);
+  
+    s-=arr[i];
+    int right_count=subsequence(i+1,arr,n,sum,s);
+    return left_count+right_count;
+    
+}
+
+
+5.  Subset sums(print sum of all the subsets)
+
+ANS.  1st approach (using the all subsequnces and maintaining their sum):
+
+       void count(int i,vector<int> &res,vector<int> arr, int n,int sum)
+    {
+        if (i==n)
+        {
+          res.push_back(sum);
+          return;  
+        }
+        sum+=arr[i];
+        count(i+1,res,arr,n,sum);
+        sum-=arr[i];
+        count(i+1,res,arr,n,sum);
+    }
+    vector<int> subsetSums(vector<int> arr, int N)
+    {
+        vector<int> res;
+        count(0,res,arr,N,0);
+        sort(res.begin(),res.end());
+        return res;
+    }
+
+
+6. Subsets II (Return powerset without duplicates)
+
+ANS.  1st approach (using set to remove duplicates):
+
+      void powerset(vector<int>& nums,vector<vector<int>> &res,int n,int i,vector<int>&temp)
+    {
+        if (i==n)
+        {
+            res.push_back(temp);
+            return;
+        }
+        temp.push_back(nums[i]);
+        powerset(nums,res,n,i+1,temp);
+        temp.pop_back();
+        powerset(nums,res,n,i+1,temp);
+    }
+    vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+        sort(nums.begin(),nums.end());
+        int n=nums.size();
+        vector<vector<int>> res;
+        vector<int> temp;
+        powerset(nums,res,n,0,temp);
+        set<vector<int>> s;
+        for (int i=0;i<res.size();i++)
+        {
+            s.insert(res[i]);
+        }
+        vector<vector<int>> res2(s.begin(),s.end());
+        return res2;
+    }
+
+
+    2nd approach (Managing duplicates ):
+
+    void powerset(vector<int>& nums,vector<vector<int>> &res,int n,int ind,vector<int>&temp)
+    {
+        res.push_back(temp);
+        for (int i=ind;i<n;i++)
+        {
+            if (i!=ind && nums[i]==nums[i-1])
+                continue;
+            temp.push_back(nums[i]);
+            powerset(nums,res,n,i+1,temp);
+            temp.pop_back();
+        }
+    }
+    vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+        sort(nums.begin(),nums.end());
+        int n=nums.size();
+        vector<vector<int>> res;
+        vector<int> temp;
+        powerset(nums,res,n,0,temp);
+        return res;
+       
+    }
+
+7.  Combination sum-1
+
+ANS.  1st approach (We can pick any index many number of times):
+
+       void combinationsum(int i,int target,vector<int>& candidates,vector<vector<int>> &res,int sum,vector<int> &temp,int n)
+    {
+        if (i==n)
+        {
+            if (sum==target)
+            {
+                res.push_back(temp);
+            }
+            return;
+        }
+         if (candidates[i]<=target-sum)
+         {
+             temp.push_back(candidates[i]);
+             sum+=candidates[i];
+             combinationsum(i,target,candidates,res,sum,temp,n);
+             sum-=candidates[i];
+             temp.pop_back();
+             
+         }
+        
+        combinationsum(i+1,target,candidates,res,sum,temp,n);                          
+    }
+    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+        int n=candidates.size();
+        vector<vector<int>> res;
+        vector<int> temp;
+        combinationsum(0,target,candidates,res,0,temp,n);
+        return res;
+        
+    }  
+
+8. Combination sum – 2
+
+ANS.   1st approach (using set to remove duplicates(Giving TLE in Leetcode)):
+
+        void combinationsum(int i,int target,vector<int>& candidates,set<vector<int>> &s,int sum,vector<int> &temp,int n)
+    {
+        if (i==n)
+        {
+            if (sum==target)
+            {
+                s.insert(temp);
+            }
+            return;
+        }
+        if (candidates[i]<=target-sum)
+        {
+            temp.push_back(candidates[i]);
+            sum+=candidates[i];
+            combinationsum(i+1,target,candidates,s,sum,temp,n);
+            sum-=candidates[i];
+            temp.pop_back();
+        }
+        combinationsum(i+1,target,candidates,s,sum,temp,n);                          
+    }
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+        sort(candidates.begin(),candidates.end());
+        int n=candidates.size();
+        vector<int> temp;
+        set<vector<int>> s;
+        combinationsum(0,target,candidates,s,0,temp,n);
+        vector<vector<int>> res(s.begin(),s.end());
+        return res;
+    }
+
+     
+     2nd approach (Managing duplicates(Little variation to the subset II)):
+
+     void combinationsum(int idx,int target,vector<int>& candidates,int sum,vector<int> &temp, vector<vector<int>>& res,int n)
+    {
+            if (sum==target)
+            {
+                res.push_back(temp);
+                return;
+            }
+            
+        
+        for (int i=idx;i<n;i++)
+        {
+            if (i!=idx && candidates[i]==candidates[i-1]) continue;
+            
+            if (candidates[i]<=target-sum)
+            {
+               temp.push_back(candidates[i]);
+               sum+=candidates[i];
+               combinationsum(i+1,target,candidates,sum,temp,res,n);
+               sum-=candidates[i]; 
+               temp.pop_back();
+            }
+            else
+                break;
+        }                        
+    }
+    
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+        sort(candidates.begin(),candidates.end());
+        int n=candidates.size();
+        vector<int> temp;
+        vector<vector<int>> res;
+        
+        combinationsum(0,target,candidates,0,temp,res,n);
+       
+        return res;
+    }
+
+9.  Palindrome partioning
+
+ANS.  1st approach (making cuts at every index):
+
+       bool ispalindrome(string s,int l,int h)
+    {
+        while (l<=h)
+        {
+            if (s[l++]!=s[h--])
+                return false;
+        }
+        return true;
+    }
+    void part(int node,vector<vector<string>> &ans,vector<string> &temp,string s)
+    {
+        if (node==s.size())
+        {
+            ans.push_back(temp);
+            return;
+        }
+        else
+        {
+            for (int i=node;i<s.size();i++)
+            {
+                if (ispalindrome(s,node,i))
+                {
+                    //substr(starting_index,length of the string as needed in substring)
+                    temp.push_back(s.substr(node,i-node+1));
+                    part(i+1,ans,temp,s);
+                    temp.pop_back();
+                }
+                
+            }
+        }
+        
+    }
+    vector<vector<string>> partition(string s) {
+       vector<vector<string>> ans;
+        vector<string> temp;
+        part(0,ans,temp,s);
+        return ans;
+    }
+
+
+10.  Palindrome Partioning II (counting minimum cuts)
+
+ANS.   1st approach ():
+
+         bool ispalindrome(string s,int l,int h)
+    {
+        while (l<=h)
+        {
+            if (s[l++]!=s[h--])
+                return false;
+        }
+        return true;
+     }
+    int part(int node,string s,int count)
+    {
+        if (node==s.size())
+        {
+              return count;
+        }
+        else
+        {
+            for (int i=node;i<s.size();i++)
+            {
+                if (ispalindrome(s,node,i))
+                {
+                    count++;
+                    count=min(count,part(i+1,s,count));
+                }
+                
+            }
+            return count;
+        }
+        
+    }
+    int minCut(string s) {
+        return part(0,s,0);
+    }
+
+      
+
+11.  Kth-permutation sequence
+
+ANS.  1st approach (Generates all the permutations and sort them to store according to the lexigraphic order and then return the kth permutation):
+
+      void perm(string& nums,vector<string>& res,int l,int h)
+    {
+        if (l==h)
+            res.push_back(nums);
+        else
+        {
+            for (int i=l;i<=h;i++)
+            {
+                 swap(nums[l],nums[i]);
+                 perm(nums,res,l+1,h);
+                 swap(nums[l],nums[i]); //for backtrack
+            }
+        }
+    }
+    string getPermutation(int n, int k) {
+        string nums="";
+        for (int i=1;i<=n;i++)
+        {
+           nums+=to_string(i);   
+        }   
+        vector<string> res;
+        perm(nums,res,0,n-1);
+        sort(res.begin(),res.end());
+        return res[k-1];
+    }
+
+
+
+    2nd approach (Calculating only the permuations on the given ranges):
+    string getPermutation(int n, int k) {
+        int fact=1;
+        vector<int> numbers;
+        for (int i=1;i<n;i++)
+        {
+            fact*=i;
+            numbers.push_back(i);
+            
+        }
+        numbers.push_back(n);
+        
+        string res="";
+        k=k-1;
+        while (true)
+        {
+            res+=to_string(numbers[k/fact]);
+            numbers.erase(numbers.begin()+k/fact);
+            if (numbers.size()==0)
+                break;
+            
+            k=k%fact;
+            fact=fact/numbers.size();
+        }
+        return res;
+    }
+
+    
+      
+
+
+
+
