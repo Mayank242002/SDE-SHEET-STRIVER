@@ -1,0 +1,488 @@
+﻿                                Day-11
+
+
+
+1.  The nth root of the Integer
+
+ANS.   1st  approach (using simple loop from 1 to n to check wheather this number multiplied n times is equal to m or not  : O(m*n)):
+
+       2nd approach (using Binary Search to find that number which multiplied n times is equal to m : O(m*logn)):
+
+    double findNthRootOfM(int n, long long m) {
+    double low=1,high=m;
+    double eps=1e-6;
+    while ((high-low)>eps)
+    {
+        double mid=(low+high)/2.0;
+        double ans=pow(mid,n);
+        if (ans==(double)m)
+            return mid;
+        else if (ans>m)
+            high=mid;
+        else
+            low=mid;
+    }
+    return low;//or return high
+}
+
+
+2. Matrix Median
+
+ANS.   1st approach (put all the matrix elements into the array , sort the aaray and return the middle element  	TC- O(n*m*(log(n*m))), SC- O(N*M)):
+ 
+   int findMedian(vector<vector<int> > &A) {
+   int n=A.size();
+   int m=A[0].size();
+    vector<int> ans;
+    for (int i=0;i<n;i++)
+    {
+        for (int j=0;j<m;j++)
+             ans.push_back(A[i][j]);
+    }
+    sort(ans.begin(),ans.end());
+    int mid=ans[(n*m)/2];
+    return mid;
+}
+
+
+     2nd approach (a number to be median there should be exactly (n/2) numbers that are less than this number.):
+
+     int numberlessthan(vector<vector<int>> &matrix,int i,int ele)
+    {
+        int l=0,h=matrix[0].size()-1;
+        int res=0;
+        while (l<=h)
+        {
+            int mid=l+(h-l)/2;
+            if (matrix[i][mid]<=ele)
+              l=mid+1;
+            else
+              h=mid-1;
+        }
+        return l;
+    }
+    int median(vector<vector<int>> &matrix, int r, int c){
+     
+     int l=INT_MAX,h=INT_MIN;;
+     for (int i=0;i<r;i++)
+     {
+        l=min(l,matrix[i][0]);
+        h=max(h,matrix[i][c-1]);
+     }
+     
+     int shouldbe=(r*c+1)/2;
+     while (l<h)
+     {
+         int mid=l+(h-l)/2;
+         int place=0;
+         for (int i=0;i<r;i++)
+           place+=numberlessthan(matrix,i,mid);
+          
+        if (place<shouldbe)  //So for every number, we get the count of numbers less than that in each row of the matrix, if it is less than the required count, the median must be greater than the selected number, else the median must be less than or equal to the selected number.
+            l=mid+1;
+        else
+            h=mid;
+        
+     }
+     
+     return l;
+    
+    }
+
+
+3. Single Element in a Sorted Array
+
+ANS.  1st approach (using xor : O(n)):
+
+      2nd approach (using the Binary search, subrray left to the single element will have 1st duplicate instance at even index and 2nd instance at odd index.
+Subarray right to the single element will have 1st duplicate instance at odd index and 2nd instance at even index: O(Logn)) :
+
+        int singleNonDuplicate(vector<int>& nums) {
+        int l=0,h=nums.size()-1;
+        while (l<h)
+        {
+            int mid=l+(h-l)/2;
+            if (mid%2==0)
+            {
+                if (nums[mid]==nums[mid-1])
+                    h=mid-2;
+                else if (nums[mid]==nums[mid+1])
+                    l=mid+2;
+                else 
+                    return nums[mid];
+            }
+            else
+            {
+                if (nums[mid]==nums[mid-1])
+                    l=mid+1;
+                else if (nums[mid]==nums[mid+1])
+                    h=mid-1;
+                else 
+                    return nums[mid];
+            }
+        }
+        return nums[l];
+        
+    }
+  
+       
+
+
+4. Search in Rotated Sorted Array
+
+ANS.   1st approach (First finding the Index of Minimum element in the Rotated Array, then applying Binary search on the left and right array to the minimum element  : O(logn)) :
+
+       int binary_search(vector<int> nums,int low,int high,int target)
+    {
+        while (low<=high)
+        {
+            int mid=(low+high)/2;
+            if (target==nums[mid])
+                return mid;
+            else if (target<nums[mid])
+            high=mid-1;
+            else 
+                low=mid+1;
+        }
+        return -1;
+        
+        
+    }
+    int search(vector<int>& nums, int target) {
+        
+        int n=nums.size();
+        int pivot=-1;
+        int s=0,e=n-1;
+        while (s<=e)
+        {
+            if (nums[s]<=nums[e])
+            {
+                    pivot=s;
+                break;
+            }
+                
+            int mid=s+(e-s)/2;
+            int next=(mid+1)%n;
+            int prev=(mid+n-1)%n;
+            
+            if (nums[mid]<=nums[next] && nums[mid]<=nums[prev])
+            {
+                pivot=mid;
+                break;
+            }
+            if (nums[s]<=nums[mid])
+                s=mid+1;
+            else if (nums[mid]<=nums[e])
+                e=mid-1;
+        }
+        
+        int a=binary_search(nums,0,pivot-1,target);
+        int b=binary_search(nums,pivot,n-1,target);
+        
+        if (a==-1 && b==-1)
+            return -1;
+        else if (a!=-1 && b==-1)
+            return a;
+        else if (a==-1 && b!=-1)
+            return b;
+        else 
+            return -1;
+    }
+
+
+
+
+5. Median of Two Sorted Arrays
+
+ANS.   1st approach (pushing all elmeent into the array and finding the medina of that  TC-O((N+M)*LOG(N+M))) , SC-O(N+M):
+
+       double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+        vector<int> res;
+        for (auto num:nums1)
+            res.push_back(num);
+        for (auto num:nums2)
+            res.push_back(num);
+        sort(res.begin(),res.end());
+        if (res.size()%2==0)
+            return (res[res.size()/2]+res[(res.size()/2)-1])/2.0;
+        else
+            return res[res.size()/2];
+        
+    }
+
+
+      2nd approach (merge both array in one array and return the median TC:O(N+M),SC-O(N+M)): 
+
+       double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+        vector<int> res;
+        int l1=0,l2=0;
+        while (l1<nums1.size() && l2<nums2.size())
+        {
+            if (nums1[l1]<nums2[l2])
+                res.push_back(nums1[l1++]);
+            else
+                res.push_back(nums2[l2++]);
+        }
+        for (;l1<nums1.size();l1++)
+            res.push_back(nums1[l1]);
+        for (;l2<nums2.size();l2++)
+            res.push_back(nums2[l2]);
+        
+             
+        if (res.size()%2==0)
+            return (res[res.size()/2]+res[(res.size()/2)-1])/2.0;
+        else
+            return res[res.size()/2];
+        
+    }
+
+
+      3rd approach (Dividing the two array into (n1+n2)/2 parts each time  TC-O(Min(logn1,logn2))):
+
+      double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+       if (nums2.size()<nums1.size()) return findMedianSortedArrays(nums2,nums1);
+        int n1=nums1.size();
+        int n2=nums2.size();
+        int low=0,high=n1;
+        while (low<=high)
+        {
+            int cut1=low+(high-low)/2;
+            int cut2=(n1+n2+1)/2-cut1;
+            
+            int left1=(cut1==0?INT_MIN:nums1[cut1-1]);
+            int left2=(cut2==0?INT_MIN:nums2[cut2-1]);
+            int right1=(cut1==n1?INT_MAX:nums1[cut1]);
+            int right2=(cut2==n2?INT_MAX:nums2[cut2]);
+            
+            if (left1<=right2 && left2<=right1)
+            {
+                if ((n1+n2)%2==0)
+                    return ((max(left1,left2)+min(right1,right2))/2.0);
+                else
+                    return max(left1,left2);
+            }
+            else if (left1>right2)
+                high=cut1-1;
+            else
+                low=cut1+1;
+                    
+        }
+                            
+      return 1.0;
+    }
+
+
+
+6.   K-th Element of two sorted Array
+
+ANS.   1st approach (merging both array into one and returning the k-1 index element   TC-O(N+M),SC-O(N+M)):
+
+       
+int kthElement(int nums1[], int nums2[], int n, int m, int k)
+    {
+       vector<int> res;
+        int l1=0,l2=0;
+        while (l1<n && l2<m)
+        {
+            if (nums1[l1]<nums2[l2])
+                res.push_back(nums1[l1++]);
+            else
+                res.push_back(nums2[l2++]);
+        }
+        for (;l1<n;l1++)
+            res.push_back(nums1[l1]);
+        for (;l2<m;l2++)
+            res.push_back(nums2[l2]);
+            
+        return res[k-1];
+        
+    }
+
+ 
+     2nd approach (merging both array into one and returning the k-1 index element   TC-O(N+M),SC-O(1)):
+
+int kthElement(int nums1[], int nums2[], int n, int m, int k)
+    {
+       
+        int l1=0,l2=0;
+        int count=0;
+        while (l1<n && l2<m)
+        {
+            count++;
+            if (nums1[l1]<nums2[l2])
+            {
+                
+                if (count==k)
+                  return nums1[l1];
+                  
+                l1++;
+            }
+               
+            else
+            {
+               if (count==k)
+                  return nums2[l2];
+                  
+                l2++;
+            }
+                
+            
+        }
+        for (;l1<n;l1++)
+        {
+            count++;
+            if (count==k)
+                  return nums1[l1];
+            
+        }
+        
+           
+        for (;l2<m;l2++)
+        {
+            count++;
+            if (count==k)
+                 return nums2[l2];
+            
+        }
+        
+            
+        return 0;
+        
+    }
+
+
+
+     3rd approach ():
+
+      int kthElement(int arr1[], int arr2[], int n, int m, int k)
+    {
+       
+         if(n > m) {
+            return kthElement(arr2, arr1, m, n, k); 
+        }
+        
+        int low = max(0,k-m), high = min(k,n);
+        
+        while(low <= high) {
+            int cut1 = (low + high) >> 1; 
+            int cut2 = k - cut1; 
+            int l1 = cut1 == 0 ? INT_MIN : arr1[cut1 - 1]; 
+            int l2 = cut2 == 0 ? INT_MIN : arr2[cut2 - 1];
+            int r1 = cut1 == n ? INT_MAX : arr1[cut1]; 
+            int r2 = cut2 == m ? INT_MAX : arr2[cut2]; 
+            
+            if(l1 <= r2 && l2 <= r1) {
+                return max(l1, l2);
+            }
+            else if (l1 > r2) {
+                high = cut1 - 1;
+            }
+            else {
+                low = cut1 + 1; 
+            }
+        }
+        return 1;
+        
+    }
+
+
+
+7.  Allocate Minimum Number of Pages
+
+ANS.   1st approach (using Binary search we will find the minimum no of maximum pages a student can get   TC-O(logn)):
+
+       bool isValid(int arr[],int n,int m,int max)
+    {
+        int students=1;
+        int sum=0;
+        for (int i=0;i<n;i++)
+        {
+            sum+=arr[i];
+            if (sum>max)
+            {
+                students++;
+                sum=arr[i];
+            }
+            if (students>m)
+              return false;
+        }
+        return true;
+    }
+    //Function to find minimum number of pages.
+    int findPages(int A[], int N, int M) 
+    {
+        if (n<k) return -1;
+        int start=*max_element(A,A+N); //for maximum in array
+        int end=accumulate(A,A+N,0);   //for sum in array
+        int res=-1;
+        while (start<=end)
+        {
+            int mid=start+(end-start)/2;
+            if (isValid(A,N,M,mid))
+            {
+                res=mid;
+                end=mid-1;
+            }
+            else
+               start=mid+1;
+        }
+        return res;
+    }
+
+
+8.   Aggressive Cows
+
+ANS.  1st approach (using Binary search (Variation to the Minimum number of Pages) TC-O(N*LOGN)) :
+
+       #include<bits/stdc++.h>
+using namespace std;
+
+bool ispossible(int arr[],int n,int cows,int dist)
+{
+    int last_cow_position=arr[0];
+    int count=1;
+    for (int i=0;i<n;i++)
+    {
+       if ((arr[i]-last_cow_position)>=dist)
+       {
+          count++;
+          last_cow_position=arr[i];
+       }
+       if (count==cows)
+         return true;
+    }
+    return false;
+}
+int cows(int arr[],int n,int cows)
+{
+   sort(arr,arr+n);
+   int low=arr[1]-arr[0],high=arr[n-1]-arr[0];
+   int res=-1;
+   while (low<=high)
+   {
+      int mid=low+(high-low)/2;
+      if (ispossible(arr,n,cows,mid))
+      {
+        res=mid;
+        low=mid+1;
+      }
+      else
+         high=mid-1;
+   }
+   return res;
+}
+int main()
+{
+  int t;
+  cin>>t;
+  while (t--)
+  {
+     int n,c;
+     cin>>n>>c;
+     int arr[n];
+     for (int i=0;i<n;i++)
+       cin>>arr[i];
+       
+     cout<<cows(arr,n,c)<<endl;
+  }
+}
