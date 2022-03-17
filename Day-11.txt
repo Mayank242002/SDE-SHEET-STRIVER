@@ -486,3 +486,298 @@ int main()
      cout<<cows(arr,n,c)<<endl;
   }
 }
+
+9.  Minimum Number of Days to make Bouqets
+
+ANS.   1st approach ():
+
+     bool isvalid(vector<int>& bloomDay,int n,int k,int m,int mid)
+    {
+        int boq=0,flowers=0;
+         for (int i=0;i<n;i++)
+         {
+            if (bloomDay[i]<=mid)
+                flowers++;
+             else
+                 flowers=0;
+             
+             if (flowers==k)
+             {
+                 boq++;
+                 flowers=0;
+             }     
+         }
+         if (boq>=m)
+             return true;
+         return false;
+    }
+    int minDays(vector<int>& bloomDay, int m, int k) {
+        int n=bloomDay.size();
+        if (n<k*m)  return -1;
+        int start=*min_element(bloomDay.begin(),bloomDay.end());
+        int end=*max_element(bloomDay.begin(),bloomDay.end());
+        int res=-1;
+        while (start<=end)
+        {
+            int mid=start+(end-start)/2;
+            if (isvalid(bloomDay,n,k,m,mid)==true)
+            {
+                res=mid;
+                end=mid-1;
+            }
+            else
+                start=mid+1;
+        }
+        return res;
+    }
+
+
+10.   Find the smallest Divisor that gives a threshold
+
+ANS.  1st approach ():
+
+     bool ispossible(vector<int>& nums,int n,int limit,int mid)
+    {
+        int sum=0;
+        for (int num:nums)
+            sum+=ceil(num/(double)mid);
+        
+        if (sum<=limit)
+            return true;
+        return false;
+    }
+    int smallestDivisor(vector<int>& nums, int threshold) {
+        int n=nums.size();
+        int low=1;
+        int high=*max_element(nums.begin(),nums.end());
+        int res=-1;
+        while (low<=high)
+        {
+            int mid=low+(high-low)/2;
+            if (ispossible(nums,n,threshold,mid))
+            {
+                res=mid;
+                high=mid-1;
+            }
+            else
+                low=mid+1;
+                
+        }
+        return res;
+        
+    }
+
+
+11.   Divide Chocolates
+
+ANS.  1st approach():
+
+      bool isValid(vector<int> &arr, int k,int mid)
+{
+    int n=arr.size();
+    int sum=0;
+    int count=0;
+    for (int i=0;i<n;i++)
+    {
+        sum+=arr[i];
+        if (sum>=mid)
+        {
+            count++;
+            sum=0;
+        }
+    }
+       if (count>=k+1)
+            return true;
+      return false;
+}
+
+int getMaximumSweetness(vector<int> &arr, int k)
+{
+    if (arr.size()<k+1)
+        return -1;
+    int start=1000; //minimum sweetness is the minimum element in the array
+    
+    int end=0;
+    for (int i=0;i<arr.size();i++)
+    {
+        if (arr[i]<start)
+            start=arr[i];
+        end+=arr[i];
+    }
+    end=end/(k+1);      //maximum sweetness he can get
+    int res=-1;
+        while (start<=end)
+        {
+            int mid=start+(end-start)/2;
+            if (isValid(arr,k,mid))
+            {
+                res=mid;
+                start=mid+1;
+                
+            }
+            else
+            {
+                end=mid-1;   
+            }
+               
+        }
+        return res;
+    
+}
+
+
+12.  Capacity To Ship Packages Within D Days
+
+ANS .
+ 
+     bool ispossible(vector<int>& arr, int max,int days)
+    {
+        int d=1;
+        int weightsum=0;
+        for (int i=0;i<arr.size();i++)
+        {
+            weightsum+=arr[i];
+            if (weightsum>max)
+            {
+                d++;
+                if (arr[i]<=max)
+                    weightsum=arr[i];
+                else
+                    return false;
+            }
+        }
+        if (d<=days)
+            return true;
+        return false;
+    }
+    int shipWithinDays(vector<int>& arr, int days) {
+        int start=*min_element(arr.begin(),arr.end());
+        int end=accumulate(arr.begin(),arr.end(),0);
+        int res=-1;
+        while (start<=end)
+        {
+            int mid=start+(end-start)/2;
+            if (ispossible(arr,mid,days))
+            {
+                res=mid;
+                end=mid-1;
+            }
+            else
+                start=mid+1;
+        }
+        return res;
+    }
+
+ 
+
+13.   Koko Eating Bananas
+
+ANS.   bool ispossible(vector<int>& arr,int k , int h)
+    {
+        int hours=0;
+        for (int i=0;i<arr.size();i++)
+        {
+            
+            hours+=arr[i]/k;   
+            if (arr[i]%k!=0)   //it means that some bananas are stil remaining
+                hours++;
+        }
+        if (hours<=h)
+            return true;
+        return false;
+    }
+    int minEatingSpeed(vector<int>& arr, int h) {
+        int start=1;
+        int end=*max_element(arr.begin(),arr.end());
+        int res=-1;
+        while (start<=end)
+        {
+            int mid=start+(end-start)/2;
+            if (ispossible(arr,mid,h))
+            {
+                res=mid;
+                end=mid-1;
+            }
+            else
+                start=mid+1;
+        }
+        return res;
+    }
+
+
+  14.  Minimize maximum Distance to Gas Station(leetcode premium)
+
+  ANS.  
+        bool ispossible(vector<int>& arr,double D,int k)
+        {
+    int count=0;
+    for (int i=0;i<arr.size()-1;i++)
+    {
+        count+=ceil((arr[i+1]-arr[i])/D)-1;
+    }
+    if (count>=k)
+    return true;
+    return false;
+      }
+    
+    double minmaxGasDist(vector<int> &arr, int k) {
+        int n=arr.size();
+        int start=0;
+        int end=arr[n-1]-arr[0];
+        double res=-1;
+        while (end-start>=1e-6)
+        {
+            double mid=start+((end-start)/2.0);
+            if (ispossible(arr,mid,k))
+            {
+                res=mid;
+                end=mid;
+            }
+            else
+                start=mid;
+        }
+        return res;
+    
+    }
+
+
+ 15.   Split Array Largest Sum
+
+ ANS.  1st approach ():
+
+        bool isValid(vector<int> &arr,int m,int max)
+    {
+        int subarraycount=1;
+        int sum=0;
+        for (int i=0;i<arr.size();i++)
+        {
+            sum+=arr[i];
+            if (sum>max)
+            {
+                subarraycount++;
+                sum=arr[i];
+            }
+            if (subarraycount>m)
+              return false;
+        }
+        return true;
+    }
+    int splitArray(vector<int>& nums, int m) {
+        int start=*max_element(nums.begin(),nums.end()); //for maximum in array
+        int end=accumulate(nums.begin(),nums.end(),0);   //for sum in array
+        int res=-1;
+        while (start<=end)
+        {
+            int mid=start+(end-start)/2;
+            if (isValid(nums,m,mid))
+            {
+                res=mid;
+                end=mid-1;
+            }
+            else
+               start=mid+1;
+        }
+        return res;
+    }
+
+      
