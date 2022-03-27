@@ -1,0 +1,366 @@
+﻿                                    Day-12
+
+
+1.  Implement Trie (Prefix Tree)(Insert, search, Startswith)
+
+ANS.  
+
+     struct Node {
+    Node *links[26];
+    bool flag=false;
+    
+    bool containsKey(char c)
+    {
+        return (links[c-'a']!=nullptr);
+    }
+    void put(char c,Node *node)
+    {
+        links[c-'a']=node;
+    }
+    Node *get(char c)
+    {
+        return links[c-'a'];
+    }
+    void setEnd()
+    {
+        flag=true;
+    }
+    bool isEnd()
+    {
+        return flag;
+    }
+    
+        
+};
+
+class Trie {
+
+    Node *root;
+    
+public:
+    Trie() {
+        root=new Node ();
+    }
+    
+    void insert(string word) {
+        Node *node=root;
+        for (int i=0;i<word.size();i++)
+        {
+            if (!node->containsKey(word[i]))
+                node->put(word[i],new Node());
+            
+            node =node->get(word[i]);
+        }
+        node->setEnd();
+        
+    }
+    
+    bool search(string word) {
+        Node *node=root;
+        for (int i=0;i<word.size();i++)
+        {
+            if (node->containsKey(word[i]))
+                node=node->get(word[i]);
+            else
+                return false;
+        }
+        return node->isEnd();
+    }
+    
+    bool startsWith(string prefix) {
+         Node *node=root;
+        for (int i=0;i<prefix.size();i++)
+        {
+            if (node->containsKey(prefix[i]))
+                node=node->get(prefix[i]);
+            else
+                return false;
+        }
+        return true;
+    }
+    
+};
+
+
+
+2.  Implement Trie II (Insert, countWordsEqualto,countWordsStartswith, Erase)
+
+ANS  
+  
+     struct Node {
+    Node *links[26];
+    int endsWith=0;
+    int countPrefix=0;
+    
+    bool containsKey(char c)
+    {
+        return (links[c-'a']!=nullptr);
+    }
+    void put(char c,Node *node)
+    {
+        links[c-'a']=node;
+    }
+    Node *get(char c)
+    {
+        return links[c-'a'];
+    }
+   
+    void increaseEnd()
+    {
+        endsWith++;
+    }
+    void increasePrefix()
+    {
+        countPrefix++;
+    }
+    void deleteEnd()
+    {
+        endsWith--;
+    }
+    void decreasePrefix()
+    {
+        countPrefix--;
+    }
+};
+
+class Trie{
+    Node *root;
+    public:
+
+    Trie(){
+        root=new Node();
+    }
+
+    void insert(string &word){
+        Node *node=root;
+        for (int i=0;i<word.size();i++)
+        {
+            if (!node->containsKey(word[i]))
+                node->put(word[i],new Node());
+            
+            node =node->get(word[i]);
+            node->increasePrefix();
+        }
+        node->increaseEnd();
+    }
+
+    int countWordsEqualTo(string &word){
+        Node *node=root;
+        for (int i=0;i<word.size();i++)
+        {
+            if (node->containsKey(word[i]))
+                node =node->get(word[i]);
+            else
+                return 0;
+        }
+        return node->endsWith;
+    }
+
+    int countWordsStartingWith(string &word){
+        Node *node=root;
+        for (int i=0;i<word.size();i++)
+        {
+            if (node->containsKey(word[i]))
+                node =node->get(word[i]);
+            else
+                return 0;
+        }
+        return node->countPrefix;
+    }
+
+    void erase(string &word){
+        Node *node=root;
+        for (int i=0;i<word.size();i++)
+        {
+            if (node->containsKey(word[i]))
+            {
+                node =node->get(word[i]);
+                node->decreasePrefix();
+            }
+        }
+        node->deleteEnd();
+
+    }
+};
+
+
+3.   Longest word with All Prefix
+
+ANS.   
+ 
+      struct Node {
+    Node *links[26];
+    bool flag=false;
+    
+    bool containsKey(char c)
+    {
+        return (links[c-'a']!=nullptr);
+    }
+    void put(char c,Node *node)
+    {
+        links[c-'a']=node;
+    }
+    Node *get(char c)
+    {
+        return links[c-'a'];
+    }
+    void setEnd()
+    {
+        flag=true;
+    }
+    bool isEnd()
+    {
+        return flag;
+    }
+    
+};
+class Trie
+{
+    Node *root;
+    public:
+    
+    Trie()
+    {
+        root=new Node();
+    }
+    void insert(string s)
+    {
+        Node *node=root;
+        for (int i=0;i<s.size();i++)
+        {
+            if (!node->containsKey(s[i]))
+                node->put(s[i],new Node());
+            
+            node=node->get(s[i]);
+        }
+        node->setEnd();
+    }
+    bool CheckifPrefix(string s)
+    {
+        Node *node=root;
+        for (int i=0;i<s.size();i++)
+        {
+            if (node->containsKey(s[i]))
+            {
+                node=node->get(s[i]);
+                if (!node->isEnd())
+                    return false;
+            }  
+            else
+                return false;
+        }
+        return true;
+    }
+};
+string completeString(int n, vector<string> &a){
+    Trie t1;
+    for (int i=0;i<a.size();i++)
+        t1.insert(a[i]);
+    
+    string longestString="";
+    for (int i=0;i<a.size();i++)
+    {
+        if (t1.CheckifPrefix(a[i]))
+        {
+            if (a[i].size()>longestString.size())
+                longestString=a[i];
+            else if (a[i].size()==longestString.size() && a[i]<longestString)
+                longestString=a[i];
+        }
+    }
+    
+    if (longestString=="") return "None";
+    return longestString;
+}
+
+
+
+4.  Number of Distinct Substring in a string
+
+ANS.   1st approach (put all the substring in a set and returns its count):
+
+       2nd approach (using Trie):
+
+        struct Node 
+{
+    Node *links[26];
+    
+    bool containsKey(char c)
+    {
+        return (links[c-'a']!=nullptr);
+    }
+    void put(char c,Node *node)
+    {
+        links[c-'a']=node;
+    }
+    Node *get(char c)
+    {
+        return links[c-'a'];
+    }
+};
+
+class Trie
+{
+    Node *root;
+    
+    public:
+    
+     Trie()
+     {
+         root=new Node();
+     }
+    int insert(string &s)
+    {
+        
+        int count=0;
+        for (int i=0;i<s.size();i++)
+        {
+            Node *node=root;
+            for (int j=i;j<s.size();j++)
+            {
+                if (!node->containsKey(s[j]))
+                {
+                    node->put(s[j],new Node());
+                    count++;
+                }
+                node=node->get(s[j]);
+            }
+        }
+        return count+1;
+        
+    }
+};
+
+int countDistinctSubstrings(string &s)
+{
+  Trie t1;
+  return t1.insert(s);
+}
+
+
+
+5.  Maximum XOR of Two Numbers in an Array
+
+ANS.  1st approach (Checking all the combinations using two loops TC-O(N2)):
+
+      
+int findMaximumXOR(vector<int>& nums) {
+        int xori=0;
+        int n=nums.size();
+        for (int i=0;i<n;i++)
+        {
+            for (int j=i+1;j<n;j++)
+            {
+                xori=max(xori,nums[i]^nums[j]);
+            }
+        }
+        return xori;
+    }
+
+
+     2nd approach ():
+         
+
+     
+
+          
