@@ -1,0 +1,673 @@
+﻿                                      Day-14
+
+
+
+1. Nearest Smaller Element
+
+ANS.  1st approach (using stack(variation of Next greater element)) :
+
+    vector<int> Solution::prevSmaller(vector<int> &arr) {
+    stack<int> st;
+    vector<int> res;
+    res.push_back(-1);
+    st.push(arr[0]);
+    for (int i=1;i<arr.size();i++)
+    {
+        while (st.size()>0 && st.top()>=arr[i])
+           st.pop();
+        if (st.empty())
+           res.push_back(-1);
+        else 
+           res.push_back(st.top());
+        st.push(arr[i]);
+    }
+    return res;
+}
+
+
+
+2.  LRU Cache
+
+ANS.   1st approach ():
+
+       class LRUCache {
+public:
+    class node {
+        public:
+            int key;
+            int val;
+            node* next;
+            node* prev;
+        node(int _key, int _val) {
+            key = _key;
+            val = _val; 
+        }
+    };
+    
+    node* head = new node(-1,-1);
+    node* tail = new node(-1,-1);
+    
+    int cap;
+    unordered_map<int, node*>m;
+    LRUCache(int capacity) {
+        cap=capacity;
+        head->next = tail;
+        tail->prev = head;
+    }
+    void addnode(node* newnode) {
+        node* temp = head->next;
+        newnode->next = temp;
+        newnode->prev = head;
+        head->next = newnode;
+        temp->prev = newnode;
+    }
+    
+    void deletenode(node* delnode) {
+        node* delprev = delnode->prev;
+        node* delnext = delnode->next;
+        delprev->next = delnext;
+        delnext->prev = delprev;
+    }
+    int get(int key) {
+        if (m.find(key) != m.end()) {
+            node* resnode = m[key];
+            int res = resnode->val;
+            m.erase(key);
+            deletenode(resnode);
+            addnode(resnode);
+            m[key] = head->next;
+            return res; 
+        }
+    
+        return -1;
+    }
+    
+    void put(int key, int value) {
+        if(m.find(key) != m.end()) {
+            node* existingnode = m[key];
+            m.erase(key);
+            deletenode(existingnode);
+        }
+        if(m.size() == cap) {
+          m.erase(tail->prev->key);
+          deletenode(tail->prev);
+        }
+        
+        addnode(new node(key, value));
+        m[key] = head->next; 
+    }
+    
+};
+
+
+
+3.   LFU Cache
+
+ANS.   1st approach ():
+
+        struct Node {
+    int key, value, cnt;
+    Node *next; 
+    Node *prev;
+    Node(int _key, int _value) {
+        key = _key;
+        value = _value; 
+        cnt = 1; 
+    }
+}; 
+struct List {
+    int size; 
+    Node *head; 
+    Node *tail; 
+    List() {
+        head = new Node(0, 0); 
+        tail = new Node(0,0); 
+        head->next = tail;
+        tail->prev = head; 
+        size = 0;
+    }
+    
+    void addFront(Node *node) {
+        Node* temp = head->next;
+        node->next = temp;
+        node->prev = head;
+        head->next = node;
+        temp->prev = node;
+        size++; 
+    }
+    
+    void removeNode(Node* delnode) {
+        Node* delprev = delnode->prev;
+        Node* delnext = delnode->next;
+        delprev->next = delnext;
+        delnext->prev = delprev;
+        size--; 
+    }
+    
+    
+    
+};
+
+class LFUCache {
+    map<int, Node*> keyNode; 
+    map<int, List*> freqListMap; 
+    int maxSizeCache;
+    int minFreq; 
+    int curSize; 
+public:
+    LFUCache(int capacity) {
+        maxSizeCache = capacity; 
+        minFreq = 0;
+        curSize = 0; 
+    }
+    void updateFreqListMap(Node *node) {
+        keyNode.erase(node->key); 
+        freqListMap[node->cnt]->removeNode(node); 
+        if(node->cnt == minFreq && freqListMap[node->cnt]->size == 0) {
+            minFreq++; 
+        }
+        
+        List* nextHigherFreqList = new List();
+        if(freqListMap.find(node->cnt + 1) != freqListMap.end()) {
+            nextHigherFreqList = freqListMap[node->cnt + 1];
+        } 
+        node->cnt += 1; 
+        nextHigherFreqList->addFront(node); 
+        freqListMap[node->cnt] = nextHigherFreqList; 
+        keyNode[node->key] = node;
+    }
+    
+    int get(int key) {
+        if(keyNode.find(key) != keyNode.end()) {
+            Node* node = keyNode[key]; 
+            int val = node->value; 
+            updateFreqListMap(node); 
+            return val; 
+        }
+        return -1; 
+    }
+    
+    void put(int key, int value) {
+        if (maxSizeCache == 0) {
+            return;
+        }
+        if(keyNode.find(key) != keyNode.end()) {
+            Node* node = keyNode[key]; 
+            node->value = value; 
+            updateFreqListMap(node); 
+        }
+        else {
+            if(curSize == maxSizeCache) {
+                List* list = freqListMap[minFreq]; 
+                keyNode.erase(list->tail->prev->key); 
+                freqListMap[minFreq]->removeNode(list->tail->prev);
+                curSize--; 
+            }
+            curSize++; 
+            // new value has to be added who is not there previously 
+            minFreq = 1; 
+            List* listFreq = new List(); 
+            if(freqListMap.find(minFreq) != freqListMap.end()) {
+                listFreq = freqListMap[minFreq]; 
+            }
+            Node* node = new Node(key, value); 
+            listFreq->addFront(node);
+            keyNode[key] = node; 
+            freqListMap[minFreq] = listFreq; 
+        }
+    }
+};
+
+        
+
+
+4.   Largest Rectangle in Histogram
+
+ANS.   1st approach (A Building can be expanded to other Buildings if and only if (Other Buildings Height’s>=Current Building Height’s). So we will calculate the NSL(Nearest smaller to the left) and NRL(Nearest smaller to the right), and the Buildings between NSL[i] and NSR[i] are those Buildings which are Greater than or equal to current Buldings):
+
+       
+vector<int> NSL(vector<int>& arr)
+    {
+        int n=arr.size();
+        vector<int> ans;
+        stack<int> s;
+        ans.push_back(-1);
+        s.push(0);
+        for (int i=1;i<n;i++)
+        {
+            while (s.size()>0 && arr[s.top()]>=arr[i])
+                s.pop();
+            if (s.empty())
+                ans.push_back(-1);
+            else
+                ans.push_back(s.top());
+                
+            s.push(i);
+        }
+        return ans;
+        
+    }
+    vector<int> NSR(vector<int>& arr)
+    {
+        int n=arr.size();
+        vector<int> ans;
+        stack<int> s;
+        ans.push_back(n);
+        s.push(n-1);
+        for (int i=n-2;i>=0;i--)
+        {
+            while (s.size()>0 && arr[s.top()]>=arr[i])
+                s.pop();
+            if (s.empty())
+                ans.push_back(n);
+            else
+                ans.push_back(s.top());
+                
+            s.push(i);
+        }
+        reverse(ans.begin(),ans.end());
+        return ans;
+        
+    }
+    int largestRectangleArea(vector<int>& heights) {
+        int n=heights.size();
+        vector<int> water(n,0);
+        vector<int> nsl=NSL(heights);
+        vector<int> nsr=NSR(heights);
+        for (int i=0;i<n;i++)
+            water[i]+=(nsr[i]-nsl[i]-1)*heights[i];
+        
+        int maxi=INT_MIN;
+        for (int num:water)
+        {
+            if (num>maxi)
+                maxi=num;
+        }
+        return maxi;
+        
+    }
+
+
+
+5.   Sliding Window Maximum
+
+ANS.  1st approach (BRUTE FORCE):
+
+      vector<int> maxSlidingWindow(vector<int>& nums, int k) {
+        if (k==1) return nums;
+        vector<int>v;
+        int mx=nums[0];
+        for (int i=1;i<k;i++)
+            mx=max(mx,nums[i]);
+        v.push_back(mx);
+        for (int i=k;i<nums.size();i++)
+        {
+            int new_mx=INT_MIN;
+            mx=max(mx,nums[i]);
+            if (mx==nums[i-k])
+            {
+                for (int j=i;j>=i-k+1;j--)
+                new_mx=max(new_mx,nums[j]);
+                mx=new_mx;
+             }
+                
+            v.push_back(mx);
+        }
+        return v;
+    }
+       
+
+ 2nd approach (Sliding Window and deque):
+
+   vector<int> maxSlidingWindow(vector<int>& nums, int k) {
+        deque<int> dq;
+        vector<int> ans;
+        for (int i=0;i<nums.size();i++)
+        {
+            if (!dq.empty() && dq.front()==i-k)  //removing out of bound index
+                dq.pop_front();
+            while (dq.size()>0 && nums[dq.back()]<nums[i])  //removing the smaller items
+                dq.pop_back();
+            
+            dq.push_back(i);  //pushing the ith index
+            
+            if (i>=k-1) 
+                ans.push_back(nums[dq.front()]);
+            
+        }
+        return ans;
+    }
+
+
+
+6.   Implement Min Stack
+
+ANS.  1st approach (using 2 stacks):
+
+      class MinStack {
+public:
+    stack<int> s;
+        stack<int> ss;
+    MinStack() {
+        
+        
+    }
+    
+    void push(int val) {
+        s.push(val);
+        if (ss.empty() || ss.top()>=val)
+              ss.push(val);        
+    }
+    
+    void pop() {
+        int ans=s.top();
+            s.pop();
+        if (ans==ss.top())
+            ss.pop();
+    }
+    
+    int top() {
+        return s.top();
+    }
+    
+    int getMin() {
+        if (ss.empty())
+             return -1;
+        else
+            return ss.top();
+    }
+};
+
+
+
+2nd approach (Using single stack):
+
+   class MinStack {
+public:
+    stack<long> st;
+    long min;
+    MinStack() {
+        
+    }
+    
+    void push(long val) {
+        if (st.empty())
+        {
+            st.push(val);
+            min=val;
+        }
+        else{
+            if (val>=min)
+                st.push(val);
+            else
+            {
+                st.push(2*val-min);
+                min=val;
+            }
+                
+        }
+    }
+    
+    void pop() {
+        if (st.empty())
+            ;
+        else
+        {
+            if (st.top()>=min)
+                st.pop();
+            else
+            {
+                min=2*min-st.top();
+                st.pop();
+            }
+        }
+        
+    }
+    
+    int top() {
+        if (st.empty())
+            return -1;
+        else
+        {
+            if (st.top()>=min)
+                return st.top();
+            else
+                return min;
+        }
+        
+    }
+    
+    int getMin() {
+        if (st.empty())
+            return -1;
+        else
+        {
+            return min;
+        }
+        
+    }
+};
+
+
+
+7.  Rotten Oranges()
+
+ANS.  1st approach (using queue):
+
+      int orangesRotting(vector<vector<int>>& grid) {
+        int m=grid.size();
+        int n=grid[0].size();
+        if (m==0 && n==0) return -1;
+        int days=0,total=0,count=0;
+        queue<pair<int,int>> rotten;
+        for (int i=0;i<m;i++)
+        {
+            for (int j=0;j<n;j++)
+            {
+                if (grid[i][j]==2)
+                    rotten.push({i,j});
+                if (grid[i][j]!=0)
+                    total++;
+            }
+        }
+        int dx[4]={0,1,0,-1};  //top -> right -> bottom -> left
+        int dy[4]={-1,0,1,0};   //top -> right -> bottom -> left
+        
+        while (!rotten.empty())
+        {
+            int k=rotten.size();
+            count+=k;
+            while (k--)
+            {
+                int x=rotten.front().first,y=rotten.front().second;
+                rotten.pop();
+                for (int i=0;i<4;i++)
+                {
+                    int  nx=x+dx[i],ny=y+dy[i];
+                    if (nx<0 || ny<0 || nx>=m || ny>=n || grid[nx][ny]!=1) continue;
+                    grid[nx][ny]=2;
+                    rotten.push({nx,ny});
+                }
+            }
+            if (rotten.size()>0) days++;
+        }
+        return (total == count? days:-1) ;
+    }
+
+ 
+
+
+8.  Online Stock Span
+
+ANS.   1st approach (span of ith index = i-NGL of that index):
+
+       vector <int> NGL(int price[],int n)
+    {
+        stack<int> s;
+        vector <int> res;
+        res.push_back(-1);
+        s.push(0);
+        for (int i=1;i<n;i++)
+        {
+            while (s.size()>0 && price[s.top()]<=price[i])
+                s.pop();
+            if (s.empty())
+               res.push_back(-1);
+            else
+               res.push_back(s.top());
+               
+            s.push(i);
+        }
+        return res;
+        
+    }
+    //Function to calculate the span of stockâ€™s price for all n days.
+    vector <int> calculateSpan(int price[], int n)
+    {
+       vector <int> v;
+       v=NGL(price,n);
+       for (int i=0;i<n;i++)
+          v[i]=i-v[i];
+    
+    return v;
+    }
+
+
+9.   Find the maximum of minimums of every window size
+
+ANS.  1st approach (Brute Force: Find all the minimums of all window size and the find maximum of them):
+
+      2nd approach (using concept of NSL and NSR):
+
+       vector<int> NSL_(int arr[],int n) {
+        
+    stack<int> st;
+    vector<int> res;
+    res.push_back(-1);
+    st.push(0);
+    for (int i=1;i<n;i++)
+    {
+        while (st.size()>0 && arr[st.top()]>=arr[i])
+           st.pop();
+        if (st.empty())
+           res.push_back(-1);
+        else 
+           res.push_back(st.top());
+        st.push(i);
+    }
+    return res;
+}
+
+vector<int> NSR_(int arr[],int n)
+    {
+     
+        vector<int> ans;
+        stack<int> s;
+        ans.push_back(n);
+        s.push(n-1);
+        for (int i=n-2;i>=0;i--)
+        {
+            while (s.size()>0 && arr[s.top()]>=arr[i])
+                s.pop();
+            if (s.empty())
+                ans.push_back(n);
+            else
+                ans.push_back(s.top());
+                
+            s.push(i);
+        }
+        reverse(ans.begin(),ans.end());
+        return ans;
+        
+    }
+    //Function to find maximum of minimums of every window size.
+    vector <int> maxOfMin(int arr[], int n)
+    {
+        vector <int> NSL=NSL_(arr,n);
+        vector <int> NSR=NSR_(arr,n);
+        vector <int> res(n+1,0);
+        for (int i=0;i<n;i++)
+        {
+            int len=NSR[i]-NSL[i]-1;
+            res[len]=max(arr[i],res[len]);
+        }
+        for (int i=n-1;i>=1;i--)
+            res[i]=max(res[i],res[i+1]);
+            
+        res.erase(res.begin());
+        return res;
+        
+    }
+
+ 
+
+
+
+10.   The Celebrity Problem
+
+ANS.  1st approach():  
+
+       int celebrity(vector<vector<int> >& M, int n) 
+    {
+        int i=0,j=0,possibleLocation=-1,count=0;
+        for(i=0;i<n;i++)
+        {
+            for(j=0;j<n;j++)
+            {
+                if(M[i][j] == 0)
+                {
+                    continue;
+                }
+                else
+                {//if 1 is encountered jth column
+                    break;
+                }
+            }
+            if(j==n)  //row with all zeroes (means it is a celebrity)
+            {//if j has traversed completely
+                possibleLocation=i;
+                count++;
+            }
+        }
+        if(count>1)   //there cannot be more than 1 celebrity
+        {
+            return -1;
+        }
+        return possibleLocation;
+    }
+
+
+
+    2nd approach ():
+
+       int celebrity(vector<vector<int> >& M, int n) 
+    {
+        stack<int> st;
+        for (int i=0;i<n;i++)
+           st.push(i);
+           
+         while (st.size()>1)
+         {
+             int i=st.top(); st.pop();
+             int j=st.top(); st.pop();
+             
+             if (M[i][j]==1)  // i knows j
+                 st.push(j);
+             else             // i does not know j
+                 st.push(i);
+         }
+         
+         int x=st.top();
+         for (int i=0;i<n;i++)
+         {
+             if (i!=x)
+             {
+                 if (M[x][i]==1 || M[i][x]==0)
+                    return -1;
+             }
+            
+         }
+         return x;
+    }
+
+
