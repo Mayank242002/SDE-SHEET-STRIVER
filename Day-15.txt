@@ -1,0 +1,277 @@
+﻿                                Day-15
+
+
+
+
+1.  Reverse words in string
+
+ANS.   1st approach ():
+
+         string reverseWords(string s) {
+        int n=s.size();
+        string res;
+        int i=0,j=0;
+        while (i<n)
+        {
+           while (i<n && s[i]==' ')
+                 i++;
+            if (i>=n) break;
+            j=i+1;
+           while (j<n && s[j]!=' ')
+               j++;
+            string temp=s.substr(i,j-i);
+            if (res.size()==0)
+                res=temp;
+            else
+                res=temp+" "+res;
+            i=j+1;
+        }
+        return res;
+    }
+
+    2nd approach (First reverse the whole string and then revese the each word):
+
+      string reverseWords(string s) {
+        int n=s.size();
+        reverse(s.begin(),s.end());
+        string res="";
+        int i=0,j=0;
+        while (i<n)
+        {
+           while (i<n && s[i]==' ')
+                 i++;
+            if (i>=n) break;
+            j=i+1;
+           while (j<n && s[j]!=' ')
+               j++;
+            string temp=s.substr(i,j-i);
+            reverse(temp.begin(),temp.end());
+            if (res.size()==0)
+                res=temp;
+            else
+                res+=" "+temp;
+            i=j+1;
+        }
+        return res;  
+    }
+
+
+
+2.   Longest Palindromic Substring
+
+ANS.   1st approach (check all possible combinations):
+
+        bool ispalin(string s)
+    {
+        for (int i=0;i<s.size()/2;i++)
+        {
+            if (s[i]!=s[s.size()-i-1])
+              return false;
+        }
+        return true;
+    }
+   
+    
+    string longestPalindrome(string s) {
+        int maxi=1;
+        string res=s.substr(0,1);
+        int n=s.size();
+        for (int i=0;i<n;i++)
+        {
+            for (int j=i+1;j<n;j++)
+            {
+                string temp=s.substr(i,j-i+1);
+                if (ispalin(temp))
+                {
+                    if (temp.size()>maxi)
+                    {
+                        res=temp;
+                        maxi=temp.size();
+                    }
+                }
+                   
+            }
+        }
+        return res;
+        
+    }
+
+
+     2nd approach (using Dynamic Programming):
+
+
+
+3.  Roman to Integer
+
+ANS.   1st approach ():
+
+    int romanToInt(string s) {
+        
+        map<char,int> m;
+        m['I']=1;
+        m['V']=5;
+        m['X']=10;
+        m['L']=50;
+        m['C']=100;
+        m['D']=500;
+        m['M']=1000;
+        
+        
+        int n=s.size();
+        int sum=m[s[n-1]];
+        
+        
+        
+        for (int i=n-1;i>0;i--)
+        {
+            if (m[s[i-1]]<m[s[i]])
+                sum=sum-m[s[i-1]];
+            else
+                sum=sum+m[s[i-1]];
+        }
+        
+        return sum;
+        
+    }
+
+
+4.  Integer to Roman
+
+ANS.  1st appraoch ():
+
+       string intToRoman(int num) {
+        string roman[]={"M","CM","D","CD","C","XC","L","XL","X","IX","V","IV","I"};
+        int ans[]={1000,900,500,400,100,90,50,40,10,9,5,4,1};
+        string res="";
+        for (int i=0;num!=0;i++)
+        {
+            
+        while (num>=ans[i])
+        {
+            num-=ans[i];
+            res+=roman[i];
+        }
+          
+        }
+         return res;
+    }
+
+
+5.   String to Integer (atoi)
+
+ANS.  1st approach (giving integer overflow error)  :
+
+       int myAtoi(string s) {
+        int i=0,j=0,sign=1;
+        int res=0;
+        int n=s.size();
+        while (i<n && s[i]==' ')
+            i++;
+        if (i>=n) return res;
+        
+        if (s[i]=='-') {
+            sign*=-1;
+            i++;
+        }
+        else if (s[i]=='+') i++;
+        
+        j=i+1;
+        
+        while (j<n && s[j]>='0' && s[j]<='9')
+             j++;
+        
+        if (s[i]>='0' && s[i]<='9')
+        {
+             int len=j-i-1;
+             int mul=pow(10,len);
+             while (mul)
+             {
+                res+=(s[i]-48)*mul;
+                i++;
+                mul/=10;
+             }
+            return sign*res;
+        }
+        return 0; 
+    }
+
+
+2nd approach ():
+
+int myAtoi(string s) {
+        long result = 0;
+        int indicator = 1;
+
+        int i = 0;
+        i = s.find_first_not_of(' ');
+
+        if (i >= 0) // i can be -1, if the string is empty
+        {
+            if (s[i] == '-' || s[i] == '+')
+            {
+                indicator = (s[i++] == '-') ? -1 : 1;
+            }
+
+            while (i<s.size() && s[i]>='0' && s[i]<='9')
+            {
+                result = result * 10 + (s[i++] - '0');
+
+                //corner cases
+                if (result * indicator >= INT_MAX) return INT_MAX;
+                if (result * indicator <= INT_MIN) return INT_MIN;
+            }
+        }
+        return result * indicator;
+
+
+
+6.   Longest Common Prefix
+
+ANS.  1st approach ():
+
+       int c=0,i=0;
+        string res;
+        for (char x:strs[0])
+        {
+            for (i=0;i<strs.size();i++)
+            {
+                if (strs[i][c]!=x)
+                {
+                    if (res.empty())
+                        return "";
+                    else
+                        return res;
+                }
+            }
+            c++;
+            res=res+x;
+        }
+        return res;
+
+
+7.    Repeated String Match (Rabin karp)
+
+ANS.   1st approach (keep adding a to str untill the size becomes equal or greater):
+
+      int repeatedStringMatch(string a, string b) {
+    int count = 1;
+    string str  = a;
+    while( str.size( ) < b.size( ))
+    {
+        str += a;
+        count++;
+    }
+    
+    if(str.find(b) != string:: npos)
+        return count;
+    
+    if((str+a).find(b) != string :: npos)
+        return count+1;
+    return -1;
+    
+}
+
+
+  2nd approach (Rabin Karp algo):
+
+     
