@@ -1,0 +1,174 @@
+﻿                                Day-16
+
+
+
+1.  Implement strStr() (Z-Function)
+
+ANS.   1st approach ():
+
+        int strStr(string haystack, string needle) {
+            int n1=haystack.size();
+            int n2=needle.size();
+        
+        if (n2==0)
+            return 0;
+        
+        int c=0;
+        int firstindex;
+        for (int i=0;i<n1;)
+        {
+            if (haystack[i]!=needle[c])
+            {
+                i=i-c;
+                c=0;
+                firstindex=0;          //if value not matches then make the needle to traverse it again
+                i++;
+            }
+                
+            else{
+                if (c==0)
+                    firstindex=i;  //stores the first index when the 1st value matches
+                i++;   //increment both values
+                c++;
+                if (c==n2)
+                    break;
+            }
+            if (i==n1)
+                break;
+        }
+        
+        if (c==n2)
+            return firstindex;
+        else
+            return -1;
+        
+        
+    }
+
+
+
+    2nd approach (using z-function):
+
+
+
+2.  Minimum Characters required to make a String Palindromic
+
+ANS.   1st approach (try to check whether string is palindrome or not in each iteration and if not, then delete the last charcter and counts the deleted element):
+
+
+
+
+ bool ispalin(string s)
+{
+    int l = s.length();
+    int j;
+     
+    for(int i = 0, j = l - 1; i <= j; i++, j--)
+    {
+        if(s[i] != s[j])
+            return false;
+    }
+    return true;
+}
+
+int Solution::solve(string s) {
+    int cnt = 0;
+    int flag = 0;
+     
+    while(s.length()>0)
+    {
+        if(ispalin(s))
+        {
+            flag = 1;
+             break;
+        }
+        else
+        {
+        cnt++;
+        s.erase(s.begin() + s.length() - 1);
+        }
+    }
+    if (flag)
+      return cnt;
+}
+
+
+    2nd approach ():
+
+
+3.  Valid Anagram
+
+ANS.   1st approach ():
+
+    bool isAnagram(string s, string t) {
+        int temp[26]={0};
+        for (char c:s)
+            temp[c-'a']++;
+        for (char c:t)
+           temp[c-'a']--;
+        for (int i=0;i<26;i++)
+            if (temp[i]!=0)
+                return false;
+        
+        return true;
+    }
+
+
+4.    Group Anagrams
+
+ANS.   1st approach ():
+
+        vector<vector<string>> groupAnagrams(vector<string>& strs) {
+           vector<vector<string>> res;
+           unordered_map<string,vector<string>> mp;
+           for (string s:strs)
+           {
+               string temp=s;
+               sort(s.begin(),s.end());
+               mp[s].push_back(temp);
+           }
+           for (auto it=mp.begin();it!=mp.end();it++)
+               res.push_back(it->second);
+        
+           return res;
+    }
+
+5.  Count and Say
+
+ANS.   1st approach ():
+
+
+
+6.   Compare version Numbers
+
+ANS.   1st approach ():
+
+          int compareVersion(string version1, string version2) {
+      int n1=version1.size();
+      int n2=version2.size();
+      int i=0,j=0;
+       
+        while (i<n1 || j<n2)
+        {
+             int v1=0,v2=0;
+            while (i<n1 && version1[i]!='.')
+            {
+                v1=v1*10+(version1[i]-'0');
+                i++;
+            }
+            while (j<n2 && version2[j]!='.')
+            {
+                v2=v2*10+(version2[j]-'0');
+                j++;
+            }
+            
+            if (v1>v2)
+                return 1;
+            else if (v1<v2)
+                return -1;
+            i++;
+            j++;  //for skipping .
+        }
+        return 0;
+        
+    }
