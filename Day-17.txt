@@ -1,0 +1,65 @@
+﻿                             Day-17
+
+
+
+1.  Binary Tree Inorder Traversal
+
+ANS.   1st approach ():
+       
+       vector<int> v;
+       vector<int> inorderTraversal(TreeNode* root) {
+        if (root!=nullptr)
+        {
+           inorderTraversal(root->left);
+            v.push_back(root->val);
+
+            inorderTraversal(root->right);
+        }
+        return v;
+}
+
+
+2.  Binary Tree Preorder Traversal
+
+ANS.   1st approach ():
+
+       vector<int> v;
+    vector<int> preorderTraversal(TreeNode* root) {
+        if (root!=nullptr)
+        {
+            v.push_back(root->val);
+            preorderTraversal(root->left);
+            preorderTraversal(root->right);
+        }
+        return v;
+    }
+
+
+3.   Binary Tree Postorder Traversal
+
+ANS.   1st apprioch ():
+
+       vector<int> v;
+       vector<int> postorderTraversal(TreeNode* root) {
+        if (root!=nullptr)
+        {
+            postorderTraversal(root->left);
+            postorderTraversal(root->right);
+            v.push_back(root->val);
+        }
+        return v;
+    }
+
+
+4.    Morris Inorder Traversal
+
+ANS.   1st approach ():
+
+
+5.    Morris Preorder Traversal
+
+ANS.   1st approach ():
+
+6.    Left view of Binary Tree
+
+ANS.    1st approach ():
