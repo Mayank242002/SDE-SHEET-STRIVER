@@ -1,0 +1,102 @@
+﻿                               Day-21
+
+
+
+
+3.   Find K-th smallest element in BST
+
+ANS.   1st approach ():
+
+        int helper(TreeNode *root,int &s,int &k,int &res)
+    {
+        if (root==nullptr) return 0;
+        else
+        {
+            
+            helper(root->left,s,k,res);
+            s++;
+            if (s==k)
+            {
+                res=root->val;
+                return 0;
+            }
+            helper(root->right,s,k,res);
+            return 0;
+        }
+    }
+    int kthSmallest(TreeNode* root, int k) {
+        int res=0;
+        int s=0;
+        helper(root,s,k,res);
+        return res;
+    }
+
+
+
+4.    Find K-th Largest element in BST
+
+ANS.    1st approach ():
+
+        int helper(Node *root,int &s,int &k,int &res)
+    {
+        if (root==nullptr) return 0;
+        else
+        {
+            helper(root->right,s,k,res);
+            s++;
+            if (s==k)
+            {
+                res=root->data;
+                return 0;
+            }
+            helper(root->left,s,k,res);
+            return 0;
+        }
+    }
+    int kthLargest(Node *root, int k)
+    {
+       int res=0;
+       int s=0;
+       helper(root,s,k,res);
+       return res;
+    }
+
+6.   Binary Search Tree Iterator
+
+ANS.   1st approach (using O(N) Space):
+
+class BSTIterator {
+public:
+    vector<int> temp;
+    int n;
+    int i;
+    void inorder(TreeNode *root,vector<int> &temp)
+    {
+        if (root==nullptr) return;
+        inorder(root->left,temp);
+        temp.push_back(root->val);
+        inorder(root->right,temp);
+    }
+    BSTIterator(TreeNode* root) {
+        inorder(root,temp);
+        n=temp.size();  
+        i=0;
+    }
+    
+    int next() {
+        return temp[i++];
+    }
+    
+    bool hasNext() {
+        if (i<n) return true;
+        else return false;
+    }
+};
+
+
+     2nd approach ():
+
+
+
+
+

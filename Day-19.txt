@@ -1,0 +1,49 @@
+﻿                                Day-19
+
+
+
+1.    Binary Tree Maximum Path Sum
+
+ANS.   1st approach ():
+
+        int maxi=INT_MIN;
+    int path_sum(TreeNode *root)
+    {
+        if (root==nullptr)
+            return 0;
+        else
+        {
+            int x=path_sum(root->left);  if (x<0) x=0;
+            int y=path_sum(root->right);  if (y<0) y=0;
+            maxi=max(maxi,x+y+root->val);
+            return max(x,y)+root->val;
+        }
+    }
+    int maxPathSum(TreeNode* root) {
+        if (root->left==nullptr && root->right==nullptr )
+            return root->val;
+        
+        path_sum(root);
+        return maxi;
+    }
+
+
+4.  Symmetric Binary Tree
+
+ANS.   1st approach ():
+
+        bool check(TreeNode *p,TreeNode *q)
+    {
+       if (p==nullptr && q==nullptr) return true;
+       if (p!=nullptr && q==nullptr) return false;
+       if (p==nullptr && q!=nullptr) return false;
+       if (p->val!=q->val) return false;
+       
+       return check(p->left,q->right) && check(p->right,q->left);
+    }
+    bool isSymmetric(TreeNode* root) {
+    
+    return check(root->left,root->right);
+    }
+
+     

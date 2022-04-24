@@ -60,6 +60,235 @@ ANS.   1st approach ():
 
 ANS.   1st approach ():
 
-6.    Left view of Binary Tree
+6.    Right view of Binary Tree
 
-ANS.    1st approach ():
+ANS.    1st approach (Last Node in each Level):
+
+vector<int> rightSideView(TreeNode* root) {
+        if (root==nullptr) return {};
+        vector<int> ans;
+        map<int,int> mpp;
+        queue<pair<TreeNode*,int>> q;
+        q.push({root,0});
+        while (!q.empty())
+        {
+            auto it=q.front();
+            q.pop();
+            TreeNode *node=it.first;
+            int level=it.second;
+            mpp[level]=node->val;
+            
+            if (node->left) q.push({node->left,level+1});
+            
+            if (node->right) q.push({node->right,level+1});
+            
+        }
+        for (auto it:mpp)
+          ans.push_back(it.second);
+          
+         return ans;
+    }
+
+
+   2nd approach (using Reverse inorder):
+
+     void reverse_inorder(TreeNode *root,vector<int> &ans,int level)
+    {
+        if (root==nullptr)
+            return;
+        
+        if (level==ans.size())
+                ans.push_back(root->val);       
+        reverse_inorder(root->right,ans,level+1);
+        reverse_inorder(root->left,ans,level+1);
+    }
+    vector<int> rightSideView(TreeNode* root) {
+        if (root==nullptr) return {};
+        vector<int> ans;
+        reverse_inorder(root,ans,0 );
+         return ans;
+        
+    }
+
+
+6.1  Left view of Binary Tree
+
+ANS.   1st approach (First Node in each Level):
+
+       vector<int> leftView(Node *root)
+{
+        vector<int> ans;
+        if (root==nullptr) return {};
+        map<int,int> mpp;
+        queue<pair<Node*,int>> q;
+        q.push({root,0});
+        while (!q.empty())
+        {
+            auto it=q.front();
+            q.pop();
+            Node *node=it.first;
+            int level=it.second;
+             if (mpp.find(level)==mpp.end()) mpp[level]=node->data;   
+            
+            if (node->left) q.push({node->left,level+1});
+            
+            if (node->right) q.push({node->right,level+1});
+            
+        }
+        for (auto it:mpp)
+          ans.push_back(it.second);
+          
+         return ans;
+}
+
+
+2nd approach (using Inorder Traversal):
+
+      void inorder(Node *root,vector<int> &ans,int level)
+    {
+        if (root==nullptr)
+            return;
+        
+        if (level==ans.size())
+                ans.push_back(root->data);       
+        reverse_inorder(root->left,ans,level+1);
+        reverse_inorder(root->right,ans,level+1);
+    }
+//Function to return a list containing elements of left view of the binary tree.
+vector<int> leftView(Node *root)
+{
+        vector<int> ans;
+        if (root==nullptr) return {};
+         inorder(root,ans,0 );
+          
+         return ans;
+}
+
+
+
+
+7.  Bottom View of Binary Tree
+
+ANS.   1st approach (Last Node in each vertical column):
+
+       vector <int> bottomView(Node *root) {
+        vector<int> ans;
+        if (root==nullptr) return {};
+        map<int,int> mpp;
+        queue<pair<Node*,int>> q;
+        q.push({root,0});
+        while (!q.empty())
+        {
+            auto it=q.front();
+            q.pop();
+            Node *node=it.first;
+            int vertical=it.second;
+             mpp[vertical]=node->data;   //update the node for vertical as we move in each level 
+            
+            if (node->left) q.push({node->left,vertical-1});
+            
+            if (node->right) q.push({node->right,vertical+1});
+            
+        }
+        for (auto it:mpp)
+          ans.push_back(it.second);
+          
+         return ans;
+    }
+
+
+8.   Top View of Binary Tree
+
+ANS.   1st approach (assigned row and column number to each node and get back the first value from each Vertical Column):
+
+        void inorder(Node *root,int v,int l,map<int,map<int,multiset<int>>> &map)
+    {
+        if (root==nullptr) return;
+        inorder(root->left,v-1,l+1,map);
+        map[v][l].insert(root->data);
+        inorder(root->right,v+1,l+1,map);
+    }
+    vector<int> topView(Node *root)
+    {
+        vector<int> ans;
+        if (root==nullptr) return {};
+        
+        map<int,map<int,multiset<int>>> map;
+        inorder(root,0,0,map);
+        //taking only first value from each Vertical column
+        for (auto it:map)
+        {
+            for (auto p:it.second)
+            {
+                for (auto q:p.second)
+                {
+                    ans.push_back(q);
+                    break;
+                }
+                break;
+            }
+        }
+        return ans;
+        
+    }
+
+ 
+   2nd approach (insert only first node in each column):
+
+    vector<int> topView(Node *root)
+    {
+        vector<int> ans;
+        if (root==nullptr) return {};
+        map<int,int> mpp;
+        queue<pair<Node*,int>> q;
+        q.push({root,0});
+        while (!q.empty())
+        {
+            auto it=q.front();
+            q.pop();
+            Node *node=it.first;
+            int vertical=it.second;
+            if (mpp.find(vertical)==mpp.end())  mpp[vertical]=node->data;
+            
+            if (node->left) q.push({node->left,vertical-1});
+            
+            if (node->right) q.push({node->right,vertical+1});
+            
+        }
+        for (auto it:mpp)
+          ans.push_back(it.second);
+          
+         return ans;
+    }
+
+9.    Vertical Order Traversal of a Binary Tree
+
+ANS.   1st approach (assigned row and column number to each node and traverse according to it):
+
+
+       void inorder(TreeNode *root,int v,int l,map<int,map<int,multiset<int>>> &map)
+    {
+        if (root==nullptr) return;
+        inorder(root->left,v-1,l+1,map);
+        map[v][l].insert(root->val);
+        inorder(root->right,v+1,l+1,map);
+    }
+    vector<vector<int>> verticalTraversal(TreeNode* root) {
+        if (root==nullptr) return {};
+        
+        map<int,map<int,multiset<int>>> map;
+        inorder(root,0,0,map);
+         vector<vector<int>> res;
+        for (auto it:map)
+        {
+            vector<int> temp;
+            for (auto p:it.second)
+            {
+                for (auto q:p.second)
+                    temp.push_back(q);
+            }
+            res.push_back(temp);
+        }
+        return res;
+        
+    }
