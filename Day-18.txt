@@ -111,7 +111,56 @@ ANS.   1st approach ():
         }
 
 
-6.  Check if two trees are identical or not
+6.    LCA in Binary Tree
+
+ANS.   1st approach (store the root to node paths):
+
+        bool preorder_helper(TreeNode *root,TreeNode *p,vector<TreeNode*> &ans1)
+    {
+        if (root==nullptr) return false;
+        ans1.push_back(root);
+        if (root->val==p->val)
+            return true;
+        if ((preorder_helper(root->left,p,ans1))|| (preorder_helper(root->right,p,ans1)))
+            return true;
+        ans1.pop_back();
+        return false;
+    }
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        vector<TreeNode*> ans1;
+        vector<TreeNode*> ans2;
+        preorder_helper(root,p,ans1);
+        preorder_helper(root,q,ans2);
+        TreeNode* ans;
+        int i=0,j=0;
+        while (i<ans1.size() && j<ans2.size())
+        {
+            if (ans1[i]==ans2[j])
+                ans=ans1[i];
+            i++;
+            j++;
+        }
+        return ans;
+        
+    }
+
+
+   2nd approach ():
+
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+       if (root==nullptr || p==root || q==root) return root;
+        
+        TreeNode *left=lowestCommonAncestor(root->left,p,q);
+        TreeNode *right=lowestCommonAncestor(root->right,p,q);
+        if (left==nullptr)
+            return right;
+        else if (right==nullptr)
+            return left;
+        else
+            return root;
+    }
+
+7.  Check if two trees are identical or not
 
 ANS.   1st approach ():
 
@@ -125,7 +174,7 @@ ANS.   1st approach ():
     }
 
 
-7.    Binary Tree Zigzag Level Order Traversal
+8.    Binary Tree Zigzag Level Order Traversal
 
 ANS.   1st approach ():
 
@@ -169,7 +218,7 @@ ANS.   1st approach ():
     }
 
 
-8.   Boundary Traversal of the Binary Tree
+9.   Boundary Traversal of the Binary Tree
 
 ANS.   1st approach (Left boundary nodes, Leaf nodes, Reverse right boundary nodes ):
 
