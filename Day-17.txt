@@ -292,3 +292,98 @@ ANS.   1st approach (assigned row and column number to each node and traverse ac
         return res;
         
     }
+
+
+10.  Root to node path
+
+ANS.   1st approach ():
+
+bool preorder_helper(TreeNode *root,int b,vector<int> &ans)
+{
+    if (root==nullptr) return false;
+    ans.push_back(root->val);
+    if (root->val==b)
+       return true;
+    if ((preorder_helper(root->left,b,ans)|| preorder_helper(root->right,b,ans)))
+       return true;
+    ans.pop_back();
+    return false;
+}
+vector<int> Solution::solve(TreeNode* A, int B) {
+    vector<int> ans;
+    preorder_helper(A,B,ans);
+    return ans;
+}
+
+             
+11.   Path Sum
+
+ANS.   1st approach ():
+
+
+       bool hasPathSum(TreeNode* root, int sum) {
+       if(!root)return false;                                        
+        sum=sum-root->val;                                            
+        if(sum==0&&!root->left&&!root->right)return true;             
+        return hasPathSum(root->left,sum)||hasPathSum(root->right,sum);
+    }
+
+
+12.   Path Sum II
+
+ANS.   1st approach ():
+
+       void helper(TreeNode *root,int sum,vector<int> &temp,vector<vector<int>> &res)
+    {
+        if (root==nullptr) return;
+        temp.push_back(root->val);
+        sum-=root->val;
+        if (sum==0 && root->left==nullptr && root->right==nullptr)
+        {
+            res.push_back(temp);
+        }
+        helper(root->left,sum,temp,res);
+        helper(root->right,sum,temp,res);
+        temp.pop_back();
+    }
+    vector<vector<int>> pathSum(TreeNode* root, int sum) {
+         vector<vector<int>> res;
+         vector<int> temp;
+         helper(root,sum,temp,res);
+         return res;
+    }
+
+
+13.   Maximum Width of Binary Tree
+
+ANS.    1st approach (assign number to each node and calculate the level width accoding to it):
+
+        int widthOfBinaryTree(TreeNode* root) {
+        if (root==nullptr) return 0;
+        int res=0;
+        queue<pair<TreeNode *,long>> q;
+        q.push({root,0});
+        while (!q.empty())
+        {
+            int size=q.size();
+            long mmin=q.front().second;
+            int last,first;
+            for (int i=0;i<size;i++)
+            {
+                long curr=q.front().second-mmin;
+                TreeNode *node=q.front().first;
+                q.pop();
+                if (node->left) q.push({node->left,curr*2+1});
+                if (node->right) q.push({node->right,curr*2+2});
+                if (i==0) first=curr;
+                if (i==size-1) last=curr;
+            }
+            res=max(res,last-first+1);
+        }
+        return res;
+    }
+
+
+   
+
+        
