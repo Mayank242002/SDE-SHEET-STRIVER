@@ -2,6 +2,80 @@
 
 
 
+0.   Insert a node in BST
+
+ANS.   1st approach (find the correct position of node and insert there):
+
+       TreeNode* insert(TreeNode *root,int val)
+    {
+        if (root==nullptr)
+            return new TreeNode(val);
+        else if (root->val<val)
+            root->right=insert(root->right,val);
+        else if (root->val>val)
+            root->left=insert(root->left,val);
+        return root;
+    }
+    TreeNode* insertIntoBST(TreeNode* root, int val) {
+        
+        return insert(root,val);
+    }
+
+
+1.   Floor in BST
+
+ANS.   1st approach ():
+
+    void search(TreeNode<int> *root, int x,int &result)
+    {
+	if (root==nullptr) return;
+	else if (root->val==x)
+	{
+		result=root->val;
+		return;
+	}
+	else if (root->val>x)
+		search(root->left,x,result);	
+	else
+	{
+		result=root->val;
+		search(root->right,x,result);
+	}
+		
+}
+int floorInBST(TreeNode<int> * root, int X)
+{
+      int result=-1;
+	search(root,X,result);
+	return result;     //RETURN -1 IF NO FLOOR VALUE IS FOUND
+}
+
+
+2.   Ceil in BST
+
+ANS.   1st approach ():
+
+     void search(BinaryTreeNode<int> *root, int x,int &result)
+    {
+	if (root==nullptr) return;
+	else if (root->data==x)
+	{
+		result=root->data;
+		return;
+	}
+	else if (root->data>x)
+	{
+	      result=root->data;
+		search(root->left,x,result);	
+	}
+	else
+		search(root->right,x,result);
+}
+int findCeil(BinaryTreeNode<int> *node, int x){
+    int result=-1;
+	search(node,x,result);
+	return result;  //RETURN -1 IF NO CEIL VALUE IS FOUND
+}
 
 3.   Find K-th smallest element in BST
 
@@ -9,7 +83,7 @@ ANS.   1st approach ():
 
         int helper(TreeNode *root,int &s,int &k,int &res)
     {
-        if (root==nullptr) return 0;
+        if (root==nullptr || s>=k) return 0;
         else
         {
             
@@ -32,6 +106,27 @@ ANS.   1st approach ():
     }
 
 
+2nd approach (it stops when ever it finds the kth smallest):
+
+    TreeNode* helper(TreeNode *root,int &s,int &k)
+    {
+        if (root==nullptr) return nullptr;
+        
+        TreeNode *left=helper(root->left,s,k);
+        if (left!=nullptr) return left;
+        
+        s++;
+        if (s==k)
+            return root;  
+        return helper(root->right,s,k);
+        
+    }
+    int kthSmallest(TreeNode* root, int k) {
+        int s=0;
+        return helper(root,s,k)->val;
+    }
+
+
 
 4.    Find K-th Largest element in BST
 
@@ -39,7 +134,7 @@ ANS.    1st approach ():
 
         int helper(Node *root,int &s,int &k,int &res)
     {
-        if (root==nullptr) return 0;
+        if (root==nullptr || s>=k) return 0;
         else
         {
             helper(root->right,s,k,res);
@@ -61,6 +156,116 @@ ANS.    1st approach ():
        return res;
     }
 
+
+    2nd approach (it stops when ever it finds the kth largest):
+
+   Node* helper(Node *root,int &s,int &k)
+    {
+        if (root==nullptr) return nullptr;
+        
+        Node *right=helper(root->right,s,k);
+        if (right!=nullptr) return right;
+        
+        s++;
+        if (s==k)
+            return root;  
+        return helper(root->left,s,k);
+    }
+    
+    int kthLargest(Node *root, int k)
+    {
+       int s=0;
+       Node *ans=helper(root,s,k);
+       return ans->data;
+ 
+    }
+
+
+5.    Two sum in BST
+
+ANS.    1st apprach (store the inorder and apply two sum concept TC-o(N),SC-o(N)):
+
+        void inorder(TreeNode *root,vector<int> &in)
+    {
+        if (root==nullptr) return;
+        inorder(root->left,in);
+        in.push_back(root->val);
+        inorder(root->right,in);
+    }
+    bool findTarget(TreeNode* root, int k) {
+        vector<int> in;
+         inorder(root,in);
+         int i=0,j=in.size()-1;
+        while (i<j)
+        {
+            if (in[i]+in[j]>k)
+                j--;
+            else if (in[i]+in[j]<k)
+                i++;
+            else
+               return true;
+        }
+        return false;
+        
+    }
+
+
+    2nd approach (applying the concept of BST iterator (created two iterator for )):
+
+   class BSTIterator {
+    stack<TreeNode *> myStack;
+    bool reverse = true; 
+public:
+    BSTIterator(TreeNode *root, bool isReverse) {
+        reverse = isReverse; 
+        pushAll(root);
+    }
+
+    /** @return whether we have a next smallest number */
+    bool hasNext() {
+        return !myStack.empty();
+    }
+
+    /** @return the next smallest number */
+    int next() {
+        TreeNode *tmpNode = myStack.top();
+        myStack.pop();
+        if(!reverse) pushAll(tmpNode->right);
+        else pushAll(tmpNode->left);
+        return tmpNode->val;
+    }
+
+private:
+    void pushAll(TreeNode *node) {
+        for(;node != NULL; ) {
+             myStack.push(node);
+             if(reverse == true) {
+                 node = node->right; 
+             } else {
+                 node = node->left; 
+             }
+        }
+    }
+};
+class Solution {
+public:
+    bool findTarget(TreeNode* root, int k) {
+        if(!root) return false; 
+        BSTIterator l(root, false); 
+        BSTIterator r(root, true); 
+        
+        int i = l.next(); 
+        int j = r.next(); 
+        while(i<j) {
+            if(i + j == k) return true; 
+            else if(i + j < k) i = l.next(); 
+            else j = r.next(); 
+        }
+        return false; 
+    }
+};
+
+       
 6.   Binary Search Tree Iterator
 
 ANS.   1st approach (using O(N) Space):
@@ -94,7 +299,267 @@ public:
 };
 
 
-     2nd approach ():
+     2nd approach (using iterative inorder traversal thoufght process TC-o(N),SC-o(H)):
+
+
+     stack<TreeNode *> st;
+    BSTIterator(TreeNode* root) {
+       pushAll(root);
+    }
+    void pushAll(TreeNode *node)
+    {
+        while (node)
+        {
+            st.push(node);
+            node=node->left;
+        }
+    }
+    int next() {
+        TreeNode *node=st.top();
+        st.pop();
+        pushAll(node->right);
+        return node->val;
+    }
+    
+    bool hasNext() {
+       return !st.empty();
+    }
+
+
+7.   Maximum sum BST in Binary Tree
+
+ANS.   1st approach (TC-o(N2)):
+
+        int sum(TreeNode *root)
+    {
+        if (root==nullptr) return 0;
+        int x=sum(root->left);
+        int y=sum(root->right);
+        return root->val+x+y;
+    }
+    bool valid(TreeNode *root,long lower,long higher)
+   {
+       if (root==nullptr) return true;
+       if (root->val<=lower || root->val>=higher) return false;
+       return valid(root->left,lower,root->val) && valid(root->right,root->val,higher);  
+   }
+    void inorder(TreeNode *root,int &maxi)
+    {
+        if (root==nullptr) return;
+        inorder(root->left,maxi);
+        if (valid(root,LONG_MIN,LONG_MAX))
+            maxi=max(maxi,sum(root));
+        inorder(root->right,maxi);
+    }
+    int maxSumBST(TreeNode* root) {
+        int maxi=0;
+        inorder(root,maxi);
+        return maxi;
+    }
+
+
+8.   Serialize and deserialize BT
+
+ANS.   1st approach ():
+
+       class Codec {
+public:
+   
+    // Encodes a tree to a single string.
+    string serialize(TreeNode* root) {
+        if (root==nullptr) return "";
+        string s="";
+        queue<TreeNode *> q;
+        q.push(root);
+        while (!q.empty())
+        {
+            TreeNode *curr=q.front();
+            q.pop();
+            if (curr==nullptr) s+="#,";
+            else
+            {
+                s+=to_string(curr->val)+",";
+                q.push(curr->left);
+                q.push(curr->right);
+            }
+        }
+        return s;
+    }
+
+    // Decodes your encoded data to tree.
+    TreeNode* deserialize(string data) {
+       if(data.size() == 0) return NULL; 
+        stringstream s(data);
+        string str; 
+        getline(s, str, ',');
+        TreeNode *root = new TreeNode(stoi(str));
+        queue<TreeNode*> q; 
+        q.push(root); 
+        while(!q.empty()) {
+            
+            TreeNode *node = q.front(); 
+            q.pop(); 
+            
+            getline(s, str, ',');
+            if(str == "#") {
+                node->left = NULL; 
+            }
+            else {
+                TreeNode* leftNode = new TreeNode(stoi(str)); 
+                node->left = leftNode; 
+                q.push(leftNode); 
+            }
+            
+            getline(s, str, ',');
+            if(str == "#") {
+                node->right = NULL; 
+            }
+            else {
+                TreeNode* rightNode = new TreeNode(stoi(str)); 
+                node->right = rightNode;
+                q.push(rightNode); 
+            }
+        }
+        return root; 
+    }
+};
+
+9.   Recover BST
+
+ANS.   1st approach (using inorder  TC-O(nlogn), SC-O(N)):
+
+       void inorder_1(TreeNode *root,vector<int> &temp)
+    {
+        if (root==nullptr) return;
+        else
+        {
+            inorder_1(root->left,temp);
+            temp.push_back(root->val);
+            inorder_1(root->right,temp);
+        }
+    }
+    void inorder_2(TreeNode *root,vector<int> &temp,int &i)
+    {
+        if (root==nullptr) return;
+        else
+        {
+            inorder_2(root->left,temp,i);
+            root->val=temp[i];
+            i++;
+            inorder_2(root->right,temp,i);
+        }
+    }
+    void recoverTree(TreeNode* root) {
+        vector<int> temp;
+        inorder_1(root,temp);
+        sort(temp.begin(),temp.end());
+        int i=0;
+        inorder_2(root,temp,i);
+    }
+
+
+      2nd approach (just storing the nodes which needs to be swapped):
+
+       class Solution {
+private:
+    TreeNode *first;
+    TreeNode *last;
+    TreeNode *middle;
+    TreeNode *prev;
+public:
+    void inorder(TreeNode *root)
+    {
+        if (root==nullptr) return;
+        inorder(root->left);
+        if (root->val<prev->val)
+        {
+            if (first==nullptr)
+            {
+                first=prev;
+                middle=root;
+            }
+            else
+                last=root;
+        }
+        prev=root;
+        inorder(root->right);
+    }
+    
+    void recoverTree(TreeNode* root) {
+        first=last=middle=nullptr;
+        prev=new TreeNode(INT_MIN);
+        inorder(root);
+        if (first && last) swap(first->val,last->val);
+        else if (first && middle) swap(first->val,middle->val);
+    }
+};
+
+
+
+10.   DeleteNode in BST
+
+ANS.   1st approach (without memmory leaks):
+
+       TreeNode* insucc(TreeNode *p)
+    {
+        while (p && p->left)
+            p=p->left;
+        return p;
+    }
+    TreeNode* deleteNode(TreeNode* root, int key) {
+        if (root==nullptr) return nullptr;
+        else if (!root->left && !root->right && root->val==key) 
+        {
+            delete root;
+            return nullptr;
+        }
+        else if (key<root->val)
+            root->left=deleteNode(root->left,key);
+        else if (key>root->val)
+            root->right=deleteNode(root->right,key);
+        else
+        {
+            TreeNode *q=insucc(root->right);
+            if (q!=nullptr){
+              root->val=q->val;
+              q->val=key;
+              root->right=deleteNode(root->right,key);
+            }
+            else
+                root=root->left;
+            return root;
+        }
+        return root;
+    }
+
+
+   2nd approach (just changing the links):
+
+ TreeNode* deleteNode(TreeNode* root, int key) {
+        if (root==nullptr) return nullptr;
+        else if (key<root->val)
+            root->left=deleteNode(root->left,key);
+        else if (key>root->val)
+            root->right=deleteNode(root->right,key);
+        else
+        {
+            if (root->right)
+            {
+                TreeNode *left=root->left;
+                root=root->right;
+                TreeNode *temp=root;
+                while (temp->left) temp=temp->left;
+                temp->left=left;
+            }
+            else
+                root=root->left;
+        }
+        return root;
+    }
+
+
+
+        
 
 
 
