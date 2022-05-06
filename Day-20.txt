@@ -1,0 +1,336 @@
+﻿                               Day-20
+
+
+1.    Populate Next Right Pointers in Each Node
+
+ANS.    1st approach (using Level order Traversal):
+
+       Node* connect(Node* root) {
+        if (root==nullptr) return root;
+        queue<Node*> q;
+        q.push(root);
+        while (!q.empty())
+        {
+            int n=q.size();
+            Node *next_node=nullptr;
+            for (int i=0;i<n;i++)
+            {
+                Node *node=q.front();
+                q.pop();
+                next_node=(i==n-1)?nullptr:q.front();
+                if (node->left) q.push(node->left);
+                if (node->right) q.push(node->right);
+                node->next=next_node;
+            }
+        }
+        return root;
+    }
+
+
+2.    Search Given key in BST
+
+ANS.   1st approach (apply any traversal TC-O(n)):
+
+       2nd approach (TC-O(logn)):
+
+       TreeNode* searchBST(TreeNode* root, int val) {
+        if (root==nullptr)
+            return root;
+        if (root->val==val)
+            return root;
+        else if (root->val>val)
+            return searchBST(root->left,val);
+        else
+            return searchBST(root->right,val);
+            
+    }
+
+
+3.    Construct Binary search Tree(Height balanced) From sorted Array(inorder)
+
+ANS.   1st approach (take the middle element as node and recursively build the tree):
+
+         TreeNode *create(int l,int h,vector<int>& nums)
+    {
+        if (l>h) return nullptr;
+        int mid=l+(h-l)/2;
+        TreeNode *root=new TreeNode(nums[mid]);
+        root->left=create(l,mid-1,nums);
+        root->right=create(mid+1,h,nums);
+        return root;
+    }
+    TreeNode* sortedArrayToBST(vector<int>& nums) {
+        int l=0,h=nums.size()-1;
+        return create(l,h,nums);
+    }
+
+
+3.1.       Convert Sorted List to Binary Search Tree
+
+ANS.    1st approach (same as above):
+
+       TreeNode *create(int l,int h,vector<int>& nums)
+    {
+        if (l>h) return nullptr;
+        int mid=l+(h-l)/2;
+        TreeNode *root=new TreeNode(nums[mid]);
+        root->left=create(l,mid-1,nums);
+        root->right=create(mid+1,h,nums);
+        return root;
+    }
+    TreeNode* sortedListToBST(ListNode* head) {
+     vector<int> nums;
+     while (head)
+     {
+        nums.push_back(head->val);
+        head=head->next;
+     }
+        
+     return create(0,nums.size()-1,nums);
+    }
+
+4.    Construct Binary Search Tree from Preorder
+
+ANS.   1st approach (TC-o(N2):
+
+
+           TreeNode* insert(TreeNode *root,int val)
+    {
+        if (root==nullptr)
+            return new TreeNode(val);
+        else if (root->val<val)
+            root->right=insert(root->right,val);
+        else if (root->val>val)
+            root->left=insert(root->left,val);
+        return root;
+    }
+    TreeNode* bstFromPreorder(vector<int>& preorder) {
+        TreeNode* root =new TreeNode(preorder[0]);
+       for (int i=1;i<preorder.size();i++)
+           insert(root,preorder[i]);
+        return root;
+    }
+
+
+     2nd approach (convert preorder to inorder by sorting and then construct BT from inorder and preorder TC-o(N*LOGN)  SC-O(N)):
+
+      3rd approach (using stack TC-O(N),SC-O(N)):
+
+      TreeNode* bstFromPreorder(vector<int>& preorder) {
+       stack<TreeNode *> st;
+        int i=0,n=preorder.size();
+        TreeNode *root=new TreeNode(preorder[i++]);
+        TreeNode *p=root;
+        st.push(root);
+        while (i<n)
+        {
+            if (preorder[i]<p->val)
+            {
+                TreeNode *t=new TreeNode(preorder[i++]);
+                p->left=t;
+                st.push(p);
+                p=t;
+            }
+            else
+            {
+                int topdata=st.empty()?INT_MAX:st.top()->val;
+                if (preorder[i]>p->val && preorder[i]<topdata)
+                {
+                    TreeNode *t=new TreeNode(preorder[i++]);
+                    p->right=t;
+                    p=t;
+                }
+                else
+                {
+                    p=st.top();
+                    st.pop();
+                }
+            }
+        }
+        return root;
+    }
+
+
+       4th approach ():
+
+     
+
+ 
+
+5.   Validate BST
+
+ANS.   1st approach (store the inorder and compare that   TC-o(N),SC-o(N)):
+
+       void inorder(vector<int> &in,TreeNode *root)
+   {
+       if (root==nullptr) return;
+       inorder(in,root->left);
+       in.push_back(root->val);
+       inorder(in,root->right);
+   }
+    bool isValidBST(TreeNode* root) {
+     vector<int> in;
+     inorder(in,root);
+     for (int i=0;i<in.size()-1;i++)
+     {
+         if (in[i]>=in[i+1])
+             return false;
+     }
+    return true;
+    }
+
+       2nd approach (TC-o(N),SC-o(1)):
+
+        bool valid(TreeNode *root,long lower,long higher)
+   {
+       if (root==nullptr) return true;
+       if (root->val<=lower || root->val>=higher) return false;
+       return valid(root->left,lower,root->val) && valid(root->right,root->val,higher);  
+   }
+    bool isValidBST(TreeNode* root) {
+       return valid(root,LONG_MIN,LONG_MAX);
+    }
+
+
+
+6.   Find LCA of two Nodes in BST
+
+ANS.   1st approach (same as BT TC-o(N),SC-o(N)) :
+
+        bool preorder_helper(TreeNode *root,TreeNode *p,vector<TreeNode*> &ans1)
+    {
+        if (root==nullptr) return false;
+        ans1.push_back(root);
+        if (root->val==p->val)
+            return true;
+        if ((preorder_helper(root->left,p,ans1))|| (preorder_helper(root->right,p,ans1)))
+            return true;
+        ans1.pop_back();
+        return false;
+    }
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        vector<TreeNode*> ans1;
+        vector<TreeNode*> ans2;
+        preorder_helper(root,p,ans1);
+        preorder_helper(root,q,ans2);
+        TreeNode* ans;
+        int i=0,j=0;
+        while (i<ans1.size() && j<ans2.size())
+        {
+            if (ans1[i]==ans2[j])
+                ans=ans1[i];
+            i++;
+            j++;
+        }
+        return ans;
+    }
+
+
+
+   2nd approach (TC-o(N)):
+
+  
+TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+       if (root==nullptr || p==root || q==root) return root;
+        
+        TreeNode *left=lowestCommonAncestor(root->left,p,q);
+        TreeNode *right=lowestCommonAncestor(root->right,p,q);
+        if (left==nullptr)
+            return right;
+        else if (right==nullptr)
+            return left;
+        else
+            return root;
+    }
+
+
+    3rd approach (node from where path splits is the LCA node    TC-o(h)):
+
+   TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        if (root==nullptr) return nullptr;
+         else if (root->val>p->val && root->val>q->val)
+            return lowestCommonAncestor(root->left,p,q);
+         else if (root->val<p->val && root->val<q->val)
+            return lowestCommonAncestor(root->right,p,q);
+         else
+             return root;
+        
+ }
+
+
+
+7.   Find the inorder successor of given key in Bst
+
+ANS.   1st approach (store the inorder and return the value greater than key  TC-O(N), SC-O(N) ):
+
+       2nd approach (perform the inorder and return the node which is larger than key  TC-o(N))  :
+
+       3rd approach (successor is same as ceil of the vlaue(equal condition is not there)):
+
+       Node * inOrderSuccessor(Node *root, Node *x)
+    {
+        Node *res=nullptr;
+        while (root)
+        {
+            if (root->data>x->data)
+            {
+                res=root;
+                root=root->left;
+            }
+            else
+                root=root->right;
+        }
+        return res;
+    }
+
+    OR
+
+    void ceil(Node *root, Node *x,Node*& res)  //PASSING POINTER AS REFERENCE
+    {
+        if (root==nullptr) return;
+        else if (root->data>x->data)
+        {
+            res=root;
+            ceil(root->left,x,res);
+        }
+        else
+        ceil(root->right,x,res);
+    }
+    Node * inOrderSuccessor(Node *root, Node *x)
+    {
+        Node *res=nullptr;
+        ceil(root,x,res);
+        return res;
+    }
+
+
+
+8.   Find the inorder predecessor of given key in Bst
+        
+ANS.   3rd approach (successor is same as floor of the vlaue(equal condition is not there) )  :
+
+      Node * inOrderPredeccessor(Node *root1, Node *x)
+    {
+        Node *res=nullptr;
+        while (root1)
+        {
+            if (root1->key<key)
+            {
+                pre=root1;
+                root1=root1->right;
+            }
+            else
+                root1=root1->left;
+            
+                
+        }
+  return res;
+    }
+ 
+
+     
+
+
+ 
+       
+    
