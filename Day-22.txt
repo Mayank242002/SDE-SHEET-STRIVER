@@ -1,0 +1,367 @@
+﻿                               Day-22
+
+
+
+1.  Flatten Binary Tree To linked list
+
+ANS.   1st approach ():  
+
+       void preorder(TreeNode *root,vector<int> &pre)
+    {
+        if (root==nullptr) return;
+        pre.push_back(root->val);
+        preorder(root->left,pre);
+        preorder(root->right,pre);
+    }
+    void flatten(TreeNode* root) {
+        if (root==nullptr) return ;
+        vector<int> pre;
+        preorder(root,pre);
+        int i=1,n=pre.size();
+        TreeNode *main_node=root;
+        while (i<n)
+        {
+            TreeNode *rightnode=new TreeNode(pre[i]);
+            main_node->right=rightnode;
+            main_node->left=nullptr;
+            main_node=main_node->right;
+            i++;
+        }
+        main_node->right=main_node->left=nullptr;
+        
+    }
+
+     2nd approach ():
+
+     class Solution {
+public:
+    TreeNode *prev=nullptr;
+    void flatten_ll(TreeNode *root)
+    {
+        if (root==nullptr) return;
+        flatten_ll(root->right);
+        flatten_ll(root->left);
+        root->right=prev;
+        root->left=nullptr;
+        prev=root;
+    }
+    void flatten(TreeNode* root) {
+        flatten_ll(root);
+    }
+};
+
+
+2.   Find Median from Data Stream
+
+ANS.   1st approach (TC-O(n2*logn)):
+
+        vector<int> ans;
+    MedianFinder() {
+        
+    }
+    
+    void addNum(int num) {
+        ans.push_back(num);
+        sort(ans.begin(),ans.end());
+    }
+    
+    double findMedian() {
+        double res=0;
+        if (ans.size()%2!=0)
+            res=ans[ans.size()/2];
+        else
+            res=(ans[ans.size()/2]+ans[(ans.size()/2)-1])/2.0;
+        return res;
+            
+    }
+
+   2nd approach (using insertion sort to insert element TC-O(N2)):
+
+   3rd approach (using maxheap for 1st half and minheap for 2nd half,After inserting, we have to balance the first half and the second half to make sure either they have the same length or the length difference is only 1. TC-(n*logn)):
+  
+   class MedianFinder {
+public:
+   priority_queue<int> maxheap; //for 1st half
+    priority_queue<int,vector<int>,greater<int>> minheap;  //for 2nd half
+    MedianFinder() {
+        
+    }
+    
+    void addNum(int num) {
+      if (maxheap.empty() || maxheap.top()>num) maxheap.push(num);
+      else
+          minheap.push(num);
+        
+       if (maxheap.size()>minheap.size()+1)
+       {
+            int n=maxheap.top();
+            maxheap.pop();
+            minheap.push(n);
+       }
+       else if (maxheap.size()+1<minheap.size())
+       {
+           int n=minheap.top();
+            minheap.pop();
+            maxheap.push(n);
+       }
+    }
+    
+    double findMedian() {
+      if (maxheap.size()==minheap.size()) return ((maxheap.top()+minheap.top())/2.0);
+      else
+        return (maxheap.size()>minheap.size()?maxheap.top():minheap.top());
+    }
+};
+
+ 
+
+
+
+3.   Kth Largest Element in a Stream
+
+ANS.   1st approach (using multiset):
+
+        class KthLargest {
+public:
+    multiset<int,greater<int>> m;
+    int key;
+    KthLargest(int k, vector<int>& nums) {
+        key=k;
+        for (int i:nums)
+            m.insert(i);
+    }
+    
+    int add(int val) {
+        m.insert(val);
+        multiset<int, greater<int> >::iterator itr=m.begin();
+        for (int i=0;i<key-1;i++)
+            itr++;
+        return *itr;
+             
+            
+        
+    }
+};
+
+
+     2nd approach ():
+
+    class KthLargest {
+public:
+    priority_queue<int, vector<int>, greater<int>> pq;
+    int size;
+    KthLargest(int k, vector<int> nums) {
+        size=k;
+        for(int i=0;i<nums.size();i++) {
+            pq.push(nums[i]);
+            if(pq.size()>k) pq.pop();
+        }
+    }
+    
+    int add(int val) {
+        pq.push(val);
+        if(pq.size()>size) pq.pop();
+        return pq.top();
+    }
+};
+
+
+4.   Distinct numbers in Window
+
+ANS.   1st approach ():
+
+       vector <int> countDistinct (int A[], int n, int k)
+    {
+        
+      vector<int> ans;
+      unordered_map<int,int> mp;
+      for (int i=0;i<k;i++)
+          mp[A[i]]++;    
+      ans.push_back(mp.size());
+
+      for (int i=k;i<n;i++)
+       {
+       mp[A[i-k]]--;
+       if (mp[A[i-k]]==0)
+          mp.erase(A[i-k]);
+    
+       mp[A[i]]++;
+   
+       ans.push_back(mp.size());
+       }
+    return ans;
+    }
+
+       
+
+
+
+5.  K-th Largest element in an unsorted array
+
+ANS.   1st approach (nlogn):
+
+       bool static comp(int a,int b)
+    {
+        return a>b;
+    }
+    int findKthLargest(vector<int>& nums, int k) {
+        sort(nums.begin(),nums.end(),comp);
+        return nums[k-1];
+        
+    }
+
+
+       2nd approach (using max heap):
+
+     int findKthLargest(vector<int>& nums, int k) {
+       priority_queue<int> pq;
+        for (int num:nums)
+            pq.push(num);
+         for (int i=0;i<k-1;i++)
+             pq.pop();
+        return pq.top();
+        
+    }
+
+
+       3rd approach (using min heap):
+
+       int findKthLargest(vector<int>& nums, int k) {
+       priority_queue<int,vector<int>,greater<int>> pq;
+        for (int num:nums)
+        {
+            pq.push(num);
+            if (pq.size()>k)
+                pq.pop();
+        }
+        return pq.top();
+        
+    }
+
+
+6.    Top k Frequent elements
+
+ANS.   1st approach (using max heap):
+ 
+        vector<int> topKFrequent(vector<int>& nums, int k) {
+        vector<int> res;
+        unordered_map<int,int> mp;
+        for (int i:nums)
+            mp[i]++;
+        
+        priority_queue<pair<int,int>> pq;
+        
+        for (auto it=mp.begin();it!=mp.end();it++)
+        {
+            pq.push({it->second,it->first});
+        }
+        while (!pq.empty() && res.size()<k)
+        {
+            int x=pq.top().second;
+            pq.pop();
+            res.push_back(x);
+        }
+        return res;
+    }
+
+
+    2nd approach (using min heap (stores only k element)):
+
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        vector<int> res;
+        unordered_map<int,int> mp;
+        for (int i:nums)
+            mp[i]++;
+         
+        //using min heap
+        priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>> pq;
+        
+        for (auto it=mp.begin();it!=mp.end();it++)
+        {
+            pq.push({it->second,it->first});
+            if (pq.size()>k)
+                pq.pop();
+        }
+        while (!pq.empty() && res.size()<k)
+        {
+            int x=pq.top().second;
+            pq.pop();
+            res.push_back(x);
+        }
+        return res;
+    }
+
+
+
+
+7.   Top k Frequent words
+
+ANS.   1st approach (using max heap(comparator)):
+
+      class Solution {
+public:
+    struct compare
+    {
+        bool operator()(pair<string,int> p1,pair<string,int> p2)
+        {
+            if (p1.second==p2.second)
+                return p1.first>p2.first;
+            else
+                return p1.second<p2.second;
+        }
+    };
+    vector<string> topKFrequent(vector<string>& words, int k) {
+         vector<string> res;
+        unordered_map<string,int> mp;
+        for (string i:words)
+            mp[i]++;
+        
+        priority_queue<pair<string,int>,vector<pair<string,int>>,compare> pq(mp.begin(),mp.end());
+        
+        
+        while (!pq.empty() && res.size()<k)
+        {
+            string x=pq.top().first;
+            pq.pop();
+            res.push_back(x);
+        }
+        
+        return res;
+    }
+};
+
+
+NOTE: Comparator of Priority queues work opposite to the sort function
+
+
+8.   Flood fill Algorithm
+
+ANS.   1st approach ():
+
+       void fill(vector<vector<int>>& image, int sr, int sc, int newColor,int oldColor,int r,int c)
+    {
+        if (sr<0 || sr>=r || sc<0 || sc>=c || image[sr][sc]==newColor || image[sr][sc]!=oldColor) return;
+        
+        if (image[sr][sc]==oldColor)
+            image[sr][sc]=newColor;
+          
+        fill(image,sr-1,sc,newColor,oldColor,r,c);
+       
+        fill(image,sr+1,sc,newColor,oldColor,r,c);
+                
+        fill(image,sr,sc+1,newColor,oldColor,r,c);
+        
+        fill(image,sr,sc-1,newColor,oldColor,r,c);
+        
+        
+    }
+    vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int newColor) {
+        fill(image,sr,sc,newColor,image[sr][sc],image.size(),image[0].size());
+        return image;
+    }
+
+
+
+
+
+
