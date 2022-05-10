@@ -1,0 +1,211 @@
+﻿
+                          Fixed size
+
+
+1.   Maximum sum Subarray of size k
+
+ANS.   1st approach ():
+
+      int maximumSumSubarray(int K, vector<int> &Arr , int N){
+       int sum=0,maxi=INT_MIN;
+       for (int i=0;i<K;i++)
+         sum+=Arr[i];
+    maxi=max(maxi,sum);
+       for (int i=K;i<N;i++)
+       {
+           sum+=Arr[i]-Arr[i-K];
+           maxi=max(maxi,sum);
+       }
+       return maxi;
+    }
+
+
+2.   First Negative in every window of size k
+
+ANS.   1st approach ():
+
+       vector<long long> printFirstNegativeInteger(long long int A[],long long int N, long long int K) {
+    vector<long long> ans;
+    list<long long> l;
+    for (int i=0;i<K;i++)
+    {
+        if (A[i]<0)
+          l.push_back(A[i]);
+    }
+    
+    (l.empty())? ans.push_back(0):ans.push_back(l.front());
+       
+    for (int i=K;i<N;i++)
+    {
+        if (A[i]<0)
+          l.push_back(A[i]);
+        if (l.front()==A[i-K])
+           l.pop_front();
+        
+        (l.empty())? ans.push_back(0):ans.push_back(l.front());
+    }
+    return ans;                                  
+ }
+
+  
+3.   Count Occurences of Anagrams
+
+ANS.   1st appraoch ():
+
+       int search(string pat, string txt) {
+	    int ans=0;
+	    int k=pat.size();
+	    unordered_map<int,int> mp;
+	    for (char c:pat)
+	      mp[c]++;
+	      
+	    int count=mp.size();
+	    
+	    for (int i=0;i<k;i++)
+	    {
+	        if (mp.find(txt[i])!=mp.end())
+	        {
+	            mp[txt[i]]--;
+	            if (mp[txt[i]]==0)
+	              count--;
+	              
+	            if (count==0)
+	               ans++;
+	        }
+	    }
+	    
+	    
+	    for (int i=k;i<txt.size();i++)
+	    {
+	        if (mp.find(txt[i-k])!=mp.end())
+	        {
+	            mp[txt[i-k]]++;
+	            if (mp[txt[i-k]]==1)
+	              count++;
+	        }
+	        if (mp.find(txt[i])!=mp.end())
+	        {
+	            mp[txt[i]]--;
+	            if (mp[txt[i]]==0)
+	              count--;
+	              
+	            if (count==0)
+	               ans++;
+	        }
+	    }
+	    return ans;
+	}
+
+
+
+4.   Find all Anagrams in a string
+
+ANS.   1st approach ():
+
+       vector<int> findAnagrams(string s, string p) {
+        int k=p.size();
+        vector<int> ans;
+        unordered_map<int,int> mp;
+	    for (char c:p)
+	      mp[c]++;
+	      
+	    int count=mp.size();
+        int start_index;
+	    
+	    for (int i=0;i<k;i++)
+	    {
+	        if (mp.find(s[i])!=mp.end())
+	        {
+	            mp[s[i]]--;
+	            if (mp[s[i]]==0)
+	              count--;
+	              
+	            if (count==0)
+	                 ans.push_back(i-k+1);
+	        }
+	    }
+	    
+	    
+	    for (int i=k;i<s.size();i++)
+	    {
+	        if (mp.find(s[i-k])!=mp.end())
+	        {
+	            mp[s[i-k]]++;
+	            if (mp[s[i-k]]==1)
+	              count++;
+	        }
+	        if (mp.find(s[i])!=mp.end())
+	        {
+	            mp[s[i]]--;
+	            if (mp[s[i]]==0)
+	              count--;
+	              
+	            if (count==0)
+	               ans.push_back(i-k+1);
+	        }
+	    }
+	    return ans;
+        
+    }
+
+
+5.    Maximum of all subrrays of size k (sliding window maximum)
+
+ANS.   1st approach ():
+
+       vector<int> maxSlidingWindow(vector<int>& nums, int k) {
+        deque<int> dq;
+        vector<int> ans;
+        int i=0,j=0;
+        while (j<nums.size())
+        {
+            if (dq.empty())
+                dq.push_back(nums[j]);
+            else
+            {
+                while (dq.size()>0 && dq.back()<nums[j])
+                    dq.pop_back();
+                dq.push_back(nums[j]);
+            }
+            
+            if (j-i+1<k) j++;
+            else if (j-i+1==k)
+            {
+                ans.push_back(dq.front());
+                if (dq.front()==nums[i])
+                    dq.pop_front();
+                
+                i++;j++;
+            }
+            
+            
+        }
+        return ans;
+    }
+
+                         
+
+
+
+
+                        Variable size window
+
+
+6.    Longest subarray of sum k
+
+ANS.    1st approach ():
+
+        
+
+      
+
+
+
+        
+
+      
+
+      
+       
+
+      
