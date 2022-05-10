@@ -334,7 +334,177 @@ public:
 NOTE: Comparator of Priority queues work opposite to the sort function
 
 
-8.   Flood fill Algorithm
+
+8. Sort a K sorted Array
+
+ANS.   1st approach (sorting TC-o(N*logn)):
+
+       2nd approach (using min heap of size k TC-o(n*LOGk)):
+
+  int sortK(int arr[], int n, int k) {
+
+  int j=0;
+  priority_queue<int,vector<int>,greater<int>> pq;
+  for (int i=0;i<n;i++)
+  {
+      pq.push(arr[i]);
+      if (pq.size()>k)
+      {
+          arr[j++]=pq.top();
+          pq.pop();
+      }
+  }
+  
+  while (!pq.empty())
+  {
+      arr[j++]=pq.top();
+          pq.pop();
+  }
+  for (int i=0;i<n;i++)
+     cout<<arr[i]<<endl;
+
+}
+
+9.  Find k Closest Elements
+
+ANS.   1st approach (using max heap) :
+
+      vector<int> findClosestElements(vector<int>& arr, int k, int x) {
+        vector<int> ans;
+        priority_queue<pair<int,int>> pq;
+        for (int i=0;i<arr.size();i++)
+        {
+            pq.push({abs(arr[i]-x),arr[i]});
+            if (pq.size()>k)
+                pq.pop();
+        }
+        while (!pq.empty())
+        {
+            ans.push_back(pq.top().second);
+            pq.pop();
+        }
+        sort(ans.begin(),ans.end());
+        return ans;
+    }
+
+
+10.   Sort Array by Increasing Frequency
+
+ANS.   1st approach ():
+
+       class Solution {
+public:
+    struct compare
+    {
+      bool operator()(pair<int,int> p1,pair<int,int> p2)
+      {
+          if (p1.second==p2.second)
+              return p1.first<p2.first;
+          else
+              return p1.second>p2.second;
+      }
+    };
+    vector<int> frequencySort(vector<int>& nums) {
+      unordered_map<int,int> mp;
+        for (int i:nums)
+            mp[i]++;
+        priority_queue<pair<int,int>,vector<pair<int,int>>, compare> pq(mp.begin(),mp.end());
+        int i=0;
+        while (!pq.empty())
+        {
+            int x = pq.top().first;
+            int n = pq.top().second;
+            pq.pop();
+            for (int j=0;j<n;j++)
+                nums[i++]=x;
+            
+        }
+        return nums;
+        
+    }
+};
+
+11.  K closest points to Origin
+
+ANS.   1st approach ():
+
+vector<vector<int>> kClosest(vector<vector<int>>& points, int k) {
+        vector<vector<int>> ans;
+        priority_queue<pair<double,pair<int,int>>> pq;
+        for (int i=0;i<points.size();i++)
+        {
+            double temp=sqrt(points[i][1]*points[i][1]+points[i][0]*points[i][0]);
+            pq.push({temp,{points[i][0],points[i][1]}});
+            if (pq.size()>k)
+                pq.pop();
+        }
+        while (!pq.empty())
+        {
+            vector<int> temp;
+            temp.push_back(pq.top().second.first);
+            temp.push_back(pq.top().second.second);
+            ans.push_back(temp);
+            pq.pop();
+        }
+        return ans;
+    }
+
+
+12.    Connect Ropes to Minimise the cost
+
+ANS.   1st approach (select two minimum at a time):
+
+       long long minCost(long long arr[], long long n) {
+        
+       priority_queue<long long,vector<long long>,greater<long long>> pq;
+       for (int i=0;i<n;i++)
+          pq.push(arr[i]);
+        
+        long long sum=0;
+        while (pq.size()>1)
+        {
+            long long temp_sum=pq.top();
+            pq.pop();
+            temp_sum+=pq.top();
+            pq.pop();
+            sum+=temp_sum;
+            pq.push(temp_sum);
+        }
+        return sum;
+       
+    }
+
+
+13.    Sum of Elements between k1 smallest and k2 smallest numbers
+
+ANS.   1st approach (using only one heap):
+
+       long long sumBetweenTwoKth( long long A[], long long N, long long K1, long long K2)
+    {
+        priority_queue<long long> pq;
+        for (long long i=0;i<N;i++)
+        {
+            pq.push(A[i]);
+            if (pq.size()>K2)
+              pq.pop();
+        }
+        long long sum=0;
+        pq.pop();
+        while (pq.size()>K1)
+        {
+            sum+=pq.top();
+            pq.pop();
+        }
+        return sum;
+    }
+
+
+    2nd approach (calcualting k1 smallest and k2 smallest number seprately)
+
+
+      
+
+12 .   Flood fill Algorithm
 
 ANS.   1st approach ():
 
