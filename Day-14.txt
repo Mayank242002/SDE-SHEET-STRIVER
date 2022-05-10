@@ -25,6 +25,70 @@ ANS.  1st approach (using stack(variation of Next greater element)) :
 }
 
 
+1.1 Maximum of Minimum of every size window
+
+ANS.   1st approach (variation to NSL ans NSR):
+
+     vector<int> NSL_(int arr[],int n) {
+        
+    stack<int> st;
+    vector<int> res;
+    res.push_back(-1);
+    st.push(0);
+    for (int i=1;i<n;i++)
+    {
+        while (st.size()>0 && arr[st.top()]>=arr[i])
+           st.pop();
+        if (st.empty())
+           res.push_back(-1);
+        else 
+           res.push_back(st.top());
+        st.push(i);
+    }
+    return res;
+}
+
+vector<int> NSR_(int arr[],int n)
+    {
+     
+        vector<int> ans;
+        stack<int> s;
+        ans.push_back(n);
+        s.push(n-1);
+        for (int i=n-2;i>=0;i--)
+        {
+            while (s.size()>0 && arr[s.top()]>=arr[i])
+                s.pop();
+            if (s.empty())
+                ans.push_back(n);
+            else
+                ans.push_back(s.top());
+                
+            s.push(i);
+        }
+        reverse(ans.begin(),ans.end());
+        return ans;
+        
+    }
+    //Function to find maximum of minimums of every window size.
+    vector <int> maxOfMin(int arr[], int n)
+    {
+        vector <int> NSL=NSL_(arr,n);
+        vector <int> NSR=NSR_(arr,n);
+        vector <int> res(n+1,0);
+        for (int i=0;i<n;i++)
+        {
+            int len=NSR[i]-NSL[i]-1;
+            res[len]=max(arr[i],res[len]);
+        }
+        for (int i=n-1;i>=1;i--)
+            res[i]=max(res[i],res[i+1]);
+            
+        res.erase(res.begin());
+        return res;
+        
+    }
+
 
 2.  LRU Cache
 
