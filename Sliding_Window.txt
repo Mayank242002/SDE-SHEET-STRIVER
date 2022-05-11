@@ -191,11 +191,116 @@ ANS.   1st approach ():
                         Variable size window
 
 
-6.    Longest subarray of sum k
+6.    Longest subarray of sum k(non-negative integers)
 
 ANS.    1st approach ():
 
+       int lenOfLongSubarr(int A[],  int N, int K) 
+    { 
+        int maxi=INT_MIN;
+        long long sum=0;
+        int i=0,j=0;
+        while (j<N)
+        {
+           sum+=A[j];
+           if (sum==K)
+              maxi=max(maxi,j-i+1);
+           while (sum>K)
+           {
+               sum-=A[i];
+               i++;
+           }
+           j++;
+        }
+        return maxi;
         
+    } 
+
+
+7.   Longest k unique characters substring
+
+ANS.   1st approach ():
+
+       int longestKSubstr(string s, int k) {
+     int i=0,j=0;
+     int maxi=INT_MIN;
+     unordered_map<int,int> mp;
+     while (j<s.size())
+     {
+         mp[s[j]]++;
+         while (mp.size()>k)
+         {
+             mp[s[i]]--;
+             if (mp[s[i]]==0)
+               mp.erase(s[i]);
+             i++;
+         }
+         if (mp.size()==k)
+            maxi=max(maxi,j-i+1);
+        j++;
+     }
+     return (maxi==INT_MIN)?-1:maxi;
+    }
+
+       
+8.   Longest Substring Without Repeating Characters (means all unique)
+
+ANS.   1st approach (k is j-i+1 here (that is window size)):
+
+     int lengthOfLongestSubstring(string s) {
+        int i=0,j=0;
+        unordered_map<int,int> mp;
+        int maxi=0;
+        while (j<s.size())
+        {
+            mp[s[j]]++;
+            while (mp.size()<j-i+1)
+            {
+                mp[s[i]]--;
+                if (mp[s[i]]==0)
+                    mp.erase(s[i]);
+                i++;
+            }
+            if (mp.size()==j-i+1)
+                maxi=max(maxi,j-i+1);
+            j++;
+        }
+        return maxi;
+        
+    }
+
+
+9.   Pick Toys (Fruits into Baskets)
+
+ANS.   1st approach (same as Longest substring with k unique characters):
+
+        int totalFruit(vector<int>& fruits) {
+        int i=0,j=0;
+        int maxi=1;
+        unordered_map<int,int> mp;
+        while (j<fruits.size())
+        {
+            mp[fruits[j]]++;
+            while (mp.size()>2)
+            {
+                mp[fruits[i]]--;
+                if (mp[fruits[i]]==0)
+                    mp.erase(fruits[i]);
+                i++;
+            }
+            if (mp.size()<=2)
+                maxi=max(maxi,j-i+1);
+            j++;
+        }
+        return maxi;
+    }
+
+ 
+10 .   Minimum Winodow Substring 
+
+ANS.   1st approach ();
+
+       
 
       
 
