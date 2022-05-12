@@ -1,5 +1,5 @@
 ﻿
-                          Fixed size
+                                 Fixed size
 
 
 1.   Maximum sum Subarray of size k
@@ -50,7 +50,7 @@ ANS.   1st approach ():
   
 3.   Count Occurences of Anagrams
 
-ANS.   1st appraoch ():
+ANS.   1st approach ():
 
        int search(string pat, string txt) {
 	    int ans=0;
@@ -298,7 +298,42 @@ ANS.   1st approach (same as Longest substring with k unique characters):
  
 10 .   Minimum Winodow Substring 
 
-ANS.   1st approach ();
+ANS.   1st approach (similar to ):
+
+       string minWindow(string s, string t) {
+      int i=0,j=0;
+      int mini=INT_MAX;
+        unordered_map<int,int> mp;
+        for (int a:t)­
+            mp[a]++;
+      
+        int count=mp.size(),idx=-1;
+        while (j<s.size())
+        {
+            if (mp.find(s[j])!=mp.end())
+            {
+                mp[s[j]]--;
+                if (mp[s[j]]==0)  count--;
+            }
+            while (count==0)
+            {
+                if (mini>j-i+1)
+                {
+                    mini=j-i+1;
+                    idx=i;
+                }
+                if (mp.find(s[i])!=mp.end())
+                {
+                    mp[s[i]]++;
+                    if (mp[s[i]]==1)
+                        count++;
+                }
+                i++;
+            }
+            j++;
+        }
+        return (idx==-1)?"":s.substr(idx,mini);
+    }
 
        
 
@@ -312,5 +347,3 @@ ANS.   1st approach ();
 
       
        
-
-      
