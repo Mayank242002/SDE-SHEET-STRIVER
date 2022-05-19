@@ -202,11 +202,476 @@ int main()
 
 ANS.   1st approach ():
 
+#include<bits/stdc++.h>
+using namespace std;
+
+//Directedgraph using adjancency matrix O(n2)
+bool CheckCycle(int node,vector<int> adj[],int vis[],int dfsvis[])
+{
+    vis[node]=1;
+    dfsvis[node]=1;
+    for (auto it: adj[node])
+    {
+        if (!vis[it])
+        {
+           if (CheckCycle(it,adj,vis,dfsvis))
+                return true;
+        }
+        else if (dfsvis[it])
+           return true;
+    }
+    dfsvis[node]=0;
+    return false;
+}
+bool isCycle(vector<int> adj[],int N)
+{
+    
+    int vis[N+1],dfsVis[N+1];
+    memset(vis,0,sizeof(vis));
+    memset(dfsVis,0,sizeof(dfsVis));
+    for (int i=1;i<=N;i++)
+    {
+        if (!vis[i])
+        {
+            if (CheckCycle(i,adj,vis,dfsVis))
+               return true;
+        }
+    }
+    return false;
+}
+int main()
+{
+    int n,m;         //n=no of Vertices, m= no of lines of edges 
+    cout<<"enter n and m"<<endl;
+    cin>>n>>m;
+    vector<int> adj[n+1];
+
+    for (int i=1;i<=m;i++)
+    {
+        int u,v;          //ex:- (2,3) is one line which mens there is a edge beetween 2 and 3
+        cin>>u>>v;
+        adj[u].push_back(v);
+    }
+
+    if (isCycle(adj,n))
+        cout<<"Cycle Detected"<<endl;
+    else
+        cout<<"Cycle Not Detected"<<endl;
+    return 0;
+}
+
+       
+
 7.   Detect a Cycle in Directed Graph using BFS
 
 ANS.   1st approach ():
-      
 
+#include<iostream>
+#include<vector>
+#include<stack>
+#include<queue>
+#include <utility>
+#include<cstring>
+using namespace std;
+
+bool Toposort(vector<int> adj[],int n)
+{
+    queue<int> q;
+    vector<int> indegree(n+1,0);
+    for (int i=1;i<=n;i++)
+    {
+        for (auto it: adj[i])
+            indegree[it]++;
+    }
+    for (int i=1;i<=n;i++)
+    {
+        if (indegree[i]==0)
+           q.push(i);
+    }
+
+    int count=0;
+
+    while (!q.empty())
+    {
+        int node=q.front();
+        q.pop();
+        count++;
+        for (auto it:adj[node])
+        {
+            indegree[it]--;
+            if (indegree[it]==0)
+               q.push(it);
+        }
+    }
+
+    if (count==n)
+       return false;
+    else
+       return true;
+}
+
+int main()
+{
+    int n,m;         //n=no of Vertices, m= no of lines of edges 
+    cout<<"enter n and m"<<endl;
+    cin>>n>>m;
+    vector<int> adj[n+1];
+
+    for (int i=1;i<=m;i++)
+    {
+        int u,v;          //ex:- (2,3) is one line which mens there is a edge beetween 2 and 3
+        cin>>u>>v;
+        adj[u].push_back(v);
+    }
+    if (Toposort(adj,n))
+       cout<<"Cycle Detected"<<endl;
+    else
+       cout<<"No Cycle Detected"<<endl;
+       
+
+}
+
+       
+
+8.   Topological Sort (BFS)
+
+ANS.   1st approach (first calculate the inorder degree of each node, add the nodes which have 0 indegree because these are the nodes which are not pointed by anyone ,so they come first in the topological order):
+
+         vector<int> topoSort(int V, vector<int> adj[]) 
+	  {
+	    vector<int> inorder(V,0);
+	    queue<int> q;
+	    for (int i=0;i<V;i++)
+	    {
+	        for (auto it:adj[i])
+	          inorder[it]++;
+	    }
+	    
+	    for (int i=0;i<V;i++)
+	    {
+	        if (inorder[i]==0)
+	           q.push(i);
+	    }
+	    vector<int> ans;
+	    while (!q.empty())
+	    {
+	        int node=q.front();
+	        q.pop();
+	        ans.push_back(node);
+	        for (auto it:adj[node])
+	        {
+	            inorder[it]--;
+	            if (inorder[it]==0)
+	               q.push(it);
+	        }
+	    }
+	    return ans;
+	}
+
+9.   Topological Sort (DFS)
+
+ANS.   1st approach (reversing the vector instead of using stack (as soon as node complete its all traversals add it to the answer vector)):
+
+        void dfs(int node,vector<int> adj[],vector<int> &ans,vector<int> &vis)
+	{
+	    vis[node]=1;
+	    for (auto it:adj[node])
+	    {
+	        if (vis[it]==0)
+	          dfs(it,adj,ans,vis);
+	    }
+	    ans.push_back(node);
+	}
+	void toposort_for_all(vector<int> adj[],int n,vector<int> &ans,vector<int> &vis)
+	{
+	    for (int i=0;i<n;i++)
+	    {
+	        if (vis[i]==0)
+	          dfs(i,adj,ans,vis);
+	    }
+	    reverse(ans.begin(),ans.end());
+	}
+	//Function to return list containing vertices in Topological order. 
+	vector<int> topoSort(int V, vector<int> adj[]) 
+	{
+	    vector<int> ans;
+	    vector<int> vis(V,0);
+	    toposort_for_all(adj,V,ans,vis);
+	    return ans;
+	}
+
+10.  Number of Islands 
+
+ANS.   1st approach (using DFS (mark all the islands with 2 so that another cell is not counted again)):
+
+      void markAllVisited(vector<vector<char>>& grid,int i,int j,int r,int c)
+    {
+        if (i>=r || j>=c || i<0 || j<0 || grid[i][j]=='0' || grid[i][j]=='2')
+            return;
+        grid[i][j]='2';
+        markAllVisited(grid,i,j-1,r,c);
+        markAllVisited(grid,i,j+1,r,c);
+        markAllVisited(grid,i-1,j,r,c);
+        markAllVisited(grid,i+1,j,r,c);
+        
+    }
+    int numIslands(vector<vector<char>>& grid) {
+        int r=grid.size();
+        int c=grid[0].size();
+        int islands=0;
+        for (int i=0;i<r;i++)
+        {
+            for (int j=0;j<c;j++)
+            {
+                if (grid[i][j]=='1')
+                {
+                    markAllVisited(grid,i,j,r,c);
+                    islands++;
+                }
+            }
+        }
+        return islands;
+    }
+
+
+10.1   Max Area of Islands
+
+ANS.   1st approach (count the cell with value 1):
+
+         void markAllVisited(vector<vector<int>>& grid,int i,int j,int r,int c,int &count)
+    {
+        if (i>=r || j>=c || i<0 || j<0 || grid[i][j]==0 || grid[i][j]==2)
+            return;
+        grid[i][j]=2;
+        count++;
+        markAllVisited(grid,i,j-1,r,c,count);
+        markAllVisited(grid,i,j+1,r,c,count);
+        markAllVisited(grid,i-1,j,r,c,count);
+        markAllVisited(grid,i+1,j,r,c,count);
+        
+    }
+    int maxAreaOfIsland(vector<vector<int>>& grid) {
+        int r=grid.size();
+        int c=grid[0].size();
+        int maxi=0;
+        for (int i=0;i<r;i++)
+        {
+            for (int j=0;j<c;j++)
+            {
+                if (grid[i][j]==1)
+                {
+                    int count=0;
+                    markAllVisited(grid,i,j,r,c,count);
+                    maxi=max(maxi,count);
+                }
+            }
+        }
+        return maxi; 
+    }
+
+11.   Bipartite check using BFS
+
+ANS.   1st approach ():
+
+       bool bfs(int src,vector<vector<int>>& graph,vector<int> &col)
+    {
+        queue<int> q;
+        col[src]=1;
+        q.push(src);
+        while (!q.empty())
+        {
+            int node=q.front(); q.pop();
+            for (auto it:graph[node])
+            {
+                if (col[it]==-1)
+                {
+                    col[it]=1-col[node];
+                    q.push(it);
+                }
+                else if (col[it]==col[node])
+                    return false;
+            }
+        }
+        return true;
+    }
+    bool bfs_for_all(vector<vector<int>>& graph,int n,vector<int> &col)
+    {
+        for (int i=0;i<n;i++)
+        {
+            if (col[i]==-1)
+                if (!bfs(i,graph,col))
+                    return false;
+        }
+        return true;
+    }
+    bool isBipartite(vector<vector<int>>& graph) {
+       int n=graph.size();
+        vector<int> col(n,-1);
+       return bfs_for_all(graph,n,col);
+    }
+
+
+12.   Bipartite check using DFS
+
+ANS.   1st approach ():
+
+bool Dfs(int src,vector<vector<int>>& graph,vector<int> &col)
+    {
+        if (col[src]==-1)
+            col[src]=1;
+        for (auto it:graph[src])
+        {
+            if (col[it]==-1)
+            {
+                col[it]=1-col[src];
+                if (!Dfs(it,graph,col))
+                    return false;
+            }
+            else if (col[it]==col[src])
+                return false;
+        }
+        return true;
+    }
+    bool Dfs_for_all(vector<vector<int>>& graph,int n,vector<int> &col)
+    {
+        for (int i=0;i<n;i++)
+        {
+            if (col[i]==-1)
+                if (!Dfs(i,graph,col))
+                    return false;
+        }
+        return true;
+    }
+    bool isBipartite(vector<vector<int>>& graph) {
+       int n=graph.size();
+        vector<int> col(n,-1);
+       return Dfs_for_all(graph,n,col);
+    }
+
+
+
+
+13.   Surrounded Regions
+
+ANS.   1st approach (first search for the ‘0’ that are on boundary, mark them ‘2’, then search again to mark the rest of ‘0’ to ‘x’):
+
+       void DFS(vector<vector<char>>& grid,int i,int j,int r,int c)
+    {
+        if (i>=r || j>=c || i<0 || j<0 || grid[i][j]=='X' || grid[i][j]=='2')
+            return;
+        grid[i][j]='2';
+        DFS(grid,i,j-1,r,c);
+        DFS(grid,i,j+1,r,c);
+        DFS(grid,i-1,j,r,c);
+        DFS(grid,i+1,j,r,c);
+        
+    }
+    void solve(vector<vector<char>>& board) {
+        int m=board.size();
+        int n=board[0].size();
+        
+        for(int i=0; i<m; i++) {
+         if(board[i][0] == 'O')
+             DFS(board, i, 0, m, n);
+         if(board[i][n-1] == 'O')
+             DFS(board, i, n-1, m, n);
+     }
+        
+        
+     //Moving over first and last row   
+     for(int j=0; j<n; j++) {
+         if(board[0][j] == 'O')
+             DFS(board, 0, j, m, n);
+         if(board[m-1][j] == 'O')
+             DFS(board, m-1, j, m, n);
+     }
+        
+     for(int i=0; i<m; i++)
+         for(int j=0; j<n; j++)
+         {
+             if(board[i][j] == 'O')
+                 board[i][j] = 'X';
+             if(board[i][j] == '2')
+                 board[i][j] = 'O';
+         }
+    }
+
+
+14.   Course Schedule
+
+ANS.   1st approach (convert the given 2d into directed graph and apply topological sort):
+
+       bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        vector<int> indegree(numCourses,0);
+        vector<int> adj[numCourses];
+        queue<int> q;
+        for (int i=0;i<prerequisites.size();i++)
+            adj[prerequisites[i][1]].push_back(prerequisites[i][0]);
+        for (int i=0;i<numCourses;i++)
+        {
+            for (auto it:adj[i])
+                indegree[it]++;
+        }
+        for (int i=0;i<numCourses;i++)
+        {
+               if (indegree[i]==0)
+                   q.push(i);
+        }
+        
+        int count=0;
+        while (!q.empty())
+        {
+            int node=q.front();
+            q.pop();
+            count++;
+            for (auto it:adj[node])
+            {
+                indegree[it]--;
+                if (indegree[it]==0)
+                    q.push(it);
+            }
+        }
+        return (count==numCourses)?true:false;
+    }
+
+
+15.   Course Schedule II
+
+ANS.   1st approach ():
+
+       vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
+        vector<int> indegree(numCourses,0);
+        vector<int> adj[numCourses];
+        vector<int> ans;
+        queue<int> q;
+        for (int i=0;i<prerequisites.size();i++)
+            adj[prerequisites[i][1]].push_back(prerequisites[i][0]);
+        for (int i=0;i<numCourses;i++)
+        {
+            for (auto it:adj[i])
+                indegree[it]++;
+        }
+        for (int i=0;i<numCourses;i++)
+        {
+               if (indegree[i]==0)
+                   q.push(i);
+        }
+        while (!q.empty())
+        {
+            int node=q.front();
+            q.pop();
+            ans.push_back(node);
+            for (auto it:adj[node])
+            {
+                indegree[it]--;
+                if (indegree[it]==0)
+                    q.push(it);
+            }
+        }
+        if (ans.size()!=numCourses) ans.clear(); return ans;
+    }
+
+           
 
 
 
