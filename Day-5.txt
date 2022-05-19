@@ -24,6 +24,36 @@ ANS.   1st approach (using three pointer O(n)):
         }
 
 
+1.1  Reverse a Linked List ||
+
+ANS.   1st approach (move to the left node and take a previous pointer to the previous of left node, reverse the linked list from left to right):
+
+       ListNode* reverseBetween(ListNode* head, int m, int n) {
+        ListNode *prev=nullptr,*curr=head;
+        int i=0;
+        for (;i<m-1;i++)
+        {
+            prev=curr;
+            curr=curr->next;
+        }
+        ListNode *con=prev,*tail=curr;
+        ListNode *p=curr->next;
+        for (;i<n-1;i++)
+        {
+            prev=curr;
+            curr=p;
+            p=p->next;
+            curr->next=prev;
+        }
+        if (con!=nullptr)
+            con->next=curr;
+        else
+            head=curr;
+        tail->next=p;
+        return head;   
+    }
+
+
 2.Find middle of LinkedList
 
 ANS.   1st approach (traverse to count the no. of nodes and then again traverse for middle  O(n)+O(n/2))  :
