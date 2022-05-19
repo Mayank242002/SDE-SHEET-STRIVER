@@ -1,7 +1,7 @@
-﻿                                               SDE SHEET STRIVER
+﻿                                SDE SHEET STRIVER
 
 
-                                                      DAY 6
+                                     DAY 6
 
 
 1.Find intersection point of Y LinkedList
@@ -113,7 +113,32 @@ ANS.    1st approach (Brute force : using hash table   TC=O(N), SC=O(N))  :
             q=q->next;
             p=p->next;
            
-            if (q==nullptr)
+            if (q==nullptr)int sum_0f_squares(int n)
+    {
+        int res=0;
+        while (n)
+        {
+            int rem=n%10;
+            res+=rem*rem;
+            n=n/10;
+        }
+        return res;
+    }
+2.1   Happy Number
+
+ANS.   1st approach (applying same concept of fast and slow pointer):
+
+
+    bool isHappy(int n) {
+        int slow=n,fast=n;
+       do
+       {
+           slow=sum_0f_squares(slow);
+           fast=sum_0f_squares(fast);
+           fast=sum_0f_squares(fast);
+       }while(slow!=fast);
+        return (slow==1)?true:false;
+    }
                 return false;
             else
                 q=q->next;
