@@ -130,4 +130,41 @@ ANS.   1st approach (Brute force):
         return true;
     }
 
+
+
+4.   Product of Array Except Self
+
+ANS.   1st approach (multiply all numbers and divide the multiplication by each number):
+
+ 2nd approach (calculate left and right products in two vectors   TC-O(N),SC-O(N)):
+
+       vector<int> productExceptSelf(vector<int>& nums) {
+        int n=nums.size();
+        vector<int> left(n,1);
+        vector<int> right(n,1);
+        for (int i=1;i<n;i++)
+            left[i]=left[i-1]*nums[i-1];
+        for (int i=n-2;i>=0;i--)
+            right[i]=right[i+1]*nums[i+1];
+        vector<int> ans(n,0);
+        for (int i=0;i<n;i++)
+            ans[i]=left[i]*right[i];
+        return ans;
+        }
+
+3rd approach (Use ans vector for storing the left multiplication   TC-O(N),SC-O(1)):
+
+      vector<int> productExceptSelf(vector<int>& nums) {
+        int n=nums.size();
+        vector<int> ans(n,1);
+        int prod=nums[n-1];
+        for (int i=1;i<n;i++)
+            ans[i]=ans[i-1]*nums[i-1];
+        for (int i=n-2;i>=0;i--)
+        {
+            ans[i]=ans[i]*prod;
+            prod*=nums[i];
+        }
+        return ans;
+    }
     
