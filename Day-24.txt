@@ -1,7 +1,179 @@
 ﻿                        Graph II
 
+1.   Strongly connected Components(kosarajgou’s algo)
 
-1.   Shortest Distance in Undirected Unweighted Graph
+ANS.   1st approach ():
+
+2.   Dijkastra Algo
+
+ANS.   1st approach ():
+
+     vector<int> Dijkastra_algo(vector<pair<int,int>> adj[],int src,int n)
+{
+    priority_queue<pair<int,int>, vector<pair<int,int>>,greater<pair<int,int>>> pq;
+    vector<int> distTo(n+1,INT_MAX);
+    distTo[src]=0;
+    pq.push(make_pair(0,src));
+    while (!pq.empty())
+    {
+        int node=pq.top().second;
+        int weight=pq.top().first;
+        pq.pop();
+        for (auto it: adj[node])
+        {
+            if (distTo[node]+it.second<distTo[it.first])
+            {
+                distTo[it.first]=distTo[node]+it.second;
+                pq.push({distTo[it.first],it.first});
+            }
+        }
+    }
+
+    return distTo;
+
+}
+
+3.   Bell-man Ford algo
+
+ANS.   1st approach ():
+
+4.   Floyd-warshall algo
+
+ANS.   1st approach ():
+
+5.   MST using Prims Algorithm
+
+ANS.   1st approach ():
+
+          int spanningTree(int n, vector<vector<int>> adj[])
+    {
+        //for graph having node from 0 to n
+        
+        int parent[n+1];
+        int key[n+1];
+        int mset[n+1];
+        
+        for (int i=0;i<=n;i++)
+           mset[i]=false,key[i]=INT_MAX;
+        key[0]=0;
+        parent[0]=-1;
+        priority_queue<pair<int,int>, vector <pair<int,int>> , greater<pair<int,int>> > pq;
+        pq.push({0,0});
+        while (!pq.empty())
+        {
+            int u=pq.top().second;
+            pq.pop();
+            
+            mset[u]=true;
+            
+            for (auto it:adj[u])
+            {
+                int node=it[0];
+                int weight=it[1];
+                if (mset[node]==false && weight<key[node])
+                {
+                    key[node]=weight;
+                    parent[node]=u;
+                    pq.push({weight,node});
+                }
+            }
+        }
+        
+        int ans=0;
+        for (int i=1;i<=n;i++)
+           if (key[i]!=INT_MAX)
+           ans+=key[i];
+           
+         return ans;
+    }
+
+6.   MST using Krushkals Algorithm
+
+ANS.   1st approach ():
+
+#include<bits/stdc++.h>
+using namespace std;
+struct node {
+    int u;
+    int v;
+    int wt; 
+    node(int first, int second, int weight) {
+        u = first;
+        v = second;
+        wt = weight;
+    }
+};
+
+bool comp(node a, node b) {
+    return a.wt < b.wt; 
+}
+
+int findPar(int u, vector<int> &parent) {
+    if(u== parent[u]) 
+	   return u; 
+    return parent[u] = findPar(parent[u], parent); 
+}
+
+void unionn(int u, int v, vector<int> &parent, vector<int> &rank) {
+    u = findPar(u, parent);
+    v = findPar(v, parent);
+    if(rank[u] < rank[v]) {
+    	parent[u] = v;
+    }
+    else if(rank[v] < rank[u]) {
+    	parent[v] = u; 
+    }
+    else {
+    	parent[v] = u;
+    	rank[u]++; 
+    }
+}
+int main(){
+	int N,m;
+	cin>>N>>m;
+	vector<pair<int,int>> adj[N];
+	cout<<"enter the edge and its weight"<<endl;
+	for (int i=0;i<m;i++)
+	{
+		int a,b,wt;
+		cin>>a>>b>>wt;
+		adj[a].push_back({b,wt});
+		adj[b].push_back({a,wt});
+	}
+	vector<node> edges; 
+	
+	//converting adjacency list to the easy edge structure
+    for (int i=0;i<N;i++)
+	{
+		for (auto it:adj[i])
+		{
+			edges.push_back(node(i,it.first,it.second));
+		}
+	}
+	sort(edges.begin(), edges.end(), comp); 
+	
+	vector<int> parent(N);
+	for(int i = 0;i<N;i++) 
+	    parent[i] = i; 
+	vector<int> rank(N, 0); 
+	
+	int cost = 0;
+	vector<pair<int,int>> mst; 
+	for(auto it : edges) {
+	    if(findPar(it.v, parent) != findPar(it.u, parent)) {
+	        cost += it.wt; 
+	        mst.push_back({it.u, it.v}); 
+	        unionn(it.u, it.v, parent, rank); 
+	    }
+	}
+	cout << cost << endl;
+	for(auto it : mst) cout << it.first << " - " << it.second << endl; 
+	return 0;
+}
+
+
+
+7.   Shortest Distance in Undirected Unweighted Graph
 
 ANS.   1st approach ():
 
@@ -54,7 +226,7 @@ int main()
     return 0;
 }
 
-2.   Shortest Path in DAG
+8.   Shortest Path in DAG
 
 ANS.   1st approach ():
 
@@ -142,7 +314,7 @@ int main()
 }
 
 
-3.   Shortest Distance in Undirected weighted Graph (Dijkasra’s Algorithm)
+9.   Shortest Distance in Undirected weighted Graph (Dijkasra’s Algorithm)
 
 ANS.   1st approach ():
 
