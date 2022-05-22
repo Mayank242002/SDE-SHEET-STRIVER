@@ -1,0 +1,193 @@
+﻿                            0/1 KnapSack
+
+
+1.   0/1 Knapsack Recursive
+
+ANS.   1st approach ():
+
+ int knapsack(int wt[], int val[], int w, int n)
+{
+    if (n == 0 || w == 0)
+        return 0;
+
+    // these are the choices we are having
+    if (wt[n - 1] <= w)
+        return max(val[n - 1] + knapsack(wt, val, w - wt[n - 1], n - 1), knapsack(wt, val, w, n – 1));
+    else
+        return knapsack(wt, val, w, n - 1); // return as it is by redusing the size of array
+   
+}
+
+
+2.   0/1 Knapsack Memoized
+
+ANS.   1st approach ():
+
+int knapSack_helper(int W, int wt[], int val[], int n,vector<vector<int>> &t) 
+    { 
+       if (n==0 || W==0)
+         return 0;
+       if (t[n][W]!=-1)
+         return t[n][W];
+       if (wt[n-1]<=W)
+         return t[n][W]=max(val[n-1]+knapSack_helper(W-wt[n-1],wt,val,n-1,t),knapSack_helper(W,wt,val,n-1,t));
+       else
+         return t[n][W]=knapSack_helper(W,wt,val,n-1,t);
+    }
+    //Function to return max value that can be put in knapsack of capacity W.
+    int knapSack(int W, int wt[], int val[], int n) 
+    { 
+         vector<vector<int>> t(n+1,vector<int> (W+1,-1));
+         return knapSack_helper(W,wt,val,n,t);
+    }
+
+
+3.   0/1 KnapSack DP
+
+ANS.   1st approach ():
+
+       int knapSack(int W, int wt[], int val[], int n) 
+    { 
+         int t[n+1][W+1];
+         //base condition
+         for (int i=0;i<n+1;i++)
+             t[i][0]=0;
+         for (int i=0;i<W+1;i++)
+             t[0][i]=0;
+         
+         for (int i=1;i<n+1;i++)
+         {
+             for (int j=1;j<W+1;j++)
+             {
+                 if (wt[i-1]<=j)
+                  t[i][j]=max(val[i-1]+t[i-1][j-wt[i-1]],t[i-1][j]);
+                 else
+                  t[i][j]=t[i-1][j];
+             }
+         }
+         return t[n][W];
+    }
+
+
+4.   Subset Sum
+
+ANS.   1st approach ():
+
+bool isSubsetSum(vector<int>arr, int sum){
+        int n=arr.size();
+        int t[n+1][sum+1];
+        for (int i=0;i<sum+1;i++)
+           t[0][i]=false;
+        for (int i=0;i<n+1;i++)
+           t[i][0]=true;
+        for (int i=1;i<n+1;i++)
+        {
+            for (int j=1;j<sum+1;j++)
+            {
+                if (arr[i-1]<=j)
+                 t[i][j]=t[i-1][j-arr[i-1]] || t[i-1][j];
+                else
+                 t[i][j]=t[i-1][j]; 
+            }
+        }
+        return t[n][sum];
+    }
+
+
+5.   Equal Sum Partition
+
+ANS.   1st approach ():
+
+       bool subset(vector<int> &arr,int n,int sum)
+    {
+        int t[n+1][sum+1];
+        for (int i=0;i<sum+1;i++)
+           t[0][i]=false;
+        for (int i=0;i<n+1;i++)
+           t[i][0]=true;
+        for (int i=1;i<n+1;i++)
+        {
+            for (int j=1;j<sum+1;j++)
+            {
+                if (arr[i-1]<=j)
+                 t[i][j]=t[i-1][j-arr[i-1]] || t[i-1][j];
+                else
+                 t[i][j]=t[i-1][j]; 
+            }
+        }
+        return t[n][sum];
+    }
+    bool canPartition(vector<int>& nums) {
+        int n=nums.size();
+        int sum=accumulate(nums.begin(),nums.end(),0);
+        if (sum%2==0)
+           return subset(nums,n,sum/2);
+        else 
+            return false;
+        
+    }
+
+
+6.    Count of subset sum with a given sum
+
+ANS.   1st approach ():
+
+int mod=1e9+7;
+	
+	int perfectSum(int arr[], int n, int sum)
+	{
+	    int t[n+1][sum+1];
+	    for (int i=0;i<sum+1;i++)
+	       t[0][i]=0;
+	    for (int i=0;i<n+1;i++)
+	       t[i][0]=1;
+	    for (int i=1;i<n+1;i++)
+	    {
+	        for (int j=0;j<sum+1;j++)
+	        {
+	            if (arr[i-1]<=j)
+	               t[i][j]=(t[i-1][j-arr[i-1]]+t[i-1][j])%mod;
+	            else
+	               t[i][j]=t[i-1][j];
+	        }
+	    }
+	    return t[n][sum];
+	}
+
+
+7.  Minimum subset sum diffrence
+
+ANS.   1st approach ():
+
+       int minDifference(int arr[], int n)  { 
+        int sum=accumulate(arr,arr+n,0);
+        int t[n+1][sum+1];
+
+        for (int i=0;i<sum+1;i++)
+           t[0][i]=false;
+        for (int i=0;i<n+1;i++)
+           t[i][0]=true;
+
+        for (int i=1;i<n+1;i++)
+        {
+            for (int j=1;j<sum+1;j++)
+            {
+                if (arr[i-1]<=j)
+                 t[i][j]=t[i-1][j-arr[i-1]] || t[i-1][j];
+                else
+                 t[i][j]=t[i-1][j]; 
+            }
+        }
+        int mini=INT_MAX;
+        for (int i=0;i<=sum/2;i++)
+        {
+            if (t[n][i]==true)
+                mini=min(mini,sum-2*i);
+        }
+        return mini;
+	} 
+
+
+
+
+
