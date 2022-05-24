@@ -1,4 +1,4 @@
-﻿                            0/1 KnapSack
+﻿                            Dynamic Programming
 
 
 1.   0/1 Knapsack Recursive
@@ -187,7 +187,262 @@ ANS.   1st approach ():
         return mini;
 	} 
 
+8.   Count the number of subsets with given diffrence
+
+ANS.  1st approach ():
+
+int countPartitions(int n, int d, vector<int> &arr) {
+       int mod=1e9+7;
+        int sum=0;
+       for (int i=0;i<n;i++)
+            sum+=arr[i];
+       if ((sum+d)%2!=0) return 0;
+       sum=(sum+d)/2;
+        int t[n+1][sum+1];
+        for (int i=0;i<sum+1;i++)
+           t[0][i]=0;
+        for (int i=0;i<n+1;i++)
+           t[i][0]=1;
+        for (int i=1;i<n+1;i++)
+        {
+            for (int j=0;j<sum+1;j++)
+            {
+                if (arr[i-1]<=j)
+                   t[i][j]=(t[i-1][j-arr[i-1]]+t[i-1][j])%mod;
+                else
+                   t[i][j]=t[i-1][j]%mod;
+            }
+        }
+        return t[n][sum]%mod;
+}
+
+9.  Unbounded KnapSack DP
+
+ANS.   1st approach ():
+
+       int knapSack(int W, int wt[], int val[], int n) 
+    { 
+         int t[n+1][W+1];
+         //base condition
+         for (int i=0;i<n+1;i++)
+             t[i][0]=0;
+         for (int i=0;i<W+1;i++)
+             t[0][i]=0;
+         
+         for (int i=1;i<n+1;i++)
+         {
+             for (int j=1;j<W+1;j++)
+             {
+                 if (wt[i-1]<=j)
+                  t[i][j]=max(val[i-1]+t[i][j-wt[i-1]],t[i-1][j]);
+                 else
+                  t[i][j]=t[i-1][j];
+             }
+         }
+         return t[n][W];
+    }
+
+
+10.   Rod Cutting Problem
+
+ANS.  1st approach ():
+
+     int cutRod(int price[], int n) {
+        int length[n];
+        for (int i=n-1;i>=0;i--)
+            length[i]=i+1;
+        
+        int t[n+1][n+1];
+         for (int i=0;i<n+1;i++)
+         {
+             t[i][0]=0;
+             t[0][i]=0;
+         }
+         for (int i=1;i<n+1;i++)
+         {
+             for (int j=1;j<n+1;j++)
+             {
+                 if (length[i-1]<=j)
+                  t[i][j]=max(price[i-1]+t[i][j-length[i-1]],t[i-1][j]);
+                 else
+                  t[i][j]=t[i-1][j];
+             }
+         }
+         return t[n][n];
+        
+    }
+
+
+11.   Maximize the cut segements
+
+ANS.   1st approach ():
+
+Note:we have to put the condition of INT_MIN because if of cut segments doesn't add up to given length than we don't have to consider them
+
+more precisely for DP[0][i] = INT_MIN
+cause if we check for a knapsack of size i and elements becomes 0 we don't have to count that cut segments that's why INT_MIN will nullify them in max() part
+
+int unbound_knap(int length[] , int n)
+{  
+
+    int t[3+1][n+1];
+ 
+     for(int i=0;i<3+1; i++) t[i][0]=0;
+     for(int j=0;j<n+1; j++) t[0][j]=INT_MIN;
+     
+    for(int i=1;i<3+1;i++)
+    {
+        for(int j=1 ;j<n+1; j++)
+        {
+            if(length[i-1]<=j)
+                t[i][j]= max(1 + t[i][j-length[i-1]] , t[i-1][j]);
+            else
+                t[i][j]= t[i-1][j];
+        }
+    }
+   return (t[3][n] >= 0) ? t[3][n] :0;
+}
+
+    //Function to find the maximum number of cuts.
+    int maximizeTheCuts(int n, int x, int y, int z)
+    {
+    int length[3];
+    length[0]=x;
+    length[1]=y;
+    length[2]=z;
+    
+    int res= unbound_knap(length, n);  // n= rod length
+    return res;
+        
+    }
+};
+
+
+12.   Coin Change (maximum Number of Ways)
+
+ANS.   1st approach ():
+
+ int change(int amount, vector<int>& coins) {
+        int n=coins.size();
+        int t[n+1][amount+1];
+        for (int i=0;i<amount+1;i++)
+            t[0][i]=0;
+        for (int i=0;i<n+1;i++)
+            t[i][0]=1;
+        
+        for (int i=1;i<n+1;i++)
+        {
+            for (int j=1;j<amount+1;j++)
+            {
+                if (coins[i-1]<=j)
+                    t[i][j]=t[i][j-coins[i-1]]+t[i-1][j];
+                else
+                    t[i][j]=t[i-1][j];
+            }
+        }
+        return t[n][amount];        
+    }
+
+
+13.   Coin Change (minimum Number of Coins)
+
+ANS.   1st appraoch ():
+
+    int coinChange(vector<int>& coins, int amount) {
+        int n=coins.size();
+        int t[n+1][amount+1];
+        for (int i=0;i<amount+1;i++)
+            t[0][i]=INT_MAX-1;
+        for (int i=0;i<n+1;i++)
+            t[i][0]=0;
+        
+        for (int i=1;i<n+1;i++)
+        {
+            for (int j=1;j<amount+1;j++)
+            {
+                if (coins[i-1]<=j)
+                    t[i][j]=min(1+t[i][j-coins[i-1]],t[i-1][j]);
+                else
+                    t[i][j]=t[i-1][j];
+            }
+        }
+        return  (INT_MAX-1==t[n][amount])?-1:t[n][amount];        
+    }
+
+
+14.   Largest Common Subsequence 
+
+ANS.   1st approach (recursive):
+
+       int LCS(string &x,string &y,int n,int m)
+    {
+        if (n==0 || m==0)
+            return 0;
+        if (x[n-1]==y[m-1])
+            return 1+LCS(x,y,n-1,m-1);
+        else
+            return max(LCS(x,y,n-1,m),LCS(x,y,n,m-1));
+    }
+    int longestCommonSubsequence(string text1, string text2) {
+        return LCS(text1,text2,text1.size(),text2.size());
+    }
+
+
+ 2nd approach (memoized):
+
+    int LCS(string &x,string &y,int n,int m,vector<vector<int>> t)
+    {
+        if (n==0 || m==0)
+            return 0;
+        if (t[n][m]!=-1)
+            return t[n][m];
+        if (x[n-1]==y[m-1])
+            return t[n][m]=1+LCS(x,y,n-1,m-1,t);
+        else
+            return t[n][m]=max(LCS(x,y,n-1,m,t),LCS(x,y,n,m-1,t));
+    }
+    int longestCommonSubsequence(string text1, string text2) {
+        int n=text1.size();
+        int m=text2.size();
+        vector<vector<int>> t(n+1,vector<int> (m+1,-1));
+        return LCS(text1,text2,n,m,t);
+    }
+
+
+3rd approach (Bottom Up (DP)):
+
+ int longestCommonSubsequence(string text1, string text2) {
+        int n=text1.size();
+        int m=text2.size();
+        vector<vector<int>> t(n+1,vector<int> (m+1,-1));
+        for (int i=0;i<n+1;i++)
+            t[i][0]=0;
+        for (int i=0;i<m+1;i++)
+            t[0][i]=0;
+        
+        for (int i=1;i<n+1;i++)
+        {
+            for (int j=1;j<m+1;j++)
+            {
+                if (text1[i-1]==text2[j-1])
+                    t[i][j]=1+t[i-1][j-1];
+                else
+                    t[i][j]=max(t[i-1][j],t[i][j-1]);
+            }
+        }
+        return t[n][m];
+        
+    }
+
+	
+15.   Longest Common Substring
+
+ANS.   1st approach ():
 
 
 
 
+
+
+
+ 
