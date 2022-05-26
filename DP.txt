@@ -439,6 +439,271 @@ ANS.   1st approach (recursive):
 
 ANS.   1st approach ():
 
+     
+
+       int longestCommonSubstr (string S1, string S2, int n, int m)
+    {
+        int t[n+1][m+1];
+        for (int i=0;i<n+1;i++)
+           t[i][0]=0;
+        for (int i=0;i<m+1;i++)
+           t[0][i]=0;
+           
+        int count=0;
+        for (int i=1;i<n+1;i++)
+        {
+            for (int j=1;j<m+1;j++)
+            {
+                if (S1[i-1]==S2[j-1])
+                {
+                    t[i][j]=1+t[i-1][j-1];
+                    count=max(count,t[i][j]);
+                }
+                else
+                t[i][j]=0;
+                                 
+            }
+        }
+        return count;
+           
+    }
+
+
+16.   Printing Longest Common Subsequence
+
+ANS.   1st approach ():
+
+   vector<int> longestCommonSubsequence(vector<int> a, vector<int> b) {
+        int n=a.size();
+        int m=b.size();
+        vector<vector<int>> t(n+1,vector<int> (m+1,-1));
+        for (int i=0;i<n+1;i++)
+            t[i][0]=0;
+        for (int i=0;i<m+1;i++)
+            t[0][i]=0;
+        
+        for (int i=1;i<n+1;i++)
+        {
+            for (int j=1;j<m+1;j++)
+            {
+                if (a[i-1]==b[j-1])
+                    t[i][j]=1+t[i-1][j-1];
+                else
+                    t[i][j]=max(t[i-1][j],t[i][j-1]);
+            }
+        }
+        vector<int> ans;
+        int i=n,j=m;
+        while (i>0 && j>0)
+        {
+            if (a[i-1]==b[j-1])
+            {
+                ans.push_back(a[i-1]);
+                i--;
+                j--;
+            }
+            else if (t[i][j-1]>t[i-1][j])
+                j--;
+            else
+                i--;
+        }
+        reverse(ans.begin(), ans.end());
+        return ans;
+        
+}
+
+
+17.   Shortest Common Subsequence
+
+ANS.   1st approach ():
+
+       int longestCommonSubsequence(string text1, string text2) {
+        int n=text1.size();
+        int m=text2.size();
+        vector<vector<int>> t(n+1,vector<int> (m+1,-1));
+        for (int i=0;i<n+1;i++)
+            t[i][0]=0;
+        for (int i=0;i<m+1;i++)
+            t[0][i]=0;
+        
+        for (int i=1;i<n+1;i++)
+        {
+            for (int j=1;j<m+1;j++)
+            {
+                if (text1[i-1]==text2[j-1])
+                    t[i][j]=1+t[i-1][j-1];
+                else
+                    t[i][j]=max(t[i-1][j],t[i][j-1]);
+            }
+        }
+        return t[n][m];
+        
+    }
+    //Function to find length of shortest common supersequence of two strings.
+    int shortestCommonSupersequence(string X, string Y, int m, int n)
+    {
+        return m+n-longestCommonSubsequence(X,Y);
+    }
+
+
+
+18.   Printing Shortest Common Subsequence
+
+ANS.   1st approach ():
+
+        string shortestCommonSupersequence(string text1, string text2) {
+        int n=text1.size();
+        int m=text2.size();
+        vector<vector<int>> t(n+1,vector<int> (m+1,-1));
+        for (int i=0;i<n+1;i++)
+            t[i][0]=0;
+        for (int i=0;i<m+1;i++)
+            t[0][i]=0;
+        
+        for (int i=1;i<n+1;i++)
+        {
+            for (int j=1;j<m+1;j++)
+            {
+                if (text1[i-1]==text2[j-1])
+                    t[i][j]=1+t[i-1][j-1];
+                else
+                    t[i][j]=max(t[i-1][j],t[i][j-1]);
+            }
+        }
+        
+        int i=n,j=m;
+        string s;
+        while(i>0 && j>0) {
+            if(text1[i-1] == text2[j-1])
+            {
+                s.push_back(text1[i-1]);
+                i--;
+                j--;
+            } else {
+                if(t[i][j-1] > t[i-1][j]) {
+                    s.push_back(text2[j-1]);
+                    j--;
+                } else {
+                    s.push_back(text1[i-1]);
+                    i--;
+                }
+            }
+        }
+        
+        while(i > 0) {
+            s.push_back(text1[i-1]);
+            i--;
+        }
+        
+        while(j > 0) {
+            s.push_back(text2[j-1]);
+            j--;
+        } 
+        
+        reverse(s.begin(), s.end());
+        return s;
+    }
+
+
+19.    Minimum number of deletions and insertions / 583. Delete Operation for
+ Two Strings
+
+ANS.   1st approach ():
+
+        int longestCommonSubsequence(string text1, string text2) {
+        int n=text1.size();
+        int m=text2.size();
+        vector<vector<int>> t(n+1,vector<int> (m+1,-1));
+        for (int i=0;i<n+1;i++)
+            t[i][0]=0;
+        for (int i=0;i<m+1;i++)
+            t[0][i]=0;
+        
+        for (int i=1;i<n+1;i++)
+        {
+            for (int j=1;j<m+1;j++)
+            {
+                if (text1[i-1]==text2[j-1])
+                    t[i][j]=1+t[i-1][j-1];
+                else
+                    t[i][j]=max(t[i-1][j],t[i][j-1]);
+            }
+        }
+        return t[n][m];
+        
+    }
+	int minOperations(string str1, string str2) 
+	{ 
+	    return str1.size()+str2.size()-longestCommonSubsequence(str1,str2)*2;
+	    
+	} 
+
+
+20.    Longest Palindromic Subsequence
+
+ANS.   1st approach ():
+
+       int longestCommonSubsequence(string text1, string text2) {
+        int n=text1.size();
+        int m=text2.size();
+        vector<vector<int>> t(n+1,vector<int> (m+1,-1));
+        for (int i=0;i<n+1;i++)
+            t[i][0]=0;
+        for (int i=0;i<m+1;i++)
+            t[0][i]=0;
+        
+        for (int i=1;i<n+1;i++)
+        {
+            for (int j=1;j<m+1;j++)
+            {
+                if (text1[i-1]==text2[j-1])
+                    t[i][j]=1+t[i-1][j-1];
+                else
+                    t[i][j]=max(t[i-1][j],t[i][j-1]);
+            }
+        }
+        return t[n][m];
+        
+    }
+    int longestPalindromeSubseq(string s) {
+     string s2=s;
+     reverse(s2.begin(),s2.end());
+     return longestCommonSubsequence(s,s2);
+    }
+
+
+
+21.   Minimum number of deletions to make it Palindrome
+
+ANS.   1st approach ():
+
+       int longestCommonSubsequence(string text1, string text2) {
+        int n=text1.size();
+        int m=text2.size();
+        vector<vector<int>> t(n+1,vector<int> (m+1,-1));
+        for (int i=0;i<n+1;i++)
+            t[i][0]=0;
+        for (int i=0;i<m+1;i++)
+            t[0][i]=0;
+        
+        for (int i=1;i<n+1;i++)
+        {
+            for (int j=1;j<m+1;j++)
+            {
+                if (text1[i-1]==text2[j-1])
+                    t[i][j]=1+t[i-1][j-1];
+                else
+                    t[i][j]=max(t[i-1][j],t[i][j-1]);
+            }
+        }
+        return t[n][m];
+    }
+int minDeletions(string str, int n) { 
+    string s2=str;
+    reverse(s2.begin(),s2.end());
+    return n-longestCommonSubsequence(str,s2);
+} 
+
 
 
 
