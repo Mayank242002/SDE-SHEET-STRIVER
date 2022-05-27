@@ -513,6 +513,8 @@ ANS.   1st approach ():
 }
 
 
+
+
 17.   Shortest Common Subsequence
 
 ANS.   1st approach ():
@@ -638,8 +640,43 @@ ANS.   1st approach ():
 	    
 	} 
 
+20.   Minimum ASCII Delete Sum for Two Strings
 
-20.    Longest Palindromic Subsequence
+ANS.   1st approach (instead of adding 1 , we have added ascii value of the character to maximize the lcs):
+
+       int longestCommonSubsequence(string text1, string text2) {
+        int n=text1.size();
+        int m=text2.size();
+        vector<vector<int>> t(n+1,vector<int> (m+1,-1));
+        for (int i=0;i<n+1;i++)
+            t[i][0]=0;
+        for (int i=0;i<m+1;i++)
+            t[0][i]=0;
+        
+        for (int i=1;i<n+1;i++)
+        {
+            for (int j=1;j<m+1;j++)
+            {
+                if (text1[i-1]==text2[j-1])
+                    t[i][j]=text1[i-1]+t[i-1][j-1];
+                else
+                    t[i][j]=max(t[i-1][j],t[i][j-1]);
+            }
+        }
+        return t[n][m]; 
+    }
+    int minimumDeleteSum(string s1, string s2) {
+        int lcs= longestCommonSubsequence(s1,s2);
+        int sum=0;
+        for (int a:s1)
+            sum+=a;
+        for (int a:s2)
+            sum+=a;
+        sum-=2*lcs;
+        return sum;
+    }
+
+21.    Longest Palindromic Subsequence
 
 ANS.   1st approach ():
 
@@ -673,7 +710,7 @@ ANS.   1st approach ():
 
 
 
-21.   Minimum number of deletions to make it Palindrome
+22.   Minimum number of deletions to make it Palindrome
 
 ANS.   1st approach ():
 
@@ -706,7 +743,189 @@ int minDeletions(string str, int n) {
 
 
 
+23.   Longest Repeating Subsequence
 
+ANS.   1st approach ():
+
+      int longestCommonSubsequence(string text1, string text2) {
+        int n=text1.size();
+        int m=text2.size();
+        vector<vector<int>> t(n+1,vector<int> (m+1,-1));
+        for (int i=0;i<n+1;i++)
+            t[i][0]=0;
+        for (int i=0;i<m+1;i++)
+            t[0][i]=0;
+        
+        for (int i=1;i<n+1;i++)
+        {
+            for (int j=1;j<m+1;j++)
+            {
+                if (i!=j && text1[i-1]==text2[j-1])
+                    t[i][j]=1+t[i-1][j-1];
+                else
+                    t[i][j]=max(t[i-1][j],t[i][j-1]);
+            }
+        }
+        return t[n][m];
+        
+    }
+		int LongestRepeatingSubsequence(string str){
+		    return longestCommonSubsequence(str,str);
+		}
+
+
+24.    Minimum Insertion Steps to Make a String Palindrome
+
+ANS.   1st approach ():
+
+       int longestCommonSubsequence(string text1, string text2) {
+        int n=text1.size();
+        int m=text2.size();
+        vector<vector<int>> t(n+1,vector<int> (m+1,-1));
+        for (int i=0;i<n+1;i++)
+            t[i][0]=0;
+        for (int i=0;i<m+1;i++)
+            t[0][i]=0;
+        
+        for (int i=1;i<n+1;i++)
+        {
+            for (int j=1;j<m+1;j++)
+            {
+                if (text1[i-1]==text2[j-1])
+                    t[i][j]=1+t[i-1][j-1];
+                else
+                    t[i][j]=max(t[i-1][j],t[i][j-1]);
+            }
+        }
+        return t[n][m];
+    }
+    int minInsertions(string s) {
+         string s2=s;
+    reverse(s2.begin(),s2.end());
+    return s.size()-longestCommonSubsequence(s,s2);
+    }
+
+
+25.   Printing Longest Palindromic Substring
+
+ANS.   1st approach ():
+
+       string longestCommonSubstr(string S1, string S2, int n, int m)
+    {
+        int t[n+1][m+1];
+        for (int i=0;i<n+1;i++)
+           t[i][0]=0;
+        for (int i=0;i<m+1;i++)
+           t[0][i]=0;
+           
+        int count=0;
+        string res;
+        int indexi,indexj;
+        for (int i=1;i<n+1;i++)
+        {
+            for (int j=1;j<m+1;j++)
+            {
+                if (S1[i-1]==S2[j-1])
+                {
+                    t[i][j]=1+t[i-1][j-1];
+                    if (t[i][j]>count)
+                    {
+                        string temp = S1.substr(i-t[i][j], t[i][j]) ;
+                        string revtemp = string(temp.rbegin(),temp.rend());
+                        if(revtemp==temp)
+                        {
+                            count = t[i][j] ;
+                            res = temp ;
+                        }
+                    }
+                }
+                else
+                t[i][j]=0;                   
+            }
+        }
+        return res;
+    }
+    string longestPalindrome(string s) {
+     string s2=s;
+     reverse(s2.begin(),s2.end());
+     return longestCommonSubstr(s,s2,s.size(),s2.size());
+    }
+
+26.   Find the longest subsequence of a string that is a substring of another string
+
+ANS.   1st approach ():
+
+       int maxSubsequenceSubstring(string text1, string text2, int n, int m){
+    
+    vector<vector<int>> t(n+1,vector<int> (m+1,-1));
+        for (int i=0;i<n+1;i++)
+            t[i][0]=0;
+        for (int i=0;i<m+1;i++)
+            t[0][i]=0;
+        
+        int count=0;
+        for (int i=1;i<n+1;i++)
+        {
+            for (int j=1;j<m+1;j++)
+            {
+                if (text1[i-1]==text2[j-1])
+                {
+                    t[i][j]=1+t[i-1][j-1];
+                    count=max(count,t[i][j]);
+                }
+                    
+                else
+                    t[i][j]=t[i-1][j];
+            }
+        }
+        return count;
+}
+
+
+27.   Matrix Chain Multiplication
+
+ANS.   1st approach (recursive):
+
+       int MCM(int arr[],int lb,int ub)
+    {
+        if (lb==ub) return 0;
+        int mini=INT_MAX;
+        for (int k=lb;k<=ub-1;k++)
+        {
+            int tempans=MCM(arr,lb,k)+MCM(arr,k+1,ub)+arr[lb-1]*arr[k]*arr[ub];
+            mini=min(mini,tempans);
+        }
+        return mini;
+    }
+    int matrixMultiplication(int N, int arr[])
+    {
+        return MCM(arr,1,N-1);
+    }
+
+
+
+    2nd approach (memoized):
+
+    int MCM(int arr[],int lb,int ub, vector<vector<int>> &t)
+    {
+        if (lb==ub) return 0;
+        if (t[lb][ub]!=-1)
+          return t[lb][ub];
+        int mini=INT_MAX;
+        for (int k=lb;k<=ub-1;k++)
+        {
+            int tempans=MCM(arr,lb,k,t)+MCM(arr,k+1,ub,t)+arr[lb-1]*arr[k]*arr[ub];
+            mini=min(mini,tempans);
+        }
+        return t[lb][ub]=mini;
+    }
+    int matrixMultiplication(int N, int arr[])
+    {
+        vector<vector<int>> t(N,vector<int> (N,-1));
+        return MCM(arr,1,N-1,t);
+    }
+
+   
 
 
 
