@@ -1126,3 +1126,84 @@ pair<int,int> ways(string &s, int i, int j){
           dp.resize(N + 1, vector<pair<int,int>>(N + 1, {-1,-1}));
         return ways(S,0, N-1).first;
     }
+
+
+30.   Scrambled String 
+
+ANS.   1st approach (using MCM pattern):
+
+         bool solve(string s1, string s2,unordered_map<string,bool> &mp)
+    {
+        if (s1==s2) return true;
+        if (s1.size()<=1) return false;
+        string key=s1;
+        key+="-";
+        key+=s2;
+        if (mp.find(key)!=mp.end())
+            return mp[key];
+        int n=s1.size();
+        bool flag=false;
+        for (int i=1;i<=n-1;i++)
+        {
+            bool cond1=false,cond2=false;
+            if (solve(s1.substr(0,i),s2.substr(n-i,i),mp) && solve(s1.substr(i,n-i),s2.substr(0,n-i),mp))
+                cond1=true;
+            if (solve(s1.substr(0,i),s2.substr(0,i),mp) && solve(s1.substr(i,n-i),s2.substr(i,n-i),mp))
+                cond2=true;
+            if (cond1 || cond2)
+            {
+                    flag=true;
+                    break;
+            }
+                
+        }
+        return mp[key]=flag;
+    }
+    bool isScramble(string s1, string s2) {
+        int n1=s1.size();
+        int n2=s2.size();
+        if (n1!=n2) return false;
+        else if (s1=="" && s2=="") return true;
+        unordered_map<string,bool> mp;
+        return solve(s1,s2,mp);
+    }
+
+
+
+31.   Egg Dropping Problem
+
+ANS.   1st approach (/*If left is less than right which mean if I go right I will be getting more number of  moves in worst case which is the ultimate goal, so I reduced the problem in half because I only care abount max number of moves in worst case so I go to right only using this: l = mid+1; otherwise the right < left which means I need to go left to maximize it, which is right = mid-1;*/
+        ):
+
+     int solve(int e,int f,vector<vector<int>> &t)
+    {
+        if (e==1) return f;
+        if (f==0 || f==1) return f;
+        if (t[e][f]!=-1) return t[e][f];
+        int mini=INT_MAX;
+        int l=1,r=f;
+        
+        while (l<=r)
+        {
+            int mid=l+(r-l)/2;
+            int left=solve(e-1,mid-1,t);
+            int right=solve(e,f-mid,t);
+            int tempans=1+max(left,right);
+            if (left<right)  
+                l=mid+1;
+            else
+                r=mid-1;
+            mini=min(mini,tempans);
+        }
+        return t[e][f]=mini;
+    }
+    int superEggDrop(int k, int n) {
+        vector<vector<int>> t(k+1,vector<int> (n+1,-1));
+        return solve(k,n,t);
+    }
+
+
+
+
+
+ 
