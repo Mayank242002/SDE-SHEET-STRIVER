@@ -1,7 +1,7 @@
-﻿                                                SDE SHEET STRIVER
+﻿                               SDE SHEET STRIVER
 
 
-                                                      DAY 2
+                                      DAY 2
 
 
 1.Set Matrix Zeros
