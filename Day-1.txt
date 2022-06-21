@@ -1,7 +1,7 @@
-﻿­	­                                          SDE SHEET STRIVER
+﻿                             SDE SHEET STRIVER
 
 
-                                                 DAY 1
+                                  DAY 1
 
 
 1. Sort an array of 0’s 1’s 2’s without using extra space or sorting algo 
@@ -284,6 +284,49 @@ public:
         return maxsum;
     }
 };
+
+
+4.1  Maximum Non-Negative SubArray  (Varaition of Kadane’s Algorithm)
+
+ANS.   1st approach ():
+
+    vector<int> Solution::maxset(vector<int> &arr) {
+      vector<int> ans;
+    	long long res=0,sum=0;
+    	int start=-1,end=-1;
+        int n=arr.size();
+    	int s=0,e=0;
+    	for (int i=0;i<n;i++)
+    	{
+    	    if (arr[i]<0)
+    	    {
+    	        sum=0;
+    	        s=i+1;
+    	    }
+    	    else
+    	    {
+    	        sum+=arr[i];
+    	        if (sum>res || sum==res && end-start<e-s)
+    	        {
+    	            res=sum;
+    	            start=s;
+    	            end=e;
+    	        }
+    	    }
+    	    e++;
+    	    
+    	}
+    	if (start==-1 && end==-1) 
+    	{
+    	    return ans;
+        }
+    	
+    	for (int i=start;i<=end;i++)
+    	   ans.push_back(arr[i]);
+    	   return ans;
+    	   
+}
+
 
 
 5.Merge Intervals 
