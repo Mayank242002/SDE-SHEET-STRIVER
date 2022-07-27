@@ -614,8 +614,63 @@ ANS.   1st approach (selecting the minimum two and adding to the cost(priority q
      
 
  
-        
+       
 
+21.   Celebrity Problem
+
+ANS.   1st approach ():
+
+ int celebrity(vector<vector<int> >& M, int n) 
+    {
+        stack<int> st;
+        for (int i=0;i<n;i++)
+           st.push(i);
+           
+         while (st.size()>1)
+         {
+             int i=st.top(); st.pop();
+             int j=st.top(); st.pop();
+             if (M[i][j]==1)
+                 st.push(j);
+             else
+                 st.push(i);
+         }
+         
+         int x=st.top();
+         for (int i=0;i<n;i++)
+         {
+             if (i!=x)
+             {
+                 if (M[x][i]==1 || M[i][x]==0)
+                    return -1;
+             }
+            
+         }
+         return x;
+    }
+
+       2nd approach ():
+
+          int celebrity(vector<vector<int> >& M, int n) 
+    {
+         vector<int> temp(n,0);
+        for (int i=0;i<n;i++)
+        {
+            for (int j=0;j<n;j++)
+            {
+                if (M[i][j]==1)
+                {
+                    temp[i]--;
+                    temp[j]++;
+                }
+            }
+        }
+        for (int i=0;i<n;i++)
+        {
+            if (temp[i]==n-1) return i;
+        }
+        return -1;
+    }
 
 
         
