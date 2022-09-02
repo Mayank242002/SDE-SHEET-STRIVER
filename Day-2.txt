@@ -84,7 +84,7 @@ public:
         }
     }
 
-     3rd approach (take two dummy array as first row and column)  :
+     3rd approach (take two dummy array as first row and column, count specifies that whether any elements in the 1st column is Zero or not || count==1(no zero in column 1), count==0(zero present in column one) )  :
 
       
       class Solution {
@@ -160,7 +160,7 @@ public:
 
 ANS   1st approach (find all permuations and returning the next permutations)
 
-      2nd approach (O(n))  :
+      2nd approach (O(n)), Intution: we start from left of the array and find the index which is less than of right element(the right candidate to change to make next larger permuation) and then find the element again from left which is just greater than step1 element because we want greater permuation and swap the array from index i to end  :
 
        class Solution {
 public:
@@ -229,8 +229,7 @@ int merge(int A[], int temp[], int l, int mid, int h)
         else
         {
             temp[k++] = A[j++];
-            inv_count += mid - i + 1;
-        }
+            inv_count += mid - i + 1;  //(mid-i+1 because mid is upperbound of array which have numbers greater than j and i is lower bound of that array. so we subtract those indexes and get count of numbers which are greater than arr[j]  }
     }
     for (; i <= mid; i++)
         temp[k++] = A[i];
@@ -273,6 +272,34 @@ int main()
 
 ANS.   1st approach (Brute froce O(n2))  :
 
+       2nd approach using Priority_Queue(varaition of Nearest Greater to Left with Priority Queue) :
+
+        int maxProfit(vector<int>& prices) {
+        int n=prices.size();
+        vector<int> temp;
+        priority_queue<int> st;
+        st.push(prices[n-1]);
+        temp.push_back(prices[n-1]);
+        for (int i=n-2;i>=0;i--)
+        {
+             while (st.size()>0 && st.top()<=prices[i])
+                st.pop();
+            if (st.size()==0)
+                temp.push_back(prices[i]);
+            else
+                temp.push_back(st.top());
+            st.push(prices[i]);
+        }
+        reverse(temp.begin(),temp.end());
+        int maxi=INT_MIN;
+        for (int i=0;i<n;i++)
+        {
+            maxi=max(maxi,temp[i]-prices[i]);
+        }
+        return maxi;
+        
+    }
+
        2nd approach (O(n)) :
 
         int maxProfit(vector<int>& prices) {
@@ -287,7 +314,7 @@ ANS.   1st approach (Brute froce O(n2))  :
         
     }
 
-6.Rotate Image
+6.Rotate Image by 90 Degree
 
 ANS.    1st approach (take another matrix and store the rows as columns):  
 
@@ -319,6 +346,21 @@ ANS.    1st approach (take another matrix and store the rows as columns):
             }
         }
     }
+
+6.1 Rotate Image by 180 Degree
+
+ANS.    1st approach (Rotate 2 times 90 Degree by above method):
+
+        2nd approach (swaping the columns and then swaping the rows):
+
+6.2 Rotate Image by 270 Degree
+
+ANS.    1st approach (Rotate 3 times 90 Degree by above method):
+
+        2nd approach (Transposing the matrix and then swaping the rows):
+
+
+       
 
 
           
