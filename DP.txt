@@ -434,7 +434,71 @@ ANS.   1st approach (recursive):
         
     }
 
-	
+14.1 Longest Increasing Subsequence
+
+ANS.   1st approach (): create an array of unique elements in sorted order and find LCS OF Original and this new array
+  int LCS(vector<int>text1, vector<int>text2) {
+        int n=text1.size();
+        int m=text2.size();
+        vector<vector<int>> t(n+1,vector<int> (m+1,-1));
+        for (int i=0;i<n+1;i++)
+            t[i][0]=0;
+        for (int i=0;i<m+1;i++)
+            t[0][i]=0;
+        
+        for (int i=1;i<n+1;i++)
+        {
+            for (int j=1;j<m+1;j++)
+            {
+                if (text1[i-1]==text2[j-1])
+                    t[i][j]=1+t[i-1][j-1];
+                else
+                    t[i][j]=max(t[i-1][j],t[i][j-1]);
+            }
+        }
+        return t[n][m];
+        
+    }
+    int lengthOfLIS(vector<int>& nums) {
+       vector<int> temp;
+        set<int> s;
+        for (int a:nums)
+            s.insert(a);
+        for (int a:s)
+            temp.push_back(a);
+        return LCS(nums,temp);
+    }
+
+14.2 Uncrossed Lines
+
+ANS.    1st approach ():
+
+            int longestCommonSubsequence(vector<int> text1, vector<int> text2) {
+        int n=text1.size();
+        int m=text2.size();
+        vector<vector<int>> t(n+1,vector<int> (m+1,-1));
+        for (int i=0;i<n+1;i++)
+            t[i][0]=0;
+        for (int i=0;i<m+1;i++)
+            t[0][i]=0;
+        
+        for (int i=1;i<n+1;i++)
+        {
+            for (int j=1;j<m+1;j++)
+            {
+                if (text1[i-1]==text2[j-1])
+                    t[i][j]=1+t[i-1][j-1];
+                else
+                    t[i][j]=max(t[i-1][j],t[i][j-1]);
+            }
+        }
+        return t[n][m];
+        
+    }
+    int maxUncrossedLines(vector<int>& nums1, vector<int>& nums2) {
+        return longestCommonSubsequence(nums1,nums2);
+    }
+
 15.   Longest Common Substring
 
 ANS.   1st approach ():
@@ -640,6 +704,65 @@ ANS.   1st approach ():
 	    
 	} 
 
+
+19.1 Edit Distance
+ANS.
+
+1st approach : 
+
+int LCS(string s1,string s2,int m,int n,vector<vector<int>> &t)
+    {
+        if (m==0) return n;
+        else if (n==0) return m;
+        else if (t[m][n]!=-1)
+            return t[m][n];
+        else
+        {
+            if (s1[m-1]==s2[n-1])
+                return t[m][n]=LCS(s1,s2,m-1,n-1,t);
+            else
+            {
+                int insert=LCS(s1,s2,m,n-1,t);
+                int deletee=LCS(s1,s2,m-1,n,t);
+                int replace=LCS(s1,s2,m-1,n-1,t);
+                return t[m][n]=1+min({insert,deletee,replace});
+            }
+        }
+    }
+    int minDistance(string word1, string word2) {
+        int m=word1.size(),n=word2.size();
+        vector<vector<int>> t(m+1,vector<int> (n+1,-1));
+        return LCS(word1,word2,m,n,t);
+    }
+
+19.2  One Edit Distance
+
+ANS.   1st approach ():
+
+        int LCS(string s1,string s2,int m,int n,vector<vector<int>> &t)
+    {
+        if (m==0) return n;
+        else if (n==0) return m;
+        else if (t[m][n]!=-1)
+            return t[m][n];
+        else
+        {
+            if (s1[m-1]==s2[n-1])
+                return t[m][n]=LCS(s1,s2,m-1,n-1,t);
+            else
+            {
+                int insert=LCS(s1,s2,m,n-1,t);
+                int deletee=LCS(s1,s2,m-1,n,t);
+                int replace=LCS(s1,s2,m-1,n-1,t);
+                return t[m][n]=1+min({insert,deletee,replace});
+            }
+        }
+    }
+    bool isOneEditDistance(string &s, string &t) {
+         int m=s.size(),n=t.size();
+        vector<vector<int>> dp(m+1,vector<int> (n+1,-1));
+        return LCS(s,t,m,n,dp)==1;
+    }
 20.   Minimum ASCII Delete Sum for Two Strings
 
 ANS.   1st approach (instead of adding 1 , we have added ascii value of the character to maximize the lcs):
