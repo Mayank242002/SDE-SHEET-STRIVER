@@ -101,6 +101,8 @@ ANS.   1st approach (using power function but interviewer may prefer better solu
 
        3rd approach (O(logn)) :
 
+
+
        double myPow(double x, int n) {
        double power=1;
         long long nn=n;
@@ -177,7 +179,7 @@ ANS.   1st approach (Brute force  O(n2)) : count for each element and return tha
     }
         
 
-       4rd approach (Moore's Voting algorithm) :
+       4rd approach (Moore's Voting algorithm(only one element can be more than n/2 times)) :
 
         int majorityElement(vector<int>& nums) {
         int n=nums.size();
