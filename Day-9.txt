@@ -109,6 +109,42 @@ int main()
 }
 
 
+2.1 Count Subsequenece whose sum is k
+
+ANS.   1st arrproach ():
+
+        #include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+void subsequence(int i,int arr[],int n,int sum,int s,int &count)
+{
+    
+    if (i==n)
+    {
+        if (s==sum)
+        {
+            count++;
+        }
+        return;
+    }
+    subsequence(i+1,arr,n,sum,s+arr[i],count);
+    subsequence(i+1,arr,n,sum,s,count);
+}
+int main()
+{
+    int arr[3]={1,2,1};
+    int sum=3;
+    int count=0;
+    subsequence(0,arr,3,sum,0,count);
+    cout<<count<<endl;
+    return 0;
+}
+
+
+
+
 3. Print any one subsequence whose sum is k(technique to print one answer)
 
 ANS.  1st approach (we will return true if our condition is satisfied otherwise return false):
