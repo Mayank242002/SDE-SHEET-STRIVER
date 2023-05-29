@@ -1327,6 +1327,140 @@ ANS.   1st approach (/*If left is less than right which mean if I go right I wil
 
 
 
+32. Frog Jump(codestudio)
 
+Ans.
 
+#include <bits/stdc++.h> 
+using namespace std;
+int t[100001];
+int solve(int i,vector<int>&heights,int n)
+{
+    if (i==n-1)
+      return 0;
+    if (t[i]!=-1)
+      return t[i];
+    int first_jump=INT_MAX,second_jump=INT_MAX;
+    if (i+1<n)
+      first_jump=abs(heights[i+1]-heights[i])+solve(i+1,heights,n);
+    if (i+2<n)
+      second_jump=abs(heights[i+2]-heights[i])+solve(i+2,heights,n);
+    return t[i]=min(first_jump,second_jump);
+}
+int frogJump(int n, vector<int> &heights)
+{
+    memset(t,-1,sizeof(t));
+    return solve(0,heights,n);
+}
+
+33. Frog with K jumps
+
+Ans
+
+#include <bits/stdc++.h> 
+using namespace std;
+int t[100001];
+int solve(int i,vector<int>&heights,int n,int k)
+{
+    if (i==n-1)
+      return 0;
+    if (t[i]!=-1)
+      return t[i];
+    int mini=INT_MAX;
+    for (int f=1;f<=k;f++)
+    {
+      if (i+f<n)
+         mini=min(mini,abs(heights[i+f]-heights[i])+solve(i+f,heights,n,k));
+    }
+    return t[i]=mini;
+}
+int frogJump(int n, vector<int> &heights,int k)
+{
+    memset(t,-1,sizeof(t));
+    return solve(0,heights,n,k);
+}
  
+int main()
+{
+  int n,k;
+  cin>>n>>k;
+  vector<int> heights(n);
+  for (int i=0;i<n;i++)
+     cin>>heights[i];
+  return frogJump(n,heights,k);
+}
+
+34. House Robber (maximum sum of subsequneces such that no elements are adjacent)
+
+Ans 
+
+int robbery(vector<int>& nums,vector<int> &t,int i)
+    {
+           if (i>=nums.size()) return 0;
+           if (t[i]!=-1) return t[i];
+           int pick=nums[i]+robbery(nums,t,i+2);
+           int not_pick=robbery(nums,t,i+1);
+           return t[i]=max(pick,not_pick);
+    }
+    int rob(vector<int>& nums) {
+        int n=nums.size();
+        vector<int> t(n+1,-1);
+        return (robbery(nums,t,0));
+    }
+
+35. House Robber II
+
+Ans
+
+ int t[101];
+    int robbery(vector<int>& nums,int i,int n)
+    {
+           if (i>=n) return 0;
+           if (t[i]!=-1) return t[i];
+           int pick=nums[i]+robbery(nums,i+2,n);
+           int not_pick=robbery(nums,i+1,n);
+           return t[i]=max(pick,not_pick);
+    }
+    int rob(vector<int>& nums) {
+         
+        if(nums.size()==1) return nums[0];
+        
+        // if want to rob at first house than cant rob at last house
+        memset(t,-1,sizeof(t));
+        int a=robbery(nums,0,nums.size()-1);
+        
+        // if want to rob at last house than cant rob at first house
+        memset(t,-1,sizeof(t));
+        int b=robbery(nums,1,nums.size());
+        return max(a,b);
+    }
+
+36. Ninja Training (Pix out of three activities each day and find maximum score such that he can't do same activities on consecutive day)
+
+Ans.
+
+#include<bits/stdc++.h>
+using namespace std;
+
+int t[100001][4];
+int solve(int i,int n,vector<vector<int>> &points,int last)
+{
+    if (i>=n)
+      return 0;
+    if (t[i][last]!=-1)
+       return t[i][last];
+    int maxi=INT_MIN;
+    for (int k=0;k<3;k++)
+    {
+        if (k!=last)
+          maxi=max(maxi,points[i][k]+solve(i+1,n,points,k));
+    }
+    return t[i][last]=maxi;
+}
+int ninjaTraining(int n, vector<vector<int>> &points)
+{
+    memset(t,-1,sizeof(t));
+    return solve(0,n,points,3);
+}
+
+37. 
