@@ -1,0 +1,11 @@
+As we know, a subarray is a slice of the contiguous memory locations of the array. So, we can have n * (n+1)/2 non-empty subarrays of an array.
+
+Now, a subset is nothing but any possible combination of the original array (or a set). We can have 2^(size of the array) i.e. 2^n subsets of an array.
+
+A subsequence is a sequence of the elements of the array obtained by deleting some elements of the array and preserving the order of the array elements. We can have2^n subsequences of an array since we keep the original ordering, this is the same as subsets of an array.
+
+For example, if the size of the array is 3 then
+
+The number of subarrays is 6.
+The number of the subsequences is 8.
+The number of subsets is 8.
