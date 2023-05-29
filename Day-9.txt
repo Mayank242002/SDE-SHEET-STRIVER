@@ -142,6 +142,62 @@ int main()
     return 0;
 }
 
+2.2 Number of Subsequences That Satisfy the Given Sum Condition
+
+Ans.   1st approach ():
+
+   void subsequence(int i,vector<int>&v,vector<int>& arr,int n,int &res,int target)
+   {
+    if (i==n)
+    {
+        if (v.size()>=1)
+        {
+          
+        if (v.front()+v.back()<=target)
+            (res++)%1000000007;    
+        }
+        
+        return;
+    }
+    v.push_back(arr[i]);
+    subsequence(i+1,v,arr,n,res,target);
+    v.pop_back();
+    subsequence(i+1,v,arr,n,res,target);
+    
+}
+    int numSubseq(vector<int>& nums, int target) {
+        int n=nums.size();
+        vector<int> v;
+        sort(nums.begin(),nums.end());
+        int res=0;
+        subsequence(0,v,nums,n,res,target);
+        return res;
+    }
+
+   2nd approach ():
+
+   int numSubseq(vector<int>& nums, int target) {
+        int n=nums.size();
+        sort(nums.begin(),nums.end());
+        int res=0;
+        int i=0,j=n-1;
+        int mod=1000000007;
+        int pow[n+1];
+        pow[0]=1;
+        for (int i=1;i<=n;i++)
+            pow[i]=(pow[i-1]*2)%mod;
+        while (i<=j)
+        {
+            if (nums[i]+nums[j]<=target)
+            {
+                res=(res+pow[j-i])%mod;
+                i++;
+            }
+            else
+                j--;
+        }
+        return res;
+    }
 
 
 
@@ -307,7 +363,7 @@ ANS.  1st approach (using set to remove duplicates):
        
     }
 
-7.  Combination sum-1
+7.  Combination sum-1 (as as Unbounded Knapsack(coin change II))
 
 ANS.  1st approach (We can pick any index many number of times):
 
@@ -341,6 +397,33 @@ ANS.  1st approach (We can pick any index many number of times):
         return res;
         
     }  
+
+
+    2nd approach (another way of Backtracking):
+
+      void combinationsum(int i,int target,vector<int>& candidates,vector<vector<int>> &res,vector<int> &temp,int n)
+    {
+         if (i==n)
+         {
+            if (target==0)
+                res.push_back(temp);
+            return;
+         }
+         if (candidates[i]<=target)
+         {
+             temp.push_back(candidates[i]);
+             combinationsum(i,target-candidates[i],candidates,res,temp,n);
+             temp.pop_back();
+         }
+        combinationsum(i+1,target,candidates,res,temp,n);                          
+    }
+    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+        int n=candidates.size();
+        vector<vector<int>> res;
+        vector<int> temp;
+        combinationsum(0,target,candidates,res,temp,n);
+        return res;
+    }
 
 8. Combination sum – 2
 
@@ -404,8 +487,8 @@ ANS.   1st approach (using set to remove duplicates(Giving TLE in Leetcode)):
                 break;
         }                        
     }
-    
-    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+
+     vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
         sort(candidates.begin(),candidates.end());
         int n=candidates.size();
         vector<int> temp;
@@ -415,6 +498,74 @@ ANS.   1st approach (using set to remove duplicates(Giving TLE in Leetcode)):
        
         return res;
     }
+
+    3rd approach (Another way of BackTracking):
+
+       void combinationsum(int idx,int target,vector<int>& candidates,vector<int> &temp, vector<vector<int>>& res,int n)
+    {
+        if (target==0)
+        {
+            res.push_back(temp);
+            return;
+        }
+        for (int i=idx;i<n;i++)
+        {
+            if (i!=idx && candidates[i]==candidates[i-1]) continue;
+            
+            if (candidates[i]<=target)
+            {
+               temp.push_back(candidates[i]);
+               combinationsum(i+1,target-candidates[i],candidates,temp,res,n); 
+               temp.pop_back();
+            }
+            else break;
+        }                        
+    }
+    
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+        sort(candidates.begin(),candidates.end());
+        int n=candidates.size();
+        vector<int> temp;
+        vector<vector<int>> res;
+        
+        combinationsum(0,target,candidates,temp,res,n);
+       
+        return res;
+    }
+    
+
+8.1 Combination Sum 3
+
+ANS.    1st approach (using same as Combination sum I):
+
+        void combinationsum(int i,int target,vector<int>& candidates,vector<vector<int>> &res,vector<int> &temp,int n,int k)
+    {
+         if (i==n)
+         {
+            if (target==0 && temp.size()==k)
+                res.push_back(temp);
+            return;
+         }
+         if (candidates[i]<=target)
+         {
+             temp.push_back(candidates[i]);
+             combinationsum(i+1,target-candidates[i],candidates,res,temp,n,k);  //i+1 because we will not be using same number twice
+             temp.pop_back();
+         }
+        combinationsum(i+1,target,candidates,res,temp,n,k);                          
+    }
+    vector<vector<int>> combinationSum3(int k, int n) {
+        vector<int> candidates;
+        for (int i=1;i<=9;i++) candidates.push_back(i);
+        int n2=candidates.size();
+        vector<vector<int>> res;
+        vector<int> temp;
+        combinationsum(0,n,candidates,res,temp,n2,k);
+        return res;
+    }
+
+        
+   
 
 9.  Palindrome partioning
 

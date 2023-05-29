@@ -481,4 +481,24 @@ ANS.   1st approach ( Reverse the linked list and then add them and again revers
         return dummy;
     }
 
-       
+ 7. Remove all nodes with value k
+
+Ans    1st approach ():
+
+Node *removeNodes(Node *head, int k) {
+     if (head == NULL) {
+        return head;
+    }
+
+    // Calling the recursive function for next node.
+    Node * temp = removeNodes(head -> next, k);
+
+    head -> next = temp;
+
+    // Checking if the current node has value 'K'.
+    if ((head -> data) == k) {
+        return head -> next;
+    } else {
+        return head;
+    }
+}

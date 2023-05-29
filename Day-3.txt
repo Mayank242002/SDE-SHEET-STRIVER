@@ -8,7 +8,7 @@
 
 ANS.   1st approach (search one by one in whole 2D array O(n2)):
 
-       2nd approach  (finding the row in which target may be present and then applying the binary search on that row  O(n)+O(logm)):
+       2nd approach  (finding the row in which target may be present and then applying the binary search on that row  O(n)*O(logm)):
 
         bool search(vector<int>& arr,int target,int n)
     {

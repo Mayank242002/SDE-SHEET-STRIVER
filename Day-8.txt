@@ -616,7 +616,7 @@ ANS.   1st approach (selecting the minimum two and adding to the cost(priority q
  
        
 
-21.   Celebrity Problem
+21.   Celebrity Problem/Find the Town Judge
 
 ANS.   1st approach ():
 

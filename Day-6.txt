@@ -104,16 +104,33 @@ ANS.    1st approach (Brute force : using hash table   TC=O(N), SC=O(N))  :
 
 
         2nd approach (using fast and slow pointer method   O(n) )  :
-
-        bool hasCycle(ListNode *head) {
-        ListNode *p=head,*q=head;
         
-        while (q!=nullptr)
+          bool hasCycle(ListNode *head) {
+        ListNode *fast=head,*slow=head;
+        while (fast)
         {
-            q=q->next;
-            p=p->next;
-           
-            if (q==nullptr)int sum_0f_squares(int n)
+            fast=fast->next;
+            slow=slow->next;
+            
+            if (fast==nullptr)
+                return false;
+            else
+                fast=fast->next;
+            
+            if (fast==slow)
+        return true;
+        }
+        
+        
+            return false; 
+    }
+
+2.1   Happy Number
+
+ANS.   1st approach (applying same concept of fast and slow pointer):
+
+
+   int sum_0f_squares(int n)
     {
         int res=0;
         while (n)
@@ -124,11 +141,6 @@ ANS.    1st approach (Brute force : using hash table   TC=O(N), SC=O(N))  :
         }
         return res;
     }
-2.1   Happy Number
-
-ANS.   1st approach (applying same concept of fast and slow pointer):
-
-
     bool isHappy(int n) {
         int slow=n,fast=n;
        do
@@ -139,15 +151,6 @@ ANS.   1st approach (applying same concept of fast and slow pointer):
        }while(slow!=fast);
         return (slow==1)?true:false;
     }
-                return false;
-            else
-                q=q->next;
-            if (p==q)
-                return true;
-        }
-        return false; 
-    }
-
 
 3.Reverse Nodes in k-Group
 
@@ -353,6 +356,8 @@ ANS.    1st approach  (uisng Hash table TC=O(N), SC=O(N)) :
 
          
         2nd approach (using slow and fast pointer (floyd tortoise method)  O(n)) :
+
+        proof ()
 
         ListNode *detectCycle(ListNode *head) {
         if (head==nullptr)

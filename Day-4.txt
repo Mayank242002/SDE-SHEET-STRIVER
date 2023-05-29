@@ -263,6 +263,7 @@ ANS.  1st approach (same as maximum subarray sum with little change   O(n3))  :
     return maxi;
 }
 
+
 5.Count the number of subarrays having a given XOR (very important question )
 
 ANS.   1st approach (Brute force : same as maximum subarray sum with little change   O(n3))  :
