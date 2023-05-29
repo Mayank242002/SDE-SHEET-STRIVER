@@ -209,6 +209,8 @@ ANS.    1st approach ():
            {
                sum-=A[i];
                i++;
+               if (sum==K)
+                 maxi=max(maxi,j-i+1);
            }
            j++;
         }
