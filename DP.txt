@@ -1494,6 +1494,25 @@ int minimumPathSum(vector<vector<int>>& triangle, int n){
 	return solve(0,0,n,triangle); 
 }
 
+
+38.0 LIS Recursive
+
+Ans.  
+
+int solve(int i,int prev_ind,vector<int> &nums,int n)
+{
+  if (i==n)
+   return 0;
+  int take=0,not_take=0;
+  not_take=solve(i+1,prev_ind,nums,n);
+  if (prev_ind==-1 || nums[i]>nums[prev_ind])
+     take=1+solve(i+1,i,nums,n);
+  return max(take,not_take); 
+}
+
+//change state of prev_ind for 0 based indexing
+
+
 38. Longest Increasing Subsequence
 
 Ans.
@@ -1536,7 +1555,7 @@ vector<int> lengthOfLIS(vector<int>& nums) {
                 {
                     if (dp[j]+1>dp[i])
                     {
-                       dp[i] = max(dp[i], dp[j] + 1);
+                       dp[i] = dp[j] + 1;
                        hash[i]=j;
                     }
                 }
@@ -1554,6 +1573,168 @@ vector<int> lengthOfLIS(vector<int>& nums) {
             ans.push_back(nums[lastindex]);
             lastindex=hash[lastindex];
         }
+        ans.push_back(nums[lastindex]);
         reverse(ans.begin(),ans.end());
         return ans;
     }
+
+40.  LIS By Binary Search
+
+Ans.
+
+int longestIncreasingSubsequence(int nums[], int n)
+{
+    
+        vector<int> temp;
+        temp.push_back(nums[0]);
+        for (int i=1;i<n;i++)
+        {
+            if (nums[i]>temp.back())
+              temp.push_back(nums[i]);
+            else
+            {
+                int ind=lower_bound(temp.begin(),temp.end(),nums[i])-temp.begin();
+                temp[ind]=nums[i];
+            }
+        }
+        return temp.size();
+}
+
+40. Longest Bitonic Subsequnce
+
+Ans.
+
+	vector<int> lengthOfLIS(vector<int>& nums) {
+        int n = nums.size();
+        int maxi=1;
+        vector<int> dp(n, 1);
+        for(int i = 0; i < n; i++)
+        {
+            for(int j = 0; j < i; j++)
+            {
+                if(nums[i] > nums[j])
+                    dp[i] = max(dp[i], dp[j] + 1);
+            }
+            maxi=max(maxi,dp[i]);
+        }
+        return dp;
+    }
+    vector<int> lengthOfDIS(vector<int>& nums) {
+        int n = nums.size();
+        int maxi=1;
+        vector<int> dp(n, 1);
+        for(int i = n-2; i>=0; i--)
+        {
+            for(int j = n-1; j>i; j--)
+            {
+                if(nums[i] >nums[j])
+                    dp[i] = max(dp[i], dp[j] + 1);
+            }
+            maxi=max(maxi,dp[i]);
+        }
+        return dp;
+    }
+	int LongestBitonicSequence(vector<int>nums)
+	{
+         int maxi=1;
+         vector<int> LIS=lengthOfLIS(nums);
+         vector<int> DIS=lengthOfDIS(nums);
+         for (int i=0;i<nums.size();i++)
+             maxi=max(maxi,LIS[i]+DIS[i]-1);
+         return maxi;
+	}
+
+41. Maximum sum Increasing Subsequence
+
+Ans.
+
+int maxSumIS(int nums[], int n)  
+	{  
+	   
+        vector<int> dp(n, 1),maxi(n);
+        int ans=0;
+        //dp[i] denotes the length of longest Increasing subsequence ending at i
+        //maxi[i] denotes the maximum sum of  Increasing subsequence ending at i
+        for(int i = 0; i < n; i++)
+        {
+            maxi[i]=nums[i];
+            int maxim=0;
+            //finding the  longest Increasing subsequence ending at i
+            for(int j = 0; j < i; j++)
+            {
+                if(nums[i] > nums[j])
+                {
+                    maxim=max(maxim,maxi[j]);
+                    dp[i] = max(dp[i], dp[j] + 1);
+                }
+            }
+            maxi[i]+=maxim;
+            ans=max(ans,maxi[i]);
+        }
+        return ans;
+	}  
+
+
+int maxSumIS(int nums[], int n)  
+	{  
+	   
+        vector<int> dp(n, 1),maxi(n);
+        int ans=0;
+        //dp[i] denotes the length of longest Increasing subsequence ending at i
+        //maxi[i] denotes the maximum sum of  Increasing subsequence ending at i
+        for(int i = 0; i < n; i++)
+        {
+            maxi[i]=nums[i];
+            int maxim=0;
+            //finding the  longest Increasing subsequence ending at i
+            for(int j = 0; j < i; j++)
+            {
+                if(nums[i] > nums[j])
+                {
+                    maxi[i]=max(maxi[i],maxi[j]+nums[i]);
+                    dp[i] = max(dp[i], dp[j] + 1);
+                }
+            }
+            ans=max(ans,maxi[i]);
+        }
+        return ans;
+	} 
+
+42. Maximum sum of elements not part of LIS
+
+Ans.
+
+int maxSumLis(int nums[], int n) {
+        vector<pair<int,int>> dp(n);
+        for (int i=0;i<n;i++)
+          dp[i]={1,nums[i]};
+        int sum=0;
+        int maxi=0;
+        for(int i = 0; i < n; i++)
+        {
+            sum+=nums[i];
+            for(int j = 0; j < i; j++)
+            {
+                if(nums[i] > nums[j])
+                {
+                    if (dp[j].first+1>dp[i].first)
+                    {
+                        dp[i].first=dp[j].first+1;
+                        dp[i].second=dp[j].second+nums[i];
+                    }
+                    else if (dp[j].first+1==dp[i].first)
+                       dp[i].second=min(dp[i].second,dp[j].second+nums[i]);
+                }
+            }
+            maxi=max(maxi,dp[i].first);
+        }
+       int LIS_min_sum=INT_MAX;
+       for (int i=0;i<n;i++)
+       {
+           if (dp[i].first==maxi)
+             LIS_min_sum=min(LIS_min_sum,dp[i].second);
+       }
+       return sum-LIS_min_sum;
+    }
+
+
