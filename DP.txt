@@ -1493,3 +1493,67 @@ int minimumPathSum(vector<vector<int>>& triangle, int n){
 	memset(t,-1,sizeof(t));
 	return solve(0,0,n,triangle); 
 }
+
+38. Longest Increasing Subsequence
+
+Ans.
+
+int lengthOfLIS(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> dp(n, 1);
+        //dp[i] denotes the length of longest Increasing subsequence ending at i
+        for(int i = 0; i < n; i++)
+        {
+            //finding the  longest Increasing subsequence ending at i
+            for(int j = 0; j < i; j++)
+            {
+                if(nums[i] > nums[j])
+                {
+                    dp[i] = max(dp[i], dp[j] + 1);
+                }
+            }
+        }
+        return *max_element(dp.begin(), dp.end());
+    }
+
+39.  Printing Longest Increasing Subsequence
+
+Ans.  
+
+vector<int> lengthOfLIS(vector<int>& nums) {
+      int n = nums.size();
+        vector<int> dp(n, 1),hash(n);
+        int maxi=1;
+        int lastindex=0;
+        //dp[i] denotes the length of longest Increasing subsequence ending at i
+        for(int i = 0; i < n; i++)
+        {
+            hash[i]=i;
+            //finding the  longest Increasing subsequence ending at i
+            for(int j = 0; j < i; j++)
+            {
+                if(nums[i] > nums[j])
+                {
+                    if (dp[j]+1>dp[i])
+                    {
+                       dp[i] = max(dp[i], dp[j] + 1);
+                       hash[i]=j;
+                    }
+                }
+            }
+            if (dp[i]>maxi)
+            {
+                maxi=dp[i];
+                lastindex=i;
+            }
+            
+        }
+        vector<int> ans;
+        while (hash[lastindex]!=lastindex)
+        {
+            ans.push_back(nums[lastindex]);
+            lastindex=hash[lastindex];
+        }
+        reverse(ans.begin(),ans.end());
+        return ans;
+    }
