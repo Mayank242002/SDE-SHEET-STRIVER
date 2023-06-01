@@ -1435,6 +1435,12 @@ Ans
         return max(a,b);
     }
 
+35.1 House Robber III
+
+Ans.
+
+
+
 36. Ninja Training (Pix out of three activities each day and find maximum score such that he can't do same activities on consecutive day)
 
 Ans.
@@ -1463,4 +1469,27 @@ int ninjaTraining(int n, vector<vector<int>> &points)
     return solve(0,n,points,3);
 }
 
-37. 
+37. Traingle Minimum path Sum
+
+Ans.
+
+#include <bits/stdc++.h>
+int t[1001][1001];
+int solve(int i,int j,int n,vector<vector<int>>& triangle)
+{
+	if (i>n || j>i)
+	   return INT_MAX;
+	if (t[i][j]!=-1)
+	   return t[i][j];
+	if (i==n)
+	   return 0;
+	int path1=INT_MAX;
+	int path2=INT_MAX;
+	path1=triangle[i][j]+solve(i+1,j,n,triangle);
+	path2=triangle[i][j]+solve(i+1,j+1,n,triangle);
+    return t[i][j]=min(path1,path2);
+} 
+int minimumPathSum(vector<vector<int>>& triangle, int n){
+	memset(t,-1,sizeof(t));
+	return solve(0,0,n,triangle); 
+}
