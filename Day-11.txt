@@ -8,22 +8,25 @@ ANS.   1st  approach (using simple loop from 1 to n to check wheather this numbe
 
        2nd approach (using Binary Search to find that number which multiplied n times is equal to m : O(m*logn)):
 
-    double findNthRootOfM(int n, long long m) {
-    double low=1,high=m;
-    double eps=1e-6;
-    while ((high-low)>eps)
-    {
-        double mid=(low+high)/2.0;
-        double ans=pow(mid,n);
-        if (ans==(double)m)
-            return mid;
-        else if (ans>m)
-            high=mid;
-        else
-            low=mid;
-    }
-    return low;//or return high
-}
+       int NthRoot(int n, int m)
+	{
+	   
+	    long long low=1,high=m;
+	    while(high>=low){
+	        long long mid=(low+high)/2;
+	        double ans=pow(mid,n);
+	        if(ans==m){
+	            return mid;
+	        }
+	        else if(ans>m){
+	            high=mid-1;
+	        }
+	        else{
+	            low=mid+1;
+	        }
+	    }
+	    return -1;
+	}
 
 
 2. Matrix Median

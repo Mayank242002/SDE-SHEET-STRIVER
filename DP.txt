@@ -1737,4 +1737,46 @@ int maxSumLis(int nums[], int n) {
        return sum-LIS_min_sum;
     }
 
+43. Longest Valid Subsequence
+
+In a valid subsequence, each pair of adjacent elements of the subsequence has bitwise XOR equal to k. 
+Note that any subsequence of length 1 is valid regardless of the value of k, 
+because there is no pair of adjacent elements in such a subsequence.
+
+Ans.
+
+#include <bits/stdc++.h>
+
+using namespace std;
+int solution(const vector<int> &a, int k) 
+{
+
+    vector<int> dp(a.size(),1);
+    int r = 0;
+    map<int,int> mp;
+    mp[a[0]]=0;
+    for (int i = 1; i <a.size(); i++) 
+    {
+        const int v = a[i] ^ k;
+        if (mp.find(v)!=mp.end())
+        {
+            dp[i]=max(dp[i],dp[mp[v]]+1);
+        }
+        else
+           dp[i]=1;
+        r = max(r, dp[i]);
+        mp[a[i]]=i;
+    }
+    return r;
+}
+
+int main()
+{
+    cout << solution({2, 1, 3, 5, 2}, 2) << endl;
+
+    return 0;
+}
+
+
+
 

@@ -57,7 +57,7 @@ ANS.   1st approach ():
 
 
 
-3.    Construct Binary Tree from Inorder and Preorder
+3.    Construct Binary Tree from Inorder and Postorder
 
 
 ANS.    1st approach (same as above (only change is that now we traverse from end of postorder)):

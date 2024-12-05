@@ -160,7 +160,7 @@ public:
 
 ANS   1st approach (find all permuations and returning the next permutations)
 
-      2nd approach (O(n)), Intution: we start from left of the array and find the index which is less than of right element(the right candidate to change to make next larger permuation) and then find the element again from left which is just greater than step1 element because we want greater permuation and swap the array from index i to end  :
+      2nd approach (O(n)), Intution: we start from right of the array and find the index which is less than of right element(the right candidate to change to make next larger permuation) and then find the element again from left which is just greater than step1 element because we want greater permuation and swap the array from index i to end  :
 
        class Solution {
 public:

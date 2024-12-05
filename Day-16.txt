@@ -51,10 +51,9 @@ ANS.   1st approach ():
 
 
 
-2.  Minimum Characters required to make a String Palindromic
+2.  Minimum Characters to be added at front to make a String Palindromic
 
 ANS.   1st approach (try to check whether string is palindrome or not in each iteration and if not, then delete the last charcter and counts the deleted element):
-
 
 
 
